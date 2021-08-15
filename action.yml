@@ -1,0 +1,30 @@
+name: Coverage Report as Comment (Clover)
+branding:
+  icon: check-square
+  color: green
+inputs:
+  github-token:
+    description: Github token
+    required: true
+    default: ${{ github.token }}
+  dir-prefix:
+    description: Section of the file on clover report to remove
+    required: true
+    default: ${{ github.workspace }}
+  dir-prefix-keep:
+    description: |
+      Section of the `dir-prefix` to keep when creating link to file.
+      Example: if your php application is at "$REPO/backend", then you should set this to "backend"
+    required: false
+  file:
+    description: The location of the clover file
+    required: true
+  only-with-cover:
+    description: Should only list files with at least one line covered
+    default: false
+  lang:
+    description: In which language to format the numbers (https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Intl#argumento_locales)
+    default: en-US
+runs:
+  using: node12
+  main: bin/index.js

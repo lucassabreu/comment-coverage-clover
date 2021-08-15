@@ -1,0 +1,36 @@
+Arguments: 
+  /home/lucas/.nvm/versions/node/v12.22.1/bin/node /usr/bin/yarn init
+
+PATH: 
+  /home/lucas/.nvm/versions/node/v12.22.1/bin:/home/lucas/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-Coderockr-SLASH-coderockr-way-github-setup:/home/lucas/.cache/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh:/home/lucas/.npm-global/bin:/home/lucas/.npm-global/bin:/home/lucas/workspace/golang/bin:/var/lib/snapd/snap/bin:/home/lucas/.local/bin/luna-studio:/home/lucas/.local/share/gem/ruby/3.0.0/bin:/home/lucas/.gem/ruby/2.7.0/bin:/home/lucas/.gvm/bin:/home/lucas/.local/bin:/home/lucas/.local/bin:/usr/local/bin:/usr/bin:/var/lib/snapd/snap/bin:/usr/local/sbin:/var/lib/flatpak/exports/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/usr/lib/jvm/default/bin:/snap/bin:/home/lucas/.yarn/bin:/home/lucas/.config/composer/vendor/bin:/home/lucas/.gem/ruby/2.5.0/bin:/home/lucas/.local/bin:/opt/anaconda/bin:/home/lucas/.bin:/home/lucas/.vim/plugged/phpactor/bin:/home/lucas/.config/composer/vendor/bin:/home/lucas/.gem/ruby/2.6.0/bin:/home/lucas/.fzf/bin
+
+Yarn version: 
+  1.22.11
+
+Node version: 
+  12.22.1
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: canceled
+      at Interface.<anonymous> (/usr/lib/node_modules/yarn/lib/cli.js:137023:13)
+      at Interface.emit (events.js:314:20)
+      at Interface._ttyWrite (readline.js:868:16)
+      at ReadStream.onkeypress (readline.js:205:10)
+      at ReadStream.emit (events.js:314:20)
+      at emitKeys (internal/readline/utils.js:335:14)
+      at emitKeys.next (<anonymous>)
+      at ReadStream.onData (readline.js:1137:36)
+      at ReadStream.emit (events.js:314:20)
+      at addChunk (_stream_readable.js:297:12)
+
+npm manifest: 
+  No manifest
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
