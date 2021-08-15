@@ -13,7 +13,7 @@ const lang =
 const workspace = getInput("dir-prefix") || process.env.GITHUB_WORKSPACE;
 const token = getInput("github-token") || process.env.GITHUB_TOKEN;
 const file = getInput("file") || process.env.FILE;
-const onlyWithCover = !!getInput("only-with-cover");
+const onlyWithCover = getInput("only-with-cover") == "true";
 const signature = `<sub data-file=${JSON.stringify(file)}>
   :robot: comment via <a href="https://github.com/lucassabreu/comment-coverage-clover">lucassabreu/comment-coverage-clover</a>
 </sub>`;
@@ -46,7 +46,7 @@ const run = async () => {
 
   const body = `
   Coverage report for commit: ${commit}
-  File: ${file}
+  File: \`${file}\`
 
   ${await comment(file)}
   ${signature}`;

@@ -8372,8 +8372,8 @@ var lib = {
 
 var Coverage = /** @class */ (function () {
     function Coverage(total, covered) {
-        this.total = total;
-        this.covered = covered;
+        this.total = Number(total);
+        this.covered = Number(covered);
         if (this.total > 0)
             this.percentual = this.covered / this.total;
     }
@@ -8392,12 +8392,13 @@ var fromString = function (str, onlyWithCover) {
             branchs: new Coverage(m.conditionals, m.coveredconditionals),
         },
         folders: allFiles
+            .sort(function (a, b) { return (a._attributes.name < b._attributes.name ? -1 : 1); })
             .map(function (f) { return (__assign(__assign({}, f), { folder: f._attributes.name.split("/").slice(0, -1).join("/") })); })
             .reduce(function (files, _a) {
             var _b;
             var folder = _a.folder, name = _a._attributes.name, m = _a.metrics._attributes;
             return files.set(folder, Object.assign(files[folder] || { name: folder }, {
-                files: __spreadArray(__spreadArray([], (((_b = files[folder]) === null || _b === void 0 ? void 0 : _b.files) || [])), [
+                files: __spreadArray(__spreadArray([], (((_b = files.get(folder)) === null || _b === void 0 ? void 0 : _b.files) || [])), [
                     {
                         name: name.split("/").pop(),
                         metrics: {
@@ -8501,7 +8502,7 @@ var lang = core.getInput("lang") ||
 var workspace = core.getInput("dir-prefix") || process.env.GITHUB_WORKSPACE;
 var token = core.getInput("github-token") || process.env.GITHUB_TOKEN;
 var file = core.getInput("file") || process.env.FILE;
-var onlyWithCover = !!core.getInput("only-with-cover");
+var onlyWithCover = core.getInput("only-with-cover") == "true";
 var signature = "<sub data-file=" + JSON.stringify(file) + ">\n  :robot: comment via <a href=\"https://github.com/lucassabreu/comment-coverage-clover\">lucassabreu/comment-coverage-clover</a>\n</sub>";
 var github = token && getOctokit_1(token);
 var comment = function (file) { return __awaiter(void 0, void 0, void 0, function () {
@@ -8535,7 +8536,7 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                 if (!context.payload.pull_request)
                     return [2 /*return*/];
                 commit = (_c = context.payload.pull_request) === null || _c === void 0 ? void 0 : _c.head.sha.substring(0, 7);
-                _a = "\n  Coverage report for commit: " + commit + "\n  File: " + file + "\n\n  ";
+                _a = "\n  Coverage report for commit: " + commit + "\n  File: `" + file + "`\n\n  ";
                 return [4 /*yield*/, comment(file)];
             case 1:
                 body = _a + (_f.sent()) + "\n  " + signature;

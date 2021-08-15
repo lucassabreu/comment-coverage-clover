@@ -3,8 +3,8 @@ export class Coverage {
   covered: number;
   percentual: number;
   constructor(total: number, covered: number) {
-    this.total = total;
-    this.covered = covered;
+    this.total = Number(total);
+    this.covered = Number(covered);
     if (this.total > 0) this.percentual = this.covered / this.total;
   }
 }
