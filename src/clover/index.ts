@@ -66,6 +66,7 @@ export const fromString = (str: string, onlyWithCover: boolean): Stats => {
       branchs: new Coverage(m.conditionals, m.coveredconditionals),
     },
     folders: allFiles
+      .sort((a, b) => (a._attributes.name < b._attributes.name ? -1 : 1))
       .map((f) => ({
         ...f,
         folder: f._attributes.name.split("/").slice(0, -1).join("/"),
@@ -79,7 +80,7 @@ export const fromString = (str: string, onlyWithCover: boolean): Stats => {
             folder,
             Object.assign(files[folder] || { name: folder }, {
               files: [
-                ...(files[folder]?.files || []),
+                ...(files.get(folder)?.files || []),
                 {
                   name: name.split("/").pop(),
                   metrics: {
