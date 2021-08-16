@@ -1,7 +1,7 @@
 import { getInput } from "@actions/core";
 import { getOctokit } from "@actions/github";
 import { context } from "@actions/github/lib/utils";
-import { readFile } from "fs";
+import { readFile, existsSync } from "fs";
 import { promisify } from "util";
 import { fromString } from "./clover";
 import { html } from "./html";
@@ -28,6 +28,7 @@ const comment = async (file: string, baseFile?: string) => {
 
   const oldStats =
     baseFile &&
+    existsSync(baseFile) &&
     fromString((await promisify(readFile)(baseFile)).toString(), onlyWithCover);
 
   const w = workspace.endsWith("/") ? workspace : workspace.concat("/");

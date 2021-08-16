@@ -8529,7 +8529,8 @@ var comment = function (file, baseFile) { return __awaiter(void 0, void 0, void 
             case 1:
                 cStats = _a.apply(void 0, [(_d.sent()).toString(),
                     onlyWithCover]);
-                _b = baseFile;
+                _b = baseFile &&
+                    require$$0.existsSync(baseFile);
                 if (!_b) return [3 /*break*/, 3];
                 _c = fromString;
                 return [4 /*yield*/, require$$6.promisify(require$$0.readFile)(baseFile)];
