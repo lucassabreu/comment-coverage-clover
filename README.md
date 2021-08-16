@@ -51,14 +51,14 @@ jobs:
     env:
       COMPOSER_NO_INTERACTION: 1
 
-  steps:
+    steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.4
+          php-version: 8.0
           coverage: none
           tools: composer:v2
 
@@ -68,18 +68,10 @@ jobs:
       - name: Execute Unit Tests
         run: phpdbg -qrr vendor/bin/phpunit --coverage-clover=coverage.xml
 
-
-      - name: Download Previous Coverage Report
-        uses: actions/download-artifact@v2
-        with:
-          name: coverage-report-main
-          path: coverage.base.xml
-
-      - name: Comment Coverage Report (coverage.xml)
-        uses: lucassabre/comment-coverage-clover@main
+      - name: Coverage Report as Comment (Clover)
+        uses: lucassabreu/comment-coverage-clover@v0.1.1
         with:
           file: coverage.xml
-          base-file: coverage.base.xml
 ```
 
 [danhunsaker/clover-reporter-action]: https://github.com/danhunsaker/clover-reporter-action
