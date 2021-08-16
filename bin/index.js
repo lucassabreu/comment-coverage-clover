@@ -8529,15 +8529,17 @@ var comment = function (file, baseFile) { return __awaiter(void 0, void 0, void 
             case 1:
                 cStats = _a.apply(void 0, [(_d.sent()).toString(),
                     onlyWithCover]);
-                _b = baseFile &&
-                    require$$0.existsSync(baseFile);
-                if (!_b) return [3 /*break*/, 3];
+                if (!(baseFile && require$$0.existsSync(baseFile))) return [3 /*break*/, 3];
                 _c = fromString;
                 return [4 /*yield*/, require$$6.promisify(require$$0.readFile)(baseFile)];
             case 2:
-                _b = _c.apply(void 0, [(_d.sent()).toString(), onlyWithCover]);
-                _d.label = 3;
+                _b = _c.apply(void 0, [(_d.sent()).toString(),
+                    onlyWithCover]);
+                return [3 /*break*/, 4];
             case 3:
+                _b = undefined;
+                _d.label = 4;
+            case 4:
                 oldStats = _b;
                 w = workspace.endsWith("/") ? workspace : workspace.concat("/");
                 cStats.folders.forEach(function (v, k) {

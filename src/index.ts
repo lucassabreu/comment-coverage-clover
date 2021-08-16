@@ -27,9 +27,12 @@ const comment = async (file: string, baseFile?: string) => {
   );
 
   const oldStats =
-    baseFile &&
-    existsSync(baseFile) &&
-    fromString((await promisify(readFile)(baseFile)).toString(), onlyWithCover);
+    baseFile && existsSync(baseFile)
+      ? fromString(
+          (await promisify(readFile)(baseFile)).toString(),
+          onlyWithCover
+        )
+      : undefined;
 
   const w = workspace.endsWith("/") ? workspace : workspace.concat("/");
   cStats.folders.forEach((v, k) =>
