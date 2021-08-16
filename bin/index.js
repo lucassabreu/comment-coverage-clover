@@ -8460,13 +8460,16 @@ var baseUrl = context.serverUrl + "/" + context.repo.owner + "/" + context.repo.
 if (core.getInput("dir-prefix-keep")) {
     baseUrl = (baseUrl + "/" + core.getInput("dir-prefix-keep")).replace(/\/$/, "");
 }
-var c2s = function (c, lang) {
-    return span(c.percentual === undefined
+var p2s = function (p, lang) {
+    return p === undefined
         ? "-"
-        : c.percentual.toLocaleString(lang, {
+        : p.toLocaleString(lang, {
             style: "percent",
             minimumFractionDigits: 2,
-        }), {
+        });
+};
+var c2s = function (c, lang) {
+    return span(p2s(c.percentual, lang), {
         title: c.covered.toLocaleString(lang, { useGrouping: true }) +
             " out of " +
             c.total.toLocaleString(lang, { useGrouping: true }),
@@ -8475,20 +8478,30 @@ var c2s = function (c, lang) {
 var line = function (name, m, lang) {
     return tr(td(name), td(c2s(m.lines, lang)), td(c2s(m.methods, lang)), td(c2s(m.branchs, lang)));
 };
-var total = function (name, c, lang) {
-    return c.total > 0 && fragment(b(name + ":"), " ", c2s(c, lang));
+var compare = function (n, o, lang) {
+    return span(n.percentual == o.percentual
+        ? ":stop_button:"
+        : n.percentual < o.percentual
+            ? ":arrow_down_small:"
+            : ":arrow_up_small:", {
+        title: "Was " + p2s(o.percentual || 0, lang) + " before",
+    });
+};
+var total = function (name, c, lang, oldC) {
+    return c.total > 0 &&
+        fragment(b(name + ":"), " ", c2s(c, lang), " ", !oldC ? "" : compare(c, oldC, lang));
 };
 var link = function (folder, file) {
     return a(baseUrl + "/" + folder + "/" + file, file);
 };
-var html = function (s, lang) {
+var html = function (c, lang, o) {
     return details(summary("Summary - ", [
-        total("Lines", s.total.lines, lang),
-        total("Methods", s.total.methods, lang),
-        total("Branchs", s.total.branchs, lang),
+        total("Lines", c.total.lines, lang, o === null || o === void 0 ? void 0 : o.total.lines),
+        total("Methods", c.total.methods, lang, o === null || o === void 0 ? void 0 : o.total.methods),
+        total("Branchs", c.total.branchs, lang, o === null || o === void 0 ? void 0 : o.total.branchs),
     ]
         .filter(function (v) { return v; })
-        .join(" | ")), "<br/>", table(thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branchs"))), tbody.apply(void 0, Array.from(s.folders.entries()).map(function (_a) {
+        .join(" | ")), "<br/>", table(thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branchs"))), tbody.apply(void 0, Array.from(c.folders.entries()).map(function (_a) {
         var folder = _a[1];
         return fragment.apply(void 0, __spreadArray([tr(td(b(folder.name), { colspan: 4 }))], folder.files.map(function (f) {
             return line("&nbsp; &nbsp;" + link(folder.name, f.name), f.metrics, lang);
@@ -8502,26 +8515,36 @@ var lang = core.getInput("lang") ||
 var workspace = core.getInput("dir-prefix") || process.env.GITHUB_WORKSPACE;
 var token = core.getInput("github-token") || process.env.GITHUB_TOKEN;
 var file = core.getInput("file") || process.env.FILE;
+var baseFile = core.getInput("base-file") || process.env.BASE_FILE;
 var onlyWithCover = core.getInput("only-with-cover") == "true";
 var signature = "<sub data-file=" + JSON.stringify(file) + ">\n  :robot: comment via <a href=\"https://github.com/lucassabreu/comment-coverage-clover\">lucassabreu/comment-coverage-clover</a>\n</sub>";
 var github = token && getOctokit_1(token);
-var comment = function (file) { return __awaiter(void 0, void 0, void 0, function () {
-    var s, _a, w;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+var comment = function (file, baseFile) { return __awaiter(void 0, void 0, void 0, function () {
+    var cStats, _a, oldStats, _b, _c, w;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
             case 0:
                 _a = fromString;
                 return [4 /*yield*/, require$$6.promisify(require$$0.readFile)(file)];
             case 1:
-                s = _a.apply(void 0, [(_b.sent()).toString(),
+                cStats = _a.apply(void 0, [(_d.sent()).toString(),
                     onlyWithCover]);
+                _b = baseFile;
+                if (!_b) return [3 /*break*/, 3];
+                _c = fromString;
+                return [4 /*yield*/, require$$6.promisify(require$$0.readFile)(baseFile)];
+            case 2:
+                _b = _c.apply(void 0, [(_d.sent()).toString(), onlyWithCover]);
+                _d.label = 3;
+            case 3:
+                oldStats = _b;
                 w = workspace.endsWith("/") ? workspace : workspace.concat("/");
-                s.folders.forEach(function (v, k) {
-                    return s.folders.set(k, Object.assign(v, {
+                cStats.folders.forEach(function (v, k) {
+                    return cStats.folders.set(k, Object.assign(v, {
                         name: v.name.startsWith(w) ? v.name.slice(w.length) : v.name,
                     }));
                 });
-                return [2 /*return*/, html(s, lang)];
+                return [2 /*return*/, html(cStats, lang, oldStats)];
         }
     });
 }); };
@@ -8537,7 +8560,7 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                     return [2 /*return*/];
                 commit = (_c = context.payload.pull_request) === null || _c === void 0 ? void 0 : _c.head.sha.substring(0, 7);
                 _a = "\n  Coverage report for commit: " + commit + "\n  File: `" + file + "`\n\n  ";
-                return [4 /*yield*/, comment(file)];
+                return [4 /*yield*/, comment(file, baseFile)];
             case 1:
                 body = _a + (_f.sent()) + "\n  " + signature;
                 commentId = null;

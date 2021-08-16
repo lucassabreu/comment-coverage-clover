@@ -19,6 +19,9 @@ inputs:
   file:
     description: The location of the clover file
     required: true
+  base-file:
+    description: The location of the clover file with a previous state of the coverage to compare
+    required: false
   only-with-cover:
     description: Should only list files with at least one line covered
     default: false
