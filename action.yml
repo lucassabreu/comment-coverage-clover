@@ -1,4 +1,6 @@
 name: Coverage Report as Comment (Clover)
+description: Creates only (and only one ) comment on a pull request with a formatted cover report (clover.xml)
+author: Lucas dos Santos Abreu
 branding:
   icon: check-square
   color: green
