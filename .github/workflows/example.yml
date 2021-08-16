@@ -15,7 +15,7 @@ jobs:
         with:
           dir-prefix: /var/www/html
           file: clover.example.xml
-          only-with-cover: true
+          base-file: clover.missing.xml
 
       - name: clover file to comment (clover.example.base.xml)
         uses: ./.
