@@ -13,21 +13,26 @@ const lang =
 const workspace = getInput("dir-prefix") || process.env.GITHUB_WORKSPACE;
 const token = getInput("github-token") || process.env.GITHUB_TOKEN;
 const file = getInput("file") || process.env.FILE;
+const baseFile = getInput("base-file") || process.env.BASE_FILE;
 const onlyWithCover = getInput("only-with-cover") == "true";
 const signature = `<sub data-file=${JSON.stringify(file)}>
   :robot: comment via <a href="https://github.com/lucassabreu/comment-coverage-clover">lucassabreu/comment-coverage-clover</a>
 </sub>`;
 const github = token && getOctokit(token);
 
-const comment = async (file: string) => {
-  let s = fromString(
+const comment = async (file: string, baseFile?: string) => {
+  let cStats = fromString(
     (await promisify(readFile)(file)).toString(),
     onlyWithCover
   );
 
+  const oldStats =
+    baseFile &&
+    fromString((await promisify(readFile)(baseFile)).toString(), onlyWithCover);
+
   const w = workspace.endsWith("/") ? workspace : workspace.concat("/");
-  s.folders.forEach((v, k) =>
-    s.folders.set(
+  cStats.folders.forEach((v, k) =>
+    cStats.folders.set(
       k,
       Object.assign(v, {
         name: v.name.startsWith(w) ? v.name.slice(w.length) : v.name,
@@ -35,7 +40,7 @@ const comment = async (file: string) => {
     )
   );
 
-  return html(s, lang);
+  return html(cStats, lang, oldStats);
 };
 
 const run = async () => {
@@ -48,7 +53,7 @@ const run = async () => {
   Coverage report for commit: ${commit}
   File: \`${file}\`
 
-  ${await comment(file)}
+  ${await comment(file, baseFile)}
   ${signature}`;
 
   let commentId = null;

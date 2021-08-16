@@ -22,21 +22,21 @@ if (getInput("dir-prefix-keep")) {
   baseUrl = `${baseUrl}/${getInput("dir-prefix-keep")}`.replace(/\/$/, "");
 }
 
+const p2s = (p: number | undefined, lang: string): string =>
+  p === undefined
+    ? "-"
+    : p.toLocaleString(lang, {
+        style: "percent",
+        minimumFractionDigits: 2,
+      });
+
 const c2s = (c: Coverage, lang: string): string =>
-  span(
-    c.percentual === undefined
-      ? "-"
-      : c.percentual.toLocaleString(lang, {
-          style: "percent",
-          minimumFractionDigits: 2,
-        }),
-    {
-      title:
-        c.covered.toLocaleString(lang, { useGrouping: true }) +
-        " out of " +
-        c.total.toLocaleString(lang, { useGrouping: true }),
-    }
-  );
+  span(p2s(c.percentual, lang), {
+    title:
+      c.covered.toLocaleString(lang, { useGrouping: true }) +
+      " out of " +
+      c.total.toLocaleString(lang, { useGrouping: true }),
+  });
 
 const line = (name: string, m: Metrics, lang: string) =>
   tr(
@@ -46,20 +46,39 @@ const line = (name: string, m: Metrics, lang: string) =>
     td(c2s(m.branchs, lang))
   );
 
-const total = (name: string, c: Coverage, lang: string) =>
-  c.total > 0 && fragment(b(name + ":"), " ", c2s(c, lang));
+const compare = (n: Coverage, o: Coverage, lang: string): string =>
+  span(
+    n.percentual == o.percentual
+      ? ":stop_button:"
+      : n.percentual < o.percentual
+      ? ":arrow_down_small:"
+      : ":arrow_up_small:",
+    {
+      title: `Was ${p2s(o.percentual || 0, lang)} before`,
+    }
+  );
+
+const total = (name: string, c: Coverage, lang: string, oldC?: Coverage) =>
+  c.total > 0 &&
+  fragment(
+    b(name + ":"),
+    " ",
+    c2s(c, lang),
+    " ",
+    !oldC ? "" : compare(c, oldC, lang)
+  );
 
 const link = (folder: string, file: string) =>
   a(`${baseUrl}/${folder}/${file}`, file);
 
-export const html = (s: Stats, lang: string): string =>
+export const html = (c: Stats, lang: string, o?: Stats): string =>
   details(
     summary(
       "Summary - ",
       [
-        total("Lines", s.total.lines, lang),
-        total("Methods", s.total.methods, lang),
-        total("Branchs", s.total.branchs, lang),
+        total("Lines", c.total.lines, lang, o?.total.lines),
+        total("Methods", c.total.methods, lang, o?.total.methods),
+        total("Branchs", c.total.branchs, lang, o?.total.branchs),
       ]
         .filter((v) => v)
         .join(" | ")
@@ -68,7 +87,7 @@ export const html = (s: Stats, lang: string): string =>
     table(
       thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branchs"))),
       tbody(
-        ...Array.from(s.folders.entries()).map(([, folder]) =>
+        ...Array.from(c.folders.entries()).map(([, folder]) =>
           fragment(
             tr(td(b(folder.name), { colspan: 4 })),
             ...folder.files.map((f: File) =>
