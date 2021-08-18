@@ -1,4 +1,4 @@
-import { getInput } from "@actions/core";
+import { error, getInput } from "@actions/core";
 import { getOctokit } from "@actions/github";
 import { context } from "@actions/github/lib/utils";
 import { readFile, existsSync } from "fs";
@@ -15,9 +15,10 @@ const token = getInput("github-token") || process.env.GITHUB_TOKEN;
 const file = getInput("file") || process.env.FILE;
 const baseFile = getInput("base-file") || process.env.BASE_FILE;
 const onlyWithCover = getInput("only-with-cover") == "true";
-const signature = `<sub data-file=${JSON.stringify(file)}>
-  :robot: comment via <a href="https://github.com/lucassabreu/comment-coverage-clover">lucassabreu/comment-coverage-clover</a>
-</sub>`;
+const signature = `<sub data-file=${JSON.stringify(file)}>${
+  getInput("signature") ||
+  ':robot: comment via <a href="https://github.com/lucassabreu/comment-coverage-clover">lucassabreu/comment-coverage-clover</a>'
+}</sub>`;
 const github = token && getOctokit(token);
 
 const comment = async (file: string, baseFile?: string) => {
@@ -26,13 +27,14 @@ const comment = async (file: string, baseFile?: string) => {
     onlyWithCover
   );
 
+  if (baseFile && !existsSync(baseFile)) {
+    error(`file ${baseFile} was not found`);
+    baseFile = undefined;
+  }
+
   const oldStats =
-    baseFile && existsSync(baseFile)
-      ? fromString(
-          (await promisify(readFile)(baseFile)).toString(),
-          onlyWithCover
-        )
-      : undefined;
+    baseFile &&
+    fromString((await promisify(readFile)(baseFile)).toString(), onlyWithCover);
 
   const w = workspace.endsWith("/") ? workspace : workspace.concat("/");
   cStats.folders.forEach((v, k) =>

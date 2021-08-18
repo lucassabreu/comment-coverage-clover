@@ -38,6 +38,8 @@ Configuration
 Example usage
 -------------
 
+#### Simple comment
+
 ```yaml
 name: Unit Tests with coverage
 
@@ -69,9 +71,67 @@ jobs:
         run: phpdbg -qrr vendor/bin/phpunit --coverage-clover=coverage.xml
 
       - name: Coverage Report as Comment (Clover)
-        uses: lucassabreu/comment-coverage-clover@v0.1.1
+        uses: lucassabreu/comment-coverage-clover@v0.1.4
         with:
           file: coverage.xml
+```
+
+#### Using artifacts to compare coverage changes
+
+```yaml
+name: Unit Tests with coverage
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  php-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      COMPOSER_NO_INTERACTION: 1
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.0
+          coverage: none
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Execute Unit Tests
+        run: phpdbg -qrr vendor/bin/phpunit --coverage-clover=tests/coverage.xml
+
+      - if: ${{ github.event_name == 'pull_request' }}
+        name: Download artifact
+        uses: dawidd6/action-download-artifact@v2.14.1
+        continue-on-error: true
+        with:
+          workflow: .github/workflows/coverage-report.yml # this file
+          branch: main
+          name: coverage-report
+          path: tests/base
+
+      - if: ${{ github.event_name != 'pull_request' }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: tests/coverage.xml
+
+      - name: Coverage Report as Comment (Clover)
+        uses: lucassabreu/comment-coverage-clover@v0.1.4
+        with:
+          file: coverage.xml
+          base-file: tests/base/coverage.xml
 ```
 
 [danhunsaker/clover-reporter-action]: https://github.com/danhunsaker/clover-reporter-action
