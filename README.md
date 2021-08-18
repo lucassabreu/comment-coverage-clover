@@ -134,4 +134,7 @@ jobs:
           base-file: tests/base/coverage.xml
 ```
 
+[CHANGELOG](CHANGELOG.md)
+---------
+
 [danhunsaker/clover-reporter-action]: https://github.com/danhunsaker/clover-reporter-action
