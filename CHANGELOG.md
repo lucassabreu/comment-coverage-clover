@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.5] - 2021-08-17
 ### Added
 - support for a custom signature on the pull request comment.
 - example on readme on how to use artifacts to compare coverage between base
@@ -15,6 +16,7 @@ branch and current commit.
 ### Changed
 - when `base-file` is not found an non-blocking error will be created on the
 workflow for user diagnosis, instead of just skipping it.
+- release workflow now uses notes from `CHANLOG.md` on release summary.
 
 ## [0.1.4] - 2021-08-16
 ### Changed

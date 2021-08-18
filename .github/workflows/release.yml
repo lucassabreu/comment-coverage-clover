@@ -12,6 +12,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@master
+      - name: Extract Release Notes
+        run: |
+          sed "/^## \[${GITHUB_REF#refs/tags/v}/, /^## \[/!d" CHANGELOG.md | tail -n +2 | head -n -2 > release-notes.md
       - name: Create Release
         id: create_release
         uses: actions/create-release@latest
@@ -20,5 +23,6 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
+          body_path: release-notes.md
           draft: false
           prerelease: false
