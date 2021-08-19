@@ -30,6 +30,12 @@ inputs:
   lang:
     description: In which language to format the numbers (https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Intl#argumento_locales)
     default: en-US
+  chart-size:
+    description: How many characters to use on chart's bar
+    default: 23
+  with-chart:
+    description: Add a chart with the distribution of coverage on files
+    default: true
   signature:
     description: Custom signature to be used at the bottom of the comment
     required: false

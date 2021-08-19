@@ -3,6 +3,7 @@ import { getOctokit } from "@actions/github";
 import { context } from "@actions/github/lib/utils";
 import { readFile, existsSync } from "fs";
 import { promisify } from "util";
+import { chart } from "./chart";
 import { fromString } from "./clover";
 import { html } from "./html";
 import { Stats } from "./types";
@@ -12,6 +13,7 @@ const token = getInput("github-token") || process.env.GITHUB_TOKEN;
 const file = getInput("file") || process.env.FILE;
 const baseFile = getInput("base-file") || process.env.BASE_FILE;
 const onlyWithCover = getInput("only-with-cover") == "true";
+const withChart = getInput("with-chart") == "true";
 const signature = `<sub data-file=${JSON.stringify(file)}>${
   getInput("signature") ||
   ':robot: comment via <a href="https://github.com/lucassabreu/comment-coverage-clover">lucassabreu/comment-coverage-clover</a>'
@@ -39,7 +41,10 @@ const comment = async (file: string, baseFile?: string) => {
     )
   );
 
-  return html(rmWithoutCover(cStats, onlyWithCover), oldStats);
+  return (
+    (withChart ? chart(cStats) : "") +
+    html(rmWithoutCover(cStats, onlyWithCover), oldStats)
+  );
 };
 
 const rmWithoutCover = (s: Stats, onlyWithCover: boolean): Stats => {

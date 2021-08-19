@@ -16,6 +16,16 @@ jobs:
           dir-prefix: /var/www/html
           file: clover.example.xml
           base-file: clover.missing.xml
+          with-chart: false
+
+      - name: clover file to comment (clover.pdepend.xml)
+        uses: ./.
+        with:
+          dir-prefix: /var/www/html
+          file: clover.pdepend.xml
+          base-file: clover.pdepend.base.xml
+          chart-size: 75
+          only-with-cover: true
 
       - name: clover file to comment (clover.example.base.xml)
         uses: ./.
