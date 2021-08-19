@@ -6,10 +6,6 @@ import { promisify } from "util";
 import { fromString } from "./clover";
 import { html } from "./html";
 
-const lang =
-  getInput("lang") ||
-  (process.env.LANG && process.env.LANG.split(".").shift().replace("_", "-")) ||
-  "en-US";
 const workspace = getInput("dir-prefix") || process.env.GITHUB_WORKSPACE;
 const token = getInput("github-token") || process.env.GITHUB_TOKEN;
 const file = getInput("file") || process.env.FILE;
@@ -46,7 +42,7 @@ const comment = async (file: string, baseFile?: string) => {
     )
   );
 
-  return html(cStats, lang, oldStats);
+  return html(cStats, oldStats);
 };
 
 const run = async () => {

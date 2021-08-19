@@ -8456,6 +8456,7 @@ var a = function (href, content) {
     return tag("a")([content], { href: href });
 };
 
+var lang = core.getInput("lang") || "en-US";
 var baseUrl = context.serverUrl + "/" + context.repo.owner + "/" + context.repo.repo + "/blob/" + context.sha;
 if (core.getInput("dir-prefix-keep")) {
     baseUrl = (baseUrl + "/" + core.getInput("dir-prefix-keep")).replace(/\/$/, "");
@@ -8487,18 +8488,18 @@ var compare = function (n, o, lang) {
         title: "Was " + p2s(o.percentual || 0, lang) + " before",
     });
 };
-var total = function (name, c, lang, oldC) {
+var total = function (name, c, oldC) {
     return c.total > 0 &&
         fragment(b(name + ":"), " ", c2s(c, lang), " ", !oldC ? "" : compare(c, oldC, lang));
 };
 var link = function (folder, file) {
     return a(baseUrl + "/" + folder + "/" + file, file);
 };
-var html = function (c, lang, o) {
+var html = function (c, o) {
     return details(summary("Summary - ", [
-        total("Lines", c.total.lines, lang, o === null || o === void 0 ? void 0 : o.total.lines),
-        total("Methods", c.total.methods, lang, o === null || o === void 0 ? void 0 : o.total.methods),
-        total("Branchs", c.total.branchs, lang, o === null || o === void 0 ? void 0 : o.total.branchs),
+        total("Lines", c.total.lines, o === null || o === void 0 ? void 0 : o.total.lines),
+        total("Methods", c.total.methods, o === null || o === void 0 ? void 0 : o.total.methods),
+        total("Branchs", c.total.branchs, o === null || o === void 0 ? void 0 : o.total.branchs),
     ]
         .filter(function (v) { return v; })
         .join(" | ")), "<br/>", table(thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branchs"))), tbody.apply(void 0, Array.from(c.folders.entries()).map(function (_a) {
@@ -8509,9 +8510,6 @@ var html = function (c, lang, o) {
     }))));
 };
 
-var lang = core.getInput("lang") ||
-    (process.env.LANG && process.env.LANG.split(".").shift().replace("_", "-")) ||
-    "en-US";
 var workspace = core.getInput("dir-prefix") || process.env.GITHUB_WORKSPACE;
 var token = core.getInput("github-token") || process.env.GITHUB_TOKEN;
 var file = core.getInput("file") || process.env.FILE;
@@ -8549,7 +8547,7 @@ var comment = function (file, baseFile) { return __awaiter(void 0, void 0, void 
                         name: v.name.startsWith(w) ? v.name.slice(w.length) : v.name,
                     }));
                 });
-                return [2 /*return*/, html(cStats, lang, oldStats)];
+                return [2 /*return*/, html(cStats, oldStats)];
         }
     });
 }); };
