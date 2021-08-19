@@ -42,7 +42,7 @@ const comment = async (file: string, baseFile?: string) => {
   );
 
   return (
-    (withChart ? chart(cStats) : "") +
+    (withChart ? chart(cStats, oldStats) : "") +
     html(rmWithoutCover(cStats, onlyWithCover), oldStats)
   );
 };

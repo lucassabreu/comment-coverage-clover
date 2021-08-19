@@ -6042,7 +6042,7 @@ function getOctokit(token, options) {
 }
 getOctokit_1 = github$1.getOctokit = getOctokit;
 
-var percs = {
+var percs = function () { return ({
     0: 0,
     10: 0,
     20: 0,
@@ -6054,7 +6054,7 @@ var percs = {
     80: 0,
     90: 0,
     100: 0,
-};
+}); };
 var reduce = function (s) {
     return Array.from(s.folders.values())
         .reduce(function (files, f) { return __spreadArray(__spreadArray([], files), f.files); }, [])
@@ -6062,29 +6062,40 @@ var reduce = function (s) {
         .reduce(function (m, perc) {
         var _a;
         return Object.assign(m, (_a = {}, _a[perc] = m[perc] + 1, _a));
-    }, percs);
+    }, percs());
 };
 var size = Number(core.getInput("chart-size") || 23);
 var emptyChar = "░";
 var fullChar = "█";
-var bar = function (c, max) {
-    return fullChar.repeat(Math.ceil((c / max) * size)).padEnd(size, emptyChar);
+var oldChar = "▒";
+var bar = function (c, o, max) {
+    return fullChar
+        .repeat(Math.ceil((c / max) * size))
+        .padEnd((o / max) * size, oldChar)
+        .padEnd(size, emptyChar);
 };
 var p2s$1 = function (p) {
     return p
         .toLocaleString("en", { style: "percent", minimumFractionDigits: 1 })
         .padStart(5);
 };
-var tostr = function (e) {
-    var max = Math.max.apply(Math, Object.values(e));
+var tostr = function (e, o) {
+    var max = Math.max.apply(Math, __spreadArray(__spreadArray([], Object.values(e)), Object.values(o || {})));
     var sum = Object.values(e).reduce(function (a, v) { return a + v; }, 0);
+    console.log({ e: e, o: o });
     return ("Cover \u250C\u2500" + "─".repeat(size) + "\u2500\u2510 Freq.\n" +
         Object.keys(e)
-            .map(function (k) { return k.padStart(4) + "% \u2502 " + bar(e[k], max) + " \u2502 " + p2s$1(e[k] / sum); })
+            .map(function (k) {
+            return k.padStart(4) + "% \u2502 " + bar(e[k], (o && o[k]) || 0, max) + " \u2502 " + p2s$1(e[k] / sum);
+        })
             .join("\n") +
-        ("\n      \u2514\u2500" + "─".repeat(size) + "\u2500\u2518"));
+        ("\n      \u2514\u2500" + "─".repeat(size) + "\u2500\u2518") +
+        ("\n *Lengend:* " + fullChar + " = Current Distribution ") +
+        ((o && "/ " + oldChar + " = Previous Distribution") || ""));
 };
-var chart = function (s) { return "\n```\n" + tostr(reduce(s)) + "\n```\n"; };
+var chart = function (c, o) {
+    return "\n```\n" + tostr(reduce(c), o && reduce(o)) + "\n```\n";
+};
 
 var sax$1 = {};
 
@@ -8589,7 +8600,7 @@ var comment = function (file, baseFile) { return __awaiter(void 0, void 0, void 
                         name: v.name.startsWith(w) ? v.name.slice(w.length) : v.name,
                     }));
                 });
-                return [2 /*return*/, ((withChart ? chart(cStats) : "") +
+                return [2 /*return*/, ((withChart ? chart(cStats, oldStats) : "") +
                         html(rmWithoutCover(cStats, onlyWithCover), oldStats))];
         }
     });
