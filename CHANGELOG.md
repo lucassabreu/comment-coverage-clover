@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.0] - 2021-08-19
 
+### Changed
+- examples on readme changed to use `@main` instead of `@v0.1.4`
+
 ### Added
 - a ascii chart will be generated with the distribution of coverage to help
 visualize the state of the project.

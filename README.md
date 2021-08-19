@@ -73,7 +73,7 @@ jobs:
         run: phpdbg -qrr vendor/bin/phpunit --coverage-clover=coverage.xml
 
       - name: Coverage Report as Comment (Clover)
-        uses: lucassabreu/comment-coverage-clover@v0.1.4
+        uses: lucassabreu/comment-coverage-clover@main
         with:
           file: coverage.xml
 ```
@@ -130,7 +130,7 @@ jobs:
           path: tests/coverage.xml
 
       - name: Coverage Report as Comment (Clover)
-        uses: lucassabreu/comment-coverage-clover@v0.1.4
+        uses: lucassabreu/comment-coverage-clover@main
         with:
           file: coverage.xml
           base-file: tests/base/coverage.xml
