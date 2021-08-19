@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2021-08-19
+
+### Added
+- a ascii chart will be generated with the distribution of coverage to help
+visualize the state of the project.
+
 ## [0.1.5] - 2021-08-17
 ### Added
 - support for a custom signature on the pull request comment.
