@@ -41,8 +41,6 @@ const tostr = (e: Record<string, number>, o?: Record<string, number>) => {
   const max = Math.max(...Object.values(e), ...Object.values(o || {}));
   const sum = Object.values(e).reduce((a, v) => a + v, 0);
 
-  console.log({ e, o });
-
   return (
     `Cover ┌─${"─".repeat(size)}─┐ Freq.\n` +
     Object.keys(e)

@@ -17,6 +17,7 @@ jobs:
           file: clover.example.xml
           base-file: clover.missing.xml
           with-chart: false
+          signature: "valid file with inexistent base-file"
 
       - name: clover file to comment (clover.pdepend.xml)
         uses: ./.
@@ -25,6 +26,7 @@ jobs:
           file: clover.pdepend.xml
           base-file: clover.pdepend.base.xml
           only-with-cover: true
+          signature: "valid file with valid base-file"
 
       - name: clover file to comment (clover.example.base.xml)
         uses: ./.
@@ -34,3 +36,29 @@ jobs:
           base-file: clover.example.xml
           chart-size: 75
           only-with-cover: true
+          signature: "valid file with valid base-file, with custom chart-size"
+
+      - name: clover file to comment - max descrease
+        uses: ./.
+        continue-on-error: true
+        with:
+          dir-prefix: /var/www/html
+          file: clover.example.xml
+          base-file: clover.example.base.xml
+          max-line-coverage-decrease: 2.0
+          max-method-coverage-decrease: 1.0
+          min-line-coverage: 99.3
+          min-method-coverage: 81.02
+          signature: "valid file with valid base-file, with blocking"
+
+      - name: clover file to comment - no descrease
+        uses: ./.
+        with:
+          dir-prefix: /var/www/html
+          file: clover.example.xml
+          base-file: clover.example.base.xml
+          max-line-coverage-decrease: 3.0
+          max-method-coverage-decrease: 2.0
+          min-line-coverage: 80.0
+          min-method-coverage: 80.00
+          signature: "valid file with valid base-file, without blocking"

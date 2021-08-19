@@ -1,11 +1,11 @@
 export class Coverage {
   total: number;
   covered: number;
-  percentual: number;
+  percentual: number | undefined;
   constructor(total: number, covered: number) {
     this.total = Number(total);
     this.covered = Number(covered);
-    if (this.total > 0) this.percentual = this.covered / this.total;
+    this.percentual = this.total == 0 ? undefined : this.covered / this.total;
   }
 }
 
