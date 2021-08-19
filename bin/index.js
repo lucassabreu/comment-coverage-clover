@@ -8380,11 +8380,9 @@ var Coverage = /** @class */ (function () {
     return Coverage;
 }());
 
-var fromString = function (str, onlyWithCover) {
+var fromString = function (str) {
     var _a = JSON.parse(lib.xml2json(str, { compact: true })).coverage.project, m = _a.metrics._attributes, files = _a.file, packages = _a.package;
     var allFiles = (packages || []).reduce(function (files, p) { return __spreadArray(__spreadArray([], files), p.file); }, files || []);
-    if (onlyWithCover)
-        allFiles = allFiles.filter(function (f) { return f.metrics._attributes.coveredstatements > 0; });
     return {
         total: {
             lines: new Coverage(m.statements, m.coveredstatements),
@@ -8526,8 +8524,7 @@ var comment = function (file, baseFile) { return __awaiter(void 0, void 0, void 
                 _a = fromString;
                 return [4 /*yield*/, require$$6.promisify(require$$0.readFile)(file)];
             case 1:
-                cStats = _a.apply(void 0, [(_d.sent()).toString(),
-                    onlyWithCover]);
+                cStats = _a.apply(void 0, [(_d.sent()).toString()]);
                 if (baseFile && !require$$0.existsSync(baseFile)) {
                     core.error("file " + baseFile + " was not found");
                     baseFile = undefined;
@@ -8537,7 +8534,7 @@ var comment = function (file, baseFile) { return __awaiter(void 0, void 0, void 
                 _c = fromString;
                 return [4 /*yield*/, require$$6.promisify(require$$0.readFile)(baseFile)];
             case 2:
-                _b = _c.apply(void 0, [(_d.sent()).toString(), onlyWithCover]);
+                _b = _c.apply(void 0, [(_d.sent()).toString()]);
                 _d.label = 3;
             case 3:
                 oldStats = _b;
@@ -8547,10 +8544,20 @@ var comment = function (file, baseFile) { return __awaiter(void 0, void 0, void 
                         name: v.name.startsWith(w) ? v.name.slice(w.length) : v.name,
                     }));
                 });
-                return [2 /*return*/, html(cStats, oldStats)];
+                return [2 /*return*/, html(rmWithoutCover(cStats, onlyWithCover), oldStats)];
         }
     });
 }); };
+var rmWithoutCover = function (s, onlyWithCover) {
+    if (!onlyWithCover)
+        return s;
+    s.folders.forEach(function (folder, key) {
+        folder.files = folder.files.filter(function (f) { return f.metrics.lines.covered !== 0; });
+        if (folder.files.length === 0)
+            s.folders["delete"](key);
+    });
+    return s;
+};
 var run = function () { return __awaiter(void 0, void 0, void 0, function () {
     var commit, body, _a, commentId, comments, i, c, e_1;
     var _c, _d, _e;

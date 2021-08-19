@@ -5,6 +5,7 @@ import { readFile, existsSync } from "fs";
 import { promisify } from "util";
 import { fromString } from "./clover";
 import { html } from "./html";
+import { Stats } from "./types";
 
 const workspace = getInput("dir-prefix") || process.env.GITHUB_WORKSPACE;
 const token = getInput("github-token") || process.env.GITHUB_TOKEN;
@@ -18,10 +19,7 @@ const signature = `<sub data-file=${JSON.stringify(file)}>${
 const github = token && getOctokit(token);
 
 const comment = async (file: string, baseFile?: string) => {
-  let cStats = fromString(
-    (await promisify(readFile)(file)).toString(),
-    onlyWithCover
-  );
+  let cStats = fromString((await promisify(readFile)(file)).toString());
 
   if (baseFile && !existsSync(baseFile)) {
     error(`file ${baseFile} was not found`);
@@ -29,8 +27,7 @@ const comment = async (file: string, baseFile?: string) => {
   }
 
   const oldStats =
-    baseFile &&
-    fromString((await promisify(readFile)(baseFile)).toString(), onlyWithCover);
+    baseFile && fromString((await promisify(readFile)(baseFile)).toString());
 
   const w = workspace.endsWith("/") ? workspace : workspace.concat("/");
   cStats.folders.forEach((v, k) =>
@@ -42,7 +39,18 @@ const comment = async (file: string, baseFile?: string) => {
     )
   );
 
-  return html(cStats, oldStats);
+  return html(rmWithoutCover(cStats, onlyWithCover), oldStats);
+};
+
+const rmWithoutCover = (s: Stats, onlyWithCover: boolean): Stats => {
+  if (!onlyWithCover) return s;
+
+  s.folders.forEach((folder, key) => {
+    folder.files = folder.files.filter((f) => f.metrics.lines.covered !== 0);
+    if (folder.files.length === 0) s.folders.delete(key);
+  });
+
+  return s;
 };
 
 const run = async () => {
