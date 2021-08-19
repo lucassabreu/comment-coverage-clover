@@ -6042,6 +6042,61 @@ function getOctokit(token, options) {
 }
 getOctokit_1 = github$1.getOctokit = getOctokit;
 
+var percs = function () { return ({
+    0: 0,
+    10: 0,
+    20: 0,
+    30: 0,
+    40: 0,
+    50: 0,
+    60: 0,
+    70: 0,
+    80: 0,
+    90: 0,
+    100: 0,
+}); };
+var reduce = function (s) {
+    return Array.from(s.folders.values())
+        .reduce(function (files, f) { return __spreadArray(__spreadArray([], files), f.files); }, [])
+        .map(function (f) { return Math.round((f.metrics.lines.percentual || 0) * 10) * 10; })
+        .reduce(function (m, perc) {
+        var _a;
+        return Object.assign(m, (_a = {}, _a[perc] = m[perc] + 1, _a));
+    }, percs());
+};
+var size = Number(core.getInput("chart-size") || 23);
+var emptyChar = "░";
+var fullChar = "█";
+var oldChar = "▒";
+var bar = function (c, o, max) {
+    return fullChar
+        .repeat(Math.ceil((c / max) * size))
+        .padEnd((o / max) * size, oldChar)
+        .padEnd(size, emptyChar);
+};
+var p2s$1 = function (p) {
+    return p
+        .toLocaleString("en", { style: "percent", minimumFractionDigits: 1 })
+        .padStart(5);
+};
+var tostr = function (e, o) {
+    var max = Math.max.apply(Math, __spreadArray(__spreadArray([], Object.values(e)), Object.values(o || {})));
+    var sum = Object.values(e).reduce(function (a, v) { return a + v; }, 0);
+    console.log({ e: e, o: o });
+    return ("Cover \u250C\u2500" + "─".repeat(size) + "\u2500\u2510 Freq.\n" +
+        Object.keys(e)
+            .map(function (k) {
+            return k.padStart(4) + "% \u2502 " + bar(e[k], (o && o[k]) || 0, max) + " \u2502 " + p2s$1(e[k] / sum);
+        })
+            .join("\n") +
+        ("\n      \u2514\u2500" + "─".repeat(size) + "\u2500\u2518") +
+        ("\n *Lengend:* " + fullChar + " = Current Distribution ") +
+        ((o && "/ " + oldChar + " = Previous Distribution") || ""));
+};
+var chart = function (c, o) {
+    return "\n```\n" + tostr(reduce(c), o && reduce(o)) + "\n```\n";
+};
+
 var sax$1 = {};
 
 (function (exports) {
@@ -8380,11 +8435,9 @@ var Coverage = /** @class */ (function () {
     return Coverage;
 }());
 
-var fromString = function (str, onlyWithCover) {
+var fromString = function (str) {
     var _a = JSON.parse(lib.xml2json(str, { compact: true })).coverage.project, m = _a.metrics._attributes, files = _a.file, packages = _a.package;
     var allFiles = (packages || []).reduce(function (files, p) { return __spreadArray(__spreadArray([], files), p.file); }, files || []);
-    if (onlyWithCover)
-        allFiles = allFiles.filter(function (f) { return f.metrics._attributes.coveredstatements > 0; });
     return {
         total: {
             lines: new Coverage(m.statements, m.coveredstatements),
@@ -8456,6 +8509,7 @@ var a = function (href, content) {
     return tag("a")([content], { href: href });
 };
 
+var lang = core.getInput("lang") || "en-US";
 var baseUrl = context.serverUrl + "/" + context.repo.owner + "/" + context.repo.repo + "/blob/" + context.sha;
 if (core.getInput("dir-prefix-keep")) {
     baseUrl = (baseUrl + "/" + core.getInput("dir-prefix-keep")).replace(/\/$/, "");
@@ -8487,18 +8541,18 @@ var compare = function (n, o, lang) {
         title: "Was " + p2s(o.percentual || 0, lang) + " before",
     });
 };
-var total = function (name, c, lang, oldC) {
+var total = function (name, c, oldC) {
     return c.total > 0 &&
         fragment(b(name + ":"), " ", c2s(c, lang), " ", !oldC ? "" : compare(c, oldC, lang));
 };
 var link = function (folder, file) {
     return a(baseUrl + "/" + folder + "/" + file, file);
 };
-var html = function (c, lang, o) {
+var html = function (c, o) {
     return details(summary("Summary - ", [
-        total("Lines", c.total.lines, lang, o === null || o === void 0 ? void 0 : o.total.lines),
-        total("Methods", c.total.methods, lang, o === null || o === void 0 ? void 0 : o.total.methods),
-        total("Branchs", c.total.branchs, lang, o === null || o === void 0 ? void 0 : o.total.branchs),
+        total("Lines", c.total.lines, o === null || o === void 0 ? void 0 : o.total.lines),
+        total("Methods", c.total.methods, o === null || o === void 0 ? void 0 : o.total.methods),
+        total("Branchs", c.total.branchs, o === null || o === void 0 ? void 0 : o.total.branchs),
     ]
         .filter(function (v) { return v; })
         .join(" | ")), "<br/>", table(thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branchs"))), tbody.apply(void 0, Array.from(c.folders.entries()).map(function (_a) {
@@ -8509,14 +8563,12 @@ var html = function (c, lang, o) {
     }))));
 };
 
-var lang = core.getInput("lang") ||
-    (process.env.LANG && process.env.LANG.split(".").shift().replace("_", "-")) ||
-    "en-US";
 var workspace = core.getInput("dir-prefix") || process.env.GITHUB_WORKSPACE;
 var token = core.getInput("github-token") || process.env.GITHUB_TOKEN;
 var file = core.getInput("file") || process.env.FILE;
 var baseFile = core.getInput("base-file") || process.env.BASE_FILE;
 var onlyWithCover = core.getInput("only-with-cover") == "true";
+var withChart = core.getInput("with-chart") == "true";
 var signature = "<sub data-file=" + JSON.stringify(file) + ">" + (core.getInput("signature") ||
     ':robot: comment via <a href="https://github.com/lucassabreu/comment-coverage-clover">lucassabreu/comment-coverage-clover</a>') + "</sub>";
 var github = token && getOctokit_1(token);
@@ -8528,8 +8580,7 @@ var comment = function (file, baseFile) { return __awaiter(void 0, void 0, void 
                 _a = fromString;
                 return [4 /*yield*/, require$$6.promisify(require$$0.readFile)(file)];
             case 1:
-                cStats = _a.apply(void 0, [(_d.sent()).toString(),
-                    onlyWithCover]);
+                cStats = _a.apply(void 0, [(_d.sent()).toString()]);
                 if (baseFile && !require$$0.existsSync(baseFile)) {
                     core.error("file " + baseFile + " was not found");
                     baseFile = undefined;
@@ -8539,7 +8590,7 @@ var comment = function (file, baseFile) { return __awaiter(void 0, void 0, void 
                 _c = fromString;
                 return [4 /*yield*/, require$$6.promisify(require$$0.readFile)(baseFile)];
             case 2:
-                _b = _c.apply(void 0, [(_d.sent()).toString(), onlyWithCover]);
+                _b = _c.apply(void 0, [(_d.sent()).toString()]);
                 _d.label = 3;
             case 3:
                 oldStats = _b;
@@ -8549,10 +8600,21 @@ var comment = function (file, baseFile) { return __awaiter(void 0, void 0, void 
                         name: v.name.startsWith(w) ? v.name.slice(w.length) : v.name,
                     }));
                 });
-                return [2 /*return*/, html(cStats, lang, oldStats)];
+                return [2 /*return*/, ((withChart ? chart(cStats, oldStats) : "") +
+                        html(rmWithoutCover(cStats, onlyWithCover), oldStats))];
         }
     });
 }); };
+var rmWithoutCover = function (s, onlyWithCover) {
+    if (!onlyWithCover)
+        return s;
+    s.folders.forEach(function (folder, key) {
+        folder.files = folder.files.filter(function (f) { return f.metrics.lines.covered !== 0; });
+        if (folder.files.length === 0)
+            s.folders["delete"](key);
+    });
+    return s;
+};
 var run = function () { return __awaiter(void 0, void 0, void 0, function () {
     var commit, body, _a, commentId, comments, i, c, e_1;
     var _c, _d, _e;

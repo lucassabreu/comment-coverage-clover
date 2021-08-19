@@ -16,6 +16,7 @@ import {
   tr,
 } from "./helper";
 
+const lang = getInput("lang") || "en-US";
 let baseUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/blob/${context.sha}`;
 
 if (getInput("dir-prefix-keep")) {
@@ -58,7 +59,7 @@ const compare = (n: Coverage, o: Coverage, lang: string): string =>
     }
   );
 
-const total = (name: string, c: Coverage, lang: string, oldC?: Coverage) =>
+const total = (name: string, c: Coverage, oldC?: Coverage) =>
   c.total > 0 &&
   fragment(
     b(name + ":"),
@@ -71,14 +72,14 @@ const total = (name: string, c: Coverage, lang: string, oldC?: Coverage) =>
 const link = (folder: string, file: string) =>
   a(`${baseUrl}/${folder}/${file}`, file);
 
-export const html = (c: Stats, lang: string, o?: Stats): string =>
+export const html = (c: Stats, o?: Stats): string =>
   details(
     summary(
       "Summary - ",
       [
-        total("Lines", c.total.lines, lang, o?.total.lines),
-        total("Methods", c.total.methods, lang, o?.total.methods),
-        total("Branchs", c.total.branchs, lang, o?.total.branchs),
+        total("Lines", c.total.lines, o?.total.lines),
+        total("Methods", c.total.methods, o?.total.methods),
+        total("Branchs", c.total.branchs, o?.total.branchs),
       ]
         .filter((v) => v)
         .join(" | ")

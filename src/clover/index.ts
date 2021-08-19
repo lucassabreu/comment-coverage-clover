@@ -38,7 +38,7 @@ interface CloverXML {
   };
 }
 
-export const fromString = (str: string, onlyWithCover: boolean): Stats => {
+export const fromString = (str: string): Stats => {
   const {
     coverage: {
       project: {
@@ -53,11 +53,6 @@ export const fromString = (str: string, onlyWithCover: boolean): Stats => {
     (files, p) => [...files, ...p.file],
     files || []
   );
-
-  if (onlyWithCover)
-    allFiles = allFiles.filter(
-      (f) => f.metrics._attributes.coveredstatements > 0
-    );
 
   return {
     total: {
