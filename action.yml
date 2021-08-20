@@ -36,6 +36,16 @@ inputs:
   with-chart:
     description: Add a chart with the distribution of coverage on files
     default: true
+  max-line-coverage-decrease:
+    description: how much the line coverage percentage can decrease without failing
+  max-method-coverage-decrease:
+    description: how much the method coverage percentage can decrease without failing
+  min-line-coverage:
+    description: Minimum percentage acceptable for line coverage
+    default: 0
+  min-method-coverage:
+    description: Minimum percentage acceptable for method coverage
+    default: 0
   signature:
     description: Custom signature to be used at the bottom of the comment
     required: false

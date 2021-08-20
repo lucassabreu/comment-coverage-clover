@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- options `max-line-coverage-decrease` to fail the action when the diff
+between current and previous coverage percentage of lines or methods is
+above a threshold
+- options `min-line-coverage` and `min-method-coverage` to fail the action
+when coverage percentage of lines or methods goes below a threshold
+
 ## [0.2.0] - 2021-08-19
 
 ### Changed

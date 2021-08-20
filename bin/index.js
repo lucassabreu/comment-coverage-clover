@@ -6082,7 +6082,6 @@ var p2s$1 = function (p) {
 var tostr = function (e, o) {
     var max = Math.max.apply(Math, __spreadArray(__spreadArray([], Object.values(e)), Object.values(o || {})));
     var sum = Object.values(e).reduce(function (a, v) { return a + v; }, 0);
-    console.log({ e: e, o: o });
     return ("Cover \u250C\u2500" + "─".repeat(size) + "\u2500\u2510 Freq.\n" +
         Object.keys(e)
             .map(function (k) {
@@ -8429,8 +8428,7 @@ var Coverage = /** @class */ (function () {
     function Coverage(total, covered) {
         this.total = Number(total);
         this.covered = Number(covered);
-        if (this.total > 0)
-            this.percentual = this.covered / this.total;
+        this.percentual = this.total == 0 ? undefined : this.covered / this.total;
     }
     return Coverage;
 }());
@@ -8572,37 +8570,21 @@ var withChart = core.getInput("with-chart") == "true";
 var signature = "<sub data-file=" + JSON.stringify(file) + ">" + (core.getInput("signature") ||
     ':robot: comment via <a href="https://github.com/lucassabreu/comment-coverage-clover">lucassabreu/comment-coverage-clover</a>') + "</sub>";
 var github = token && getOctokit_1(token);
-var comment = function (file, baseFile) { return __awaiter(void 0, void 0, void 0, function () {
-    var cStats, _a, oldStats, _b, _c, w;
-    return __generator(this, function (_d) {
-        switch (_d.label) {
-            case 0:
-                _a = fromString;
-                return [4 /*yield*/, require$$6.promisify(require$$0.readFile)(file)];
-            case 1:
-                cStats = _a.apply(void 0, [(_d.sent()).toString()]);
-                if (baseFile && !require$$0.existsSync(baseFile)) {
-                    core.error("file " + baseFile + " was not found");
-                    baseFile = undefined;
-                }
-                _b = baseFile;
-                if (!_b) return [3 /*break*/, 3];
-                _c = fromString;
-                return [4 /*yield*/, require$$6.promisify(require$$0.readFile)(baseFile)];
-            case 2:
-                _b = _c.apply(void 0, [(_d.sent()).toString()]);
-                _d.label = 3;
-            case 3:
-                oldStats = _b;
-                w = workspace.endsWith("/") ? workspace : workspace.concat("/");
-                cStats.folders.forEach(function (v, k) {
-                    return cStats.folders.set(k, Object.assign(v, {
-                        name: v.name.startsWith(w) ? v.name.slice(w.length) : v.name,
-                    }));
-                });
-                return [2 /*return*/, ((withChart ? chart(cStats, oldStats) : "") +
-                        html(rmWithoutCover(cStats, onlyWithCover), oldStats))];
-        }
+var maxLineCoverageDecrease = core.getInput("max-line-coverage-decrease");
+var maxMethodCoverageDecrease = core.getInput("max-method-coverage-decrease");
+var minLineCoverage = Number(core.getInput("min-line-coverage"));
+var minMethodCoverage = Number(core.getInput("min-method-coverage"));
+var comment = function (cStats, oldStats) { return __awaiter(void 0, void 0, void 0, function () {
+    var w;
+    return __generator(this, function (_a) {
+        w = workspace.endsWith("/") ? workspace : workspace.concat("/");
+        cStats.folders.forEach(function (v, k) {
+            return cStats.folders.set(k, Object.assign(v, {
+                name: v.name.startsWith(w) ? v.name.slice(w.length) : v.name,
+            }));
+        });
+        return [2 /*return*/, ((withChart ? chart(cStats, oldStats) : "") +
+                html(rmWithoutCover(cStats, onlyWithCover), oldStats))];
     });
 }); };
 var rmWithoutCover = function (s, onlyWithCover) {
@@ -8615,56 +8597,113 @@ var rmWithoutCover = function (s, onlyWithCover) {
     });
     return s;
 };
+function checkThreshold(c, o) {
+    var f, lcdiff, mcdiff;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                f = function (n) { return n.toFixed(2) + "%"; };
+                if (!(minLineCoverage > c.total.lines.percentual * 100)) return [3 /*break*/, 2];
+                return [4 /*yield*/, "Minimum line coverage is " + f(minLineCoverage) + ", currently it is " + f(c.total.lines.percentual * 100)];
+            case 1:
+                _a.sent();
+                _a.label = 2;
+            case 2:
+                if (!(minMethodCoverage > c.total.methods.percentual * 100)) return [3 /*break*/, 4];
+                return [4 /*yield*/, "Minimum method coverage is " + f(minMethodCoverage) + ", currently it is " + f(c.total.methods.percentual * 100)];
+            case 3:
+                _a.sent();
+                _a.label = 4;
+            case 4:
+                if (o === undefined)
+                    return [2 /*return*/];
+                lcdiff = (o.total.lines.percentual - c.total.lines.percentual) * 100;
+                if (!(maxLineCoverageDecrease && lcdiff >= Number(maxLineCoverageDecrease))) return [3 /*break*/, 6];
+                return [4 /*yield*/, "Line coverage was down by " + f(lcdiff) + " (max is " + f(Number(maxLineCoverageDecrease)) + ")"];
+            case 5:
+                _a.sent();
+                _a.label = 6;
+            case 6:
+                mcdiff = (o.total.methods.percentual - c.total.methods.percentual) * 100;
+                if (!(maxMethodCoverageDecrease &&
+                    mcdiff >= Number(maxMethodCoverageDecrease))) return [3 /*break*/, 8];
+                return [4 /*yield*/, "Methods coverage was down by " + f(mcdiff) + " (max is " + f(Number(maxMethodCoverageDecrease)) + ")"];
+            case 7:
+                _a.sent();
+                _a.label = 8;
+            case 8: return [2 /*return*/];
+        }
+    });
+}
 var run = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var commit, body, _a, commentId, comments, i, c, e_1;
-    var _c, _d, _e;
-    return __generator(this, function (_f) {
-        switch (_f.label) {
+    var commit, cStats, _a, oldStats, _b, _c, msgs, body, _d, commentId, comments, i, c, e_1;
+    var _f, _g, _h;
+    return __generator(this, function (_j) {
+        switch (_j.label) {
             case 0:
                 if (!github)
                     return [2 /*return*/];
                 if (!context.payload.pull_request)
                     return [2 /*return*/];
-                commit = (_c = context.payload.pull_request) === null || _c === void 0 ? void 0 : _c.head.sha.substring(0, 7);
-                _a = "\n  Coverage report for commit: " + commit + "\n  File: `" + file + "`\n\n  ";
-                return [4 /*yield*/, comment(file, baseFile)];
+                commit = (_f = context.payload.pull_request) === null || _f === void 0 ? void 0 : _f.head.sha.substring(0, 7);
+                _a = fromString;
+                return [4 /*yield*/, require$$6.promisify(require$$0.readFile)(file)];
             case 1:
-                body = _a + (_f.sent()) + "\n  " + signature;
-                commentId = null;
-                _f.label = 2;
+                cStats = _a.apply(void 0, [(_j.sent()).toString()]);
+                if (baseFile && !require$$0.existsSync(baseFile)) {
+                    core.error("file " + baseFile + " was not found");
+                    baseFile = undefined;
+                }
+                _b = baseFile;
+                if (!_b) return [3 /*break*/, 3];
+                _c = fromString;
+                return [4 /*yield*/, require$$6.promisify(require$$0.readFile)(baseFile)];
             case 2:
-                _f.trys.push([2, 4, , 5]);
-                return [4 /*yield*/, github.rest.issues.listComments(__assign(__assign({}, context.repo), { issue_number: context.issue.number }))];
+                _b = _c.apply(void 0, [(_j.sent()).toString()]);
+                _j.label = 3;
             case 3:
-                comments = (_f.sent()).data;
+                oldStats = _b;
+                msgs = Array.from(checkThreshold(cStats, oldStats));
+                msgs.map(core.setFailed);
+                _d = "\nCoverage report for commit: " + commit + "\nFile: `" + file + "`\n\n" + msgs.map(function (m) { return "> :warning: " + m; }).join("\n") + "\n\n";
+                return [4 /*yield*/, comment(cStats, oldStats)];
+            case 4:
+                body = _d + (_j.sent()) + "\n\n" + signature;
+                commentId = null;
+                _j.label = 5;
+            case 5:
+                _j.trys.push([5, 7, , 8]);
+                return [4 /*yield*/, github.rest.issues.listComments(__assign(__assign({}, context.repo), { issue_number: context.issue.number }))];
+            case 6:
+                comments = (_j.sent()).data;
                 for (i = comments.length - 1; i >= 0; i--) {
                     c = comments[i];
-                    if (((_d = c.user) === null || _d === void 0 ? void 0 : _d.type) !== "Bot")
+                    if (((_g = c.user) === null || _g === void 0 ? void 0 : _g.type) !== "Bot")
                         continue;
-                    if (!((_e = c.body) === null || _e === void 0 ? void 0 : _e.includes(signature)))
+                    if (!((_h = c.body) === null || _h === void 0 ? void 0 : _h.includes(signature)))
                         continue;
                     commentId = c.id;
                 }
-                return [3 /*break*/, 5];
-            case 4:
-                e_1 = _f.sent();
-                console.error(e_1);
-                return [3 /*break*/, 5];
-            case 5:
-                if (!commentId) return [3 /*break*/, 9];
-                _f.label = 6;
-            case 6:
-                _f.trys.push([6, 8, , 9]);
-                return [4 /*yield*/, github.rest.issues.updateComment(__assign(__assign({}, context.repo), { comment_id: commentId, body: body }))];
+                return [3 /*break*/, 8];
             case 7:
-                _f.sent();
-                return [2 /*return*/];
+                e_1 = _j.sent();
+                console.error(e_1);
+                return [3 /*break*/, 8];
             case 8:
-                _f.sent();
-                return [3 /*break*/, 9];
-            case 9: return [4 /*yield*/, github.rest.issues.createComment(__assign(__assign({}, context.repo), { issue_number: context.issue.number, body: body }))];
+                if (!commentId) return [3 /*break*/, 12];
+                _j.label = 9;
+            case 9:
+                _j.trys.push([9, 11, , 12]);
+                return [4 /*yield*/, github.rest.issues.updateComment(__assign(__assign({}, context.repo), { comment_id: commentId, body: body }))];
             case 10:
-                _f.sent();
+                _j.sent();
+                return [2 /*return*/];
+            case 11:
+                _j.sent();
+                return [3 /*break*/, 12];
+            case 12: return [4 /*yield*/, github.rest.issues.createComment(__assign(__assign({}, context.repo), { issue_number: context.issue.number, body: body }))];
+            case 13:
+                _j.sent();
                 return [2 /*return*/];
         }
     });

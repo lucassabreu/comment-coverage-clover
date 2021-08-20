@@ -26,16 +26,20 @@ File: `clover.example.base.xml`
 Configuration
 -------------
 
-| Input             | Description                                                                                                                                                               |
-|-------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `file`            | The location of the clover file. <br/> **Required**                                                                                                                       |
-| `base-file`       | The location of the clover file with a previous state of the coverage to compare                                                                                          |
-| `dir-prefix`      | Section of the file on clover report to remove <br/> Default: `github.workspace` <br/> **Required**                                                                       |
-| `dir-prefix-keep` | Section of the `dir-prefix` to keep when creating link to file.<br/>Example: if your php application is at "$REPO/backend", then you should set this to "backend"         |
-| `only-with-cover` | Should only list files with at least one line covered.                                                                                                                    |
-| `lang`            | In which [language](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Intl#argumento_locales) to format the numbers <br/> Default: `en-US` |
-| `chart-size`      | How many characters to use on chart's bar<br/> Default: `23`                                                                                                              |
-| `with-chart`      | Add a chart with the distribution of coverage on files<br/> Default: `true`                                                                                               |
+| Input                          | Description                                                                                                                                                               |
+|--------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `file`                         | The location of the clover file. <br/> **Required**                                                                                                                       |
+| `base-file`                    | The location of the clover file with a previous state of the coverage to compare                                                                                          |
+| `dir-prefix`                   | Section of the file on clover report to remove <br/> Default: `github.workspace` <br/> **Required**                                                                       |
+| `dir-prefix-keep`              | Section of the `dir-prefix` to keep when creating link to file.<br/>Example: if your php application is at "$REPO/backend", then you should set this to "backend"         |
+| `only-with-cover`              | Should only list files with at least one line covered.                                                                                                                    |
+| `lang`                         | In which [language](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Intl#argumento_locales) to format the numbers <br/> Default: `en-US` |
+| `chart-size`                   | How many characters to use on chart's bar<br/> Default: `23`                                                                                                              |
+| `with-chart`                   | Add a chart with the distribution of coverage on files<br/> Default: `true`                                                                                               |
+| `max-line-coverage-decrease`   | How much the line coverage percentage can decrease without failing                                                                                                        |
+| `max-method-coverage-decrease` | How much the method coverage percentage can decrease without failing                                                                                                      |
+| `min-line-coverage`            | Minimum percentage acceptable for line coverage <br/> Default: `0`                                                                                                        |
+| `min-method-coverage`          | Minimum percentage acceptable for method coverage <br/>Default `0`                                                                                                        |
 
 Example usage
 -------------
