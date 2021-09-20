@@ -8682,7 +8682,7 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                     repo: context.repo.repo,
                     output: {
                         title: "Coverage Report",
-                        summary: comment,
+                        summary: body,
                     },
                     conclusion: msgs.length ? "failed" : "success",
                     status: "completed",

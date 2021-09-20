@@ -126,7 +126,7 @@ ${signature}`;
     repo: context.repo.repo,
     output: {
       title: "Coverage Report",
-      summary: comment,
+      summary: body,
     },
     conclusion: msgs.length ? "failed" : "success",
     status: "completed",
