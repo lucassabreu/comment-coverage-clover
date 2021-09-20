@@ -90,9 +90,10 @@ function* checkThreshold(c: Stats, o?: Stats) {
 
 const run = async () => {
   if (!github) return;
-  if (!context.payload.pull_request) return;
 
-  const commit = context.payload.pull_request?.head.sha.substring(0, 7);
+  const commit = context.payload.pull_request
+    ? context.payload.pull_request.head.sha
+    : context.sha;
 
   const cStats = fromString((await promisify(readFile)(file)).toString());
 
@@ -109,7 +110,7 @@ const run = async () => {
   msgs.map(setFailed);
 
   const body = `
-Coverage report for commit: ${commit}
+Coverage report for commit: ${commit.substring(0, 7)}
 File: \`${file}\`
 
 ${msgs.map((m) => `> :warning: ${m}`).join("\n")}
@@ -117,6 +118,21 @@ ${msgs.map((m) => `> :warning: ${m}`).join("\n")}
 ${await comment(cStats, oldStats)}
 
 ${signature}`;
+
+  github.rest.checks.create({
+    name: "PHPUnit Report",
+    head_sha: commit,
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    output: {
+      title: "Coverage Report",
+      summary: comment,
+    },
+    conclusion: msgs.length ? "failed" : "success",
+    status: "completed",
+  });
+
+  if (!context.payload.pull_request) return;
 
   let commentId = null;
   try {
