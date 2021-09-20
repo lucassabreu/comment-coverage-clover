@@ -8643,19 +8643,20 @@ function checkThreshold(c, o) {
 }
 var run = function () { return __awaiter(void 0, void 0, void 0, function () {
     var commit, cStats, _a, oldStats, _b, _c, msgs, body, _d, commentId, comments, i, c, e_1;
-    var _f, _g, _h;
-    return __generator(this, function (_j) {
-        switch (_j.label) {
+    var _f, _g;
+    return __generator(this, function (_h) {
+        switch (_h.label) {
             case 0:
                 if (!github)
                     return [2 /*return*/];
-                if (!context.payload.pull_request)
-                    return [2 /*return*/];
-                commit = (_f = context.payload.pull_request) === null || _f === void 0 ? void 0 : _f.head.sha.substring(0, 7);
+                commit = context.payload.pull_request
+                    ? context.payload.pull_request.head.sha
+                    : context.sha;
+                console.log(commit, context);
                 _a = fromString;
                 return [4 /*yield*/, require$$6.promisify(require$$0.readFile)(file)];
             case 1:
-                cStats = _a.apply(void 0, [(_j.sent()).toString()]);
+                cStats = _a.apply(void 0, [(_h.sent()).toString()]);
                 if (baseFile && !require$$0.existsSync(baseFile)) {
                     core.error("file " + baseFile + " was not found");
                     baseFile = undefined;
@@ -8665,51 +8666,65 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                 _c = fromString;
                 return [4 /*yield*/, require$$6.promisify(require$$0.readFile)(baseFile)];
             case 2:
-                _b = _c.apply(void 0, [(_j.sent()).toString()]);
-                _j.label = 3;
+                _b = _c.apply(void 0, [(_h.sent()).toString()]);
+                _h.label = 3;
             case 3:
                 oldStats = _b;
                 msgs = Array.from(checkThreshold(cStats, oldStats));
                 msgs.map(core.setFailed);
-                _d = "\nCoverage report for commit: " + commit + "\nFile: `" + file + "`\n\n" + msgs.map(function (m) { return "> :warning: " + m; }).join("\n") + "\n\n";
+                _d = "\nCoverage report for commit: " + commit.substring(0, 7) + "\nFile: `" + file + "`\n\n" + msgs.map(function (m) { return "> :warning: " + m; }).join("\n") + "\n\n";
                 return [4 /*yield*/, comment(cStats, oldStats)];
             case 4:
-                body = _d + (_j.sent()) + "\n\n" + signature;
+                body = _d + (_h.sent()) + "\n\n" + signature;
+                github.rest.checks.create({
+                    name: "PHPUnit Report",
+                    head_sha: commit,
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    output: {
+                        title: "Coverage Report",
+                        summary: comment,
+                    },
+                    conclusion: msgs.length ? "failed" : "success",
+                    status: "completed",
+                });
+                if (!context.payload.pull_request)
+                    return [2 /*return*/];
                 commentId = null;
-                _j.label = 5;
+                _h.label = 5;
             case 5:
-                _j.trys.push([5, 7, , 8]);
+                _h.trys.push([5, 7, , 8]);
                 return [4 /*yield*/, github.rest.issues.listComments(__assign(__assign({}, context.repo), { issue_number: context.issue.number }))];
             case 6:
-                comments = (_j.sent()).data;
+                comments = (_h.sent()).data;
                 for (i = comments.length - 1; i >= 0; i--) {
                     c = comments[i];
-                    if (((_g = c.user) === null || _g === void 0 ? void 0 : _g.type) !== "Bot")
+                    if (((_f = c.user) === null || _f === void 0 ? void 0 : _f.type) !== "Bot")
                         continue;
-                    if (!((_h = c.body) === null || _h === void 0 ? void 0 : _h.includes(signature)))
+                    if (!((_g = c.body) === null || _g === void 0 ? void 0 : _g.includes(signature)))
                         continue;
                     commentId = c.id;
                 }
                 return [3 /*break*/, 8];
             case 7:
-                e_1 = _j.sent();
+                e_1 = _h.sent();
                 console.error(e_1);
                 return [3 /*break*/, 8];
             case 8:
                 if (!commentId) return [3 /*break*/, 12];
-                _j.label = 9;
+                _h.label = 9;
             case 9:
-                _j.trys.push([9, 11, , 12]);
+                _h.trys.push([9, 11, , 12]);
                 return [4 /*yield*/, github.rest.issues.updateComment(__assign(__assign({}, context.repo), { comment_id: commentId, body: body }))];
             case 10:
-                _j.sent();
+                _h.sent();
                 return [2 /*return*/];
             case 11:
-                _j.sent();
+                _h.sent();
                 return [3 /*break*/, 12];
             case 12: return [4 /*yield*/, github.rest.issues.createComment(__assign(__assign({}, context.repo), { issue_number: context.issue.number, body: body }))];
             case 13:
-                _j.sent();
+                _h.sent();
                 return [2 /*return*/];
         }
     });
