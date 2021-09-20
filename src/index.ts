@@ -119,8 +119,10 @@ ${await comment(cStats, oldStats)}
 
 ${signature}`;
 
-  const check = {
-    name: "PHPUnit Report",
+  github.rest.checks.create({
+    name:
+      "PHPUnit Report" +
+      (getInput("signature") ? ` - ${getInput("signature")}` : ""),
     head_sha: commit,
     owner: context.repo.owner,
     repo: context.repo.repo,
@@ -130,11 +132,7 @@ ${signature}`;
     },
     conclusion: msgs.length ? "failed" : "success",
     status: "completed",
-  };
-
-  console.log(check);
-
-  github.rest.checks.create(check);
+  });
 
   if (!context.payload.pull_request) return;
 

@@ -8642,7 +8642,7 @@ function checkThreshold(c, o) {
     });
 }
 var run = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var commit, cStats, _a, oldStats, _b, _c, msgs, body, _d, check, commentId, comments, i, c, e_1;
+    var commit, cStats, _a, oldStats, _b, _c, msgs, body, _d, commentId, comments, i, c, e_1;
     var _f, _g;
     return __generator(this, function (_h) {
         switch (_h.label) {
@@ -8675,8 +8675,9 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                 return [4 /*yield*/, comment(cStats, oldStats)];
             case 4:
                 body = _d + (_h.sent()) + "\n\n" + signature;
-                check = {
-                    name: "PHPUnit Report",
+                github.rest.checks.create({
+                    name: "PHPUnit Report" +
+                        (core.getInput("signature") ? " - " + core.getInput("signature") : ""),
                     head_sha: commit,
                     owner: context.repo.owner,
                     repo: context.repo.repo,
@@ -8686,9 +8687,7 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                     },
                     conclusion: msgs.length ? "failed" : "success",
                     status: "completed",
-                };
-                console.log(check);
-                github.rest.checks.create(check);
+                });
                 if (!context.payload.pull_request)
                     return [2 /*return*/];
                 commentId = null;
