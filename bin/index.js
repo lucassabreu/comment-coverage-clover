@@ -8675,8 +8675,10 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                 return [4 /*yield*/, comment(cStats, oldStats)];
             case 4:
                 body = _d + (_h.sent()) + "\n\n" + signature;
+                console.log("Coverage Report" +
+                    (core.getInput("signature") ? " - " + core.getInput("signature") : ""));
                 github.rest.checks.create({
-                    name: "PHPUnit Report" +
+                    name: "Coverage Report" +
                         (core.getInput("signature") ? " - " + core.getInput("signature") : ""),
                     head_sha: commit,
                     owner: context.repo.owner,

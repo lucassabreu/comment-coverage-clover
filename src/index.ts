@@ -119,9 +119,14 @@ ${await comment(cStats, oldStats)}
 
 ${signature}`;
 
+  console.log(
+    "Coverage Report" +
+      (getInput("signature") ? ` - ${getInput("signature")}` : "")
+  );
+
   github.rest.checks.create({
     name:
-      "PHPUnit Report" +
+      "Coverage Report" +
       (getInput("signature") ? ` - ${getInput("signature")}` : ""),
     head_sha: commit,
     owner: context.repo.owner,
