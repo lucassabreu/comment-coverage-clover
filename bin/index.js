@@ -8642,7 +8642,7 @@ function checkThreshold(c, o) {
     });
 }
 var run = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var commit, cStats, _a, oldStats, _b, _c, msgs, body, _d, commentId, comments, i, c, e_1;
+    var commit, cStats, _a, oldStats, _b, _c, msgs, body, _d, check, commentId, comments, i, c, e_1;
     var _f, _g;
     return __generator(this, function (_h) {
         switch (_h.label) {
@@ -8652,7 +8652,6 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                 commit = context.payload.pull_request
                     ? context.payload.pull_request.head.sha
                     : context.sha;
-                console.log(commit, context);
                 _a = fromString;
                 return [4 /*yield*/, require$$6.promisify(require$$0.readFile)(file)];
             case 1:
@@ -8676,7 +8675,7 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                 return [4 /*yield*/, comment(cStats, oldStats)];
             case 4:
                 body = _d + (_h.sent()) + "\n\n" + signature;
-                github.rest.checks.create({
+                check = {
                     name: "PHPUnit Report",
                     head_sha: commit,
                     owner: context.repo.owner,
@@ -8687,7 +8686,9 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                     },
                     conclusion: msgs.length ? "failed" : "success",
                     status: "completed",
-                });
+                };
+                console.log(check);
+                github.rest.checks.create(check);
                 if (!context.payload.pull_request)
                     return [2 /*return*/];
                 commentId = null;

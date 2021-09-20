@@ -95,8 +95,6 @@ const run = async () => {
     ? context.payload.pull_request.head.sha
     : context.sha;
 
-  console.log(commit, context);
-
   const cStats = fromString((await promisify(readFile)(file)).toString());
 
   if (baseFile && !existsSync(baseFile)) {
@@ -121,7 +119,7 @@ ${await comment(cStats, oldStats)}
 
 ${signature}`;
 
-  github.rest.checks.create({
+  const check = {
     name: "PHPUnit Report",
     head_sha: commit,
     owner: context.repo.owner,
@@ -132,7 +130,11 @@ ${signature}`;
     },
     conclusion: msgs.length ? "failed" : "success",
     status: "completed",
-  });
+  };
+
+  console.log(check);
+
+  github.rest.checks.create(check);
 
   if (!context.payload.pull_request) return;
 
