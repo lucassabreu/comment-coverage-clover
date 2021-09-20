@@ -95,6 +95,8 @@ const run = async () => {
     ? context.payload.pull_request.head.sha
     : context.sha;
 
+  console.log(commit, context);
+
   const cStats = fromString((await promisify(readFile)(file)).toString());
 
   if (baseFile && !existsSync(baseFile)) {
