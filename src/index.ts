@@ -14,6 +14,7 @@ const file = getInput("file") || process.env.FILE;
 let baseFile = getInput("base-file") || process.env.BASE_FILE;
 const onlyWithCover = getInput("only-with-cover") == "true";
 const withChart = getInput("with-chart") == "true";
+const withTable = getInput("with-table") == "true";
 const signature = `<sub data-file=${JSON.stringify(file)}>${
   getInput("signature") ||
   ':robot: comment via <a href="https://github.com/lucassabreu/comment-coverage-clover">lucassabreu/comment-coverage-clover</a>'
@@ -37,7 +38,7 @@ const comment = async (cStats: Stats, oldStats?: Stats) => {
 
   return (
     (withChart ? chart(cStats, oldStats) : "") +
-    html(rmWithoutCover(cStats, onlyWithCover), oldStats)
+    (withTable ? html(rmWithoutCover(cStats, onlyWithCover), oldStats) : "")
   );
 };
 

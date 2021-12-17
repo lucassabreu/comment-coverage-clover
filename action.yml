@@ -36,6 +36,9 @@ inputs:
   with-chart:
     description: Add a chart with the distribution of coverage on files
     default: true
+  with-table:
+    description: Add a table with a list of files and its coverage
+    default: true
   max-line-coverage-decrease:
     description: how much the line coverage percentage can decrease without failing
   max-method-coverage-decrease:

@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2021-12-17
+
+### Added
+
+- option `with-table` to show the table summary (on by default)
+
 ## [0.3.0] - 2021-08-19
 
 ### Added

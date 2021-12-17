@@ -40,6 +40,7 @@ Configuration
 | `max-method-coverage-decrease` | How much the method coverage percentage can decrease without failing                                                                                                      |
 | `min-line-coverage`            | Minimum percentage acceptable for line coverage <br/> Default: `0`                                                                                                        |
 | `min-method-coverage`          | Minimum percentage acceptable for method coverage <br/>Default `0`                                                                                                        |
+| `with-table`                   | Add a table with a list of files and its coverage <br/> Default: `true`                                                                                                   |
 
 Example usage
 -------------

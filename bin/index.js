@@ -8567,6 +8567,7 @@ var file = core.getInput("file") || process.env.FILE;
 var baseFile = core.getInput("base-file") || process.env.BASE_FILE;
 var onlyWithCover = core.getInput("only-with-cover") == "true";
 var withChart = core.getInput("with-chart") == "true";
+var withTable = core.getInput("with-table") == "true";
 var signature = "<sub data-file=" + JSON.stringify(file) + ">" + (core.getInput("signature") ||
     ':robot: comment via <a href="https://github.com/lucassabreu/comment-coverage-clover">lucassabreu/comment-coverage-clover</a>') + "</sub>";
 var github = token && getOctokit_1(token);
@@ -8584,7 +8585,7 @@ var comment = function (cStats, oldStats) { return __awaiter(void 0, void 0, voi
             }));
         });
         return [2 /*return*/, ((withChart ? chart(cStats, oldStats) : "") +
-                html(rmWithoutCover(cStats, onlyWithCover), oldStats))];
+                (withTable ? html(rmWithoutCover(cStats, onlyWithCover), oldStats) : ""))];
     });
 }); };
 var rmWithoutCover = function (s, onlyWithCover) {
