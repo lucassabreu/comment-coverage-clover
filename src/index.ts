@@ -38,7 +38,7 @@ const comment = async (cStats: Stats, oldStats?: Stats) => {
 
   return (
     (withChart ? chart(cStats, oldStats) : "") +
-    (withTable ? html(rmWithoutCover(cStats, onlyWithCover), oldStats) : "")
+    html(withTable, rmWithoutCover(cStats, onlyWithCover), oldStats)
   );
 };
 

@@ -1,6 +1,8 @@
 import { getInput } from "@actions/core";
 import { context } from "@actions/github/lib/utils";
+
 import { Coverage, File, Metrics, Stats } from "../types";
+
 import {
   a,
   b,
@@ -72,10 +74,9 @@ const total = (name: string, c: Coverage, oldC?: Coverage) =>
 const link = (folder: string, file: string) =>
   a(`${baseUrl}/${folder}/${file}`, file);
 
-export const html = (c: Stats, o?: Stats): string =>
-  details(
-    summary(
-      "Summary - ",
+export const html = (withTable: boolean, c: Stats, o?: Stats): string =>
+  (withTable ? tableWrap(c) : span)(
+    "Summary - ".concat(
       [
         total("Lines", c.total.lines, o?.total.lines),
         total("Methods", c.total.methods, o?.total.methods),
@@ -83,19 +84,30 @@ export const html = (c: Stats, o?: Stats): string =>
       ]
         .filter((v) => v)
         .join(" | ")
-    ),
-    "<br/>",
-    table(
-      thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branchs"))),
-      tbody(
-        ...Array.from(c.folders.entries()).map(([, folder]) =>
-          fragment(
-            tr(td(b(folder.name), { colspan: 4 })),
-            ...folder.files.map((f: File) =>
-              line(`&nbsp; &nbsp;${link(folder.name, f.name)}`, f.metrics, lang)
+    )
+  );
+
+const tableWrap =
+  (c: Stats) =>
+  (summaryText: string): string =>
+    details(
+      summary(summaryText),
+      "<br/>",
+      table(
+        thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branchs"))),
+        tbody(
+          ...Array.from(c.folders.entries()).map(([, folder]) =>
+            fragment(
+              tr(td(b(folder.name), { colspan: 4 })),
+              ...folder.files.map((f: File) =>
+                line(
+                  `&nbsp; &nbsp;${link(folder.name, f.name)}`,
+                  f.metrics,
+                  lang
+                )
+              )
             )
           )
         )
       )
-    )
-  );
+    );

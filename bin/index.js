@@ -8546,19 +8546,24 @@ var total = function (name, c, oldC) {
 var link = function (folder, file) {
     return a(baseUrl + "/" + folder + "/" + file, file);
 };
-var html = function (c, o) {
-    return details(summary("Summary - ", [
+var html = function (withTable, c, o) {
+    return (withTable ? tableWrap(c) : span)("Summary - ".concat([
         total("Lines", c.total.lines, o === null || o === void 0 ? void 0 : o.total.lines),
         total("Methods", c.total.methods, o === null || o === void 0 ? void 0 : o.total.methods),
         total("Branchs", c.total.branchs, o === null || o === void 0 ? void 0 : o.total.branchs),
     ]
         .filter(function (v) { return v; })
-        .join(" | ")), "<br/>", table(thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branchs"))), tbody.apply(void 0, Array.from(c.folders.entries()).map(function (_a) {
-        var folder = _a[1];
-        return fragment.apply(void 0, __spreadArray([tr(td(b(folder.name), { colspan: 4 }))], folder.files.map(function (f) {
-            return line("&nbsp; &nbsp;" + link(folder.name, f.name), f.metrics, lang);
-        })));
-    }))));
+        .join(" | ")));
+};
+var tableWrap = function (c) {
+    return function (summaryText) {
+        return details(summary(summaryText), "<br/>", table(thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branchs"))), tbody.apply(void 0, Array.from(c.folders.entries()).map(function (_a) {
+            var folder = _a[1];
+            return fragment.apply(void 0, __spreadArray([tr(td(b(folder.name), { colspan: 4 }))], folder.files.map(function (f) {
+                return line("&nbsp; &nbsp;" + link(folder.name, f.name), f.metrics, lang);
+            })));
+        }))));
+    };
 };
 
 var workspace = core.getInput("dir-prefix") || process.env.GITHUB_WORKSPACE;
@@ -8585,7 +8590,7 @@ var comment = function (cStats, oldStats) { return __awaiter(void 0, void 0, voi
             }));
         });
         return [2 /*return*/, ((withChart ? chart(cStats, oldStats) : "") +
-                (withTable ? html(rmWithoutCover(cStats, onlyWithCover), oldStats) : ""))];
+                html(withTable, rmWithoutCover(cStats, onlyWithCover), oldStats))];
     });
 }); };
 var rmWithoutCover = function (s, onlyWithCover) {
