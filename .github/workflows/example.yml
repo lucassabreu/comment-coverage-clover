@@ -62,3 +62,32 @@ jobs:
           min-line-coverage: 80.0
           min-method-coverage: 80.00
           signature: "valid file with valid base-file, without blocking"
+
+      - name: clover file to comment - without table
+        uses: ./.
+        continue-on-error: true
+        with:
+          dir-prefix: /var/www/html
+          file: clover.example.xml
+          base-file: clover.example.base.xml
+          max-line-coverage-decrease: 2.0
+          max-method-coverage-decrease: 1.0
+          min-line-coverage: 99.3
+          min-method-coverage: 81.02
+          with-table: false
+          signature: "valid file with valid base-file, without table"
+
+      - name: clover file to comment - without table or chart
+        uses: ./.
+        continue-on-error: true
+        with:
+          dir-prefix: /var/www/html
+          file: clover.example.xml
+          base-file: clover.example.base.xml
+          max-line-coverage-decrease: 2.0
+          max-method-coverage-decrease: 1.0
+          min-line-coverage: 99.3
+          min-method-coverage: 81.02
+          with-table: false
+          with-chart: false
+          signature: "valid file with valid base-file, without table or chart"

@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- option `with-table` was "hidding" the summary totals.
+
 ## [0.4.0] - 2021-12-17
 
 ### Added
