@@ -6089,7 +6089,7 @@ var tostr = function (e, o) {
         })
             .join("\n") +
         ("\n      \u2514\u2500" + "─".repeat(size) + "\u2500\u2518") +
-        ("\n *Lengend:* " + fullChar + " = Current Distribution ") +
+        ("\n *Legend:* " + fullChar + " = Current Distribution ") +
         ((o && "/ " + oldChar + " = Previous Distribution") || ""));
 };
 var chart = function (c, o) {
