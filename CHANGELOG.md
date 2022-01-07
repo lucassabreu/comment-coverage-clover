@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.2] - 2022-01-07
+
+### Fixed
+
+- fixing typo "Lengend" to "Legend" (thanks [@DennisLammers](https://github.com/DennisLammers))
+
+## [0.4.1] - 2021-12-17
+
 ### Fixed
 
 - option `with-table` was "hidding" the summary totals.
@@ -88,7 +96,9 @@ as bundling tool.
 - implemented base action reading clover.xml files and converting then.
 - release.yml workflow to auto-release tags
 
-[Unreleased]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.4.0...v0.4.1
+[0.4.0]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.1.5...v0.2.0
 [0.1.5]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.1.4...v0.1.5
