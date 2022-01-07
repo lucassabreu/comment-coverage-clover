@@ -52,7 +52,7 @@ const tostr = (e: Record<string, number>, o?: Record<string, number>) => {
       )
       .join("\n") +
     `\n      └─${"─".repeat(size)}─┘` +
-    `\n *Lengend:* ${fullChar} = Current Distribution ` +
+    `\n *Legend:* ${fullChar} = Current Distribution ` +
     ((o && `/ ${oldChar} = Previous Distribution`) || "")
   );
 };
