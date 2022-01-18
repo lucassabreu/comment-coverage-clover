@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2022-01-18
+
+### Added
+
+- options `table-type-coverage`, `table-bellow-coverage` and
+  `table-above-coverage` to allow users to hide files where the coverage is out
+  of a range, that way large projects were most files are above 80% coverage
+  can hide the ones bellow that.
+
 ## [0.4.2] - 2022-01-07
 
 ### Fixed
@@ -96,7 +105,8 @@ as bundling tool.
 - implemented base action reading clover.xml files and converting then.
 - release.yml workflow to auto-release tags
 
-[Unreleased]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.4.2...HEAD
+[Unreleased]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.4.2...v0.5.0
 [0.4.2]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.3.0...v0.4.0
