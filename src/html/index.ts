@@ -26,7 +26,7 @@ if (getInput("dir-prefix-keep")) {
 }
 
 const p2s = (p: number | undefined, lang: string): string =>
-  p === undefined
+  p === undefined || p == 0
     ? "-"
     : p.toLocaleString(lang, {
         style: "percent",
@@ -74,8 +74,15 @@ const total = (name: string, c: Coverage, oldC?: Coverage) =>
 const link = (folder: string, file: string) =>
   a(`${baseUrl}/${folder}/${file}`, file);
 
-export const html = (withTable: boolean, c: Stats, o?: Stats): string =>
-  (withTable ? tableWrap(c) : span)(
+export const html = (
+  withTable: boolean,
+  c: Stats,
+  o: null | Stats,
+  type: string,
+  min: number,
+  max: number
+): string =>
+  (withTable ? tableWrap(filterConverage(c, type, min, max)) : span)(
     "Summary - ".concat(
       [
         total("Lines", c.total.lines, o?.total.lines),
@@ -111,3 +118,27 @@ const tableWrap =
         )
       )
     );
+
+const between = (v: number, min: number, max: number) =>
+  min <= (v || 0) && (v || 0) <= max;
+
+const filterConverage = (
+  c: Stats,
+  type: string,
+  min: number,
+  max: number
+): Stats => {
+  c.folders.forEach((f, k) => {
+    const files = f.files.filter((f) =>
+      between(f.metrics[type].percentual * 100, min, max)
+    );
+
+    if (files.length === 0) {
+      return c.folders.delete(k);
+    }
+
+    c.folders.set(k, Object.assign(f, { files }));
+  });
+
+  return c;
+};

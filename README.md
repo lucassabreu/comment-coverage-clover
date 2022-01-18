@@ -41,6 +41,9 @@ Configuration
 | `min-line-coverage`            | Minimum percentage acceptable for line coverage <br/> Default: `0`                                                                                                        |
 | `min-method-coverage`          | Minimum percentage acceptable for method coverage <br/>Default `0`                                                                                                        |
 | `with-table`                   | Add a table with a list of files and its coverage <br/> Default: `true`                                                                                                   |
+| `table-type-coverage`          | Which of the coverage percentages to filter <br/> Default: `"lines"`                                                                                                      |
+| `table-bellow-coverage`        | Show only files bellow or equal to this coverage percentage <br/> Default: `100`                                                                                          |
+| `table-above-coverage`         | Show only files above or equal to this coverage percentage <br/> Default: `0`                                                                                             |
 
 Example usage
 -------------

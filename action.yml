@@ -39,6 +39,15 @@ inputs:
   with-table:
     description: Add a table with a list of files and its coverage
     default: true
+  table-type-coverage:
+    description: Which of the coverage percentages to filter
+    default: "lines"
+  table-bellow-coverage:
+    description: Show only files bellow or equal to this coverage percentage
+    default: 100
+  table-above-coverage:
+    description: Show only files above or equal to this coverage percentage
+    default: 0
   max-line-coverage-decrease:
     description: how much the line coverage percentage can decrease without failing
   max-method-coverage-decrease:
