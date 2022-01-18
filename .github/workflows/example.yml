@@ -91,3 +91,57 @@ jobs:
           with-table: false
           with-chart: false
           signature: "valid file with valid base-file, without table or chart"
+
+      - name: clover file to comment - only bellow 70% methods coverage
+        uses: ./.
+        with:
+          dir-prefix: /var/www/html
+          file: clover.example.xml
+          base-file: clover.missing.xml
+          with-chart: false
+          table-bellow-coverage: 70
+          table-type-coverage: methods
+          signature: "clover file to comment - only bellow 70% methods coverage"
+
+      - name: clover file to comment - only bellow 80% lines coveraged
+        uses: ./.
+        with:
+          dir-prefix: /var/www/html
+          file: clover.example.xml
+          base-file: clover.missing.xml
+          with-chart: false
+          table-bellow-coverage: 80
+          signature: "clover file to comment - only bellow 80% lines coveraged"
+
+      - name: clover file to comment - only above 0% methods coverage
+        uses: ./.
+        with:
+          dir-prefix: /var/www/html
+          file: clover.example.xml
+          base-file: clover.missing.xml
+          with-chart: false
+          table-above-coverage: 10
+          table-type-coverage: methods
+          signature: "clover file to comment - only above 10% methods coverage"
+
+      - name: clover file to comment - invalid coverage type
+        uses: ./.
+        continue-on-error: true
+        with:
+          dir-prefix: /var/www/html
+          file: clover.example.xml
+          base-file: clover.missing.xml
+          with-chart: false
+          table-type-coverage: banana
+          signature: "clover file to comment - invalid coverage type"
+
+      - name: clover file to comment - obly between 50% and 80% line coverage
+        uses: ./.
+        with:
+          dir-prefix: /var/www/html
+          file: clover.example.xml
+          base-file: clover.missing.xml
+          with-chart: false
+          table-above-coverage: 50
+          table-bellow-coverage: 80
+          signature: "clover file to comment - obly between 50% and 80% line coverage"

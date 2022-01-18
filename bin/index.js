@@ -8513,7 +8513,7 @@ if (core.getInput("dir-prefix-keep")) {
     baseUrl = (baseUrl + "/" + core.getInput("dir-prefix-keep")).replace(/\/$/, "");
 }
 var p2s = function (p, lang) {
-    return p === undefined
+    return p === undefined || p == 0
         ? "-"
         : p.toLocaleString(lang, {
             style: "percent",
@@ -8546,8 +8546,8 @@ var total = function (name, c, oldC) {
 var link = function (folder, file) {
     return a(baseUrl + "/" + folder + "/" + file, file);
 };
-var html = function (withTable, c, o) {
-    return (withTable ? tableWrap(c) : span)("Summary - ".concat([
+var html = function (withTable, c, o, type, min, max) {
+    return (withTable ? tableWrap(filterConverage(c, type, min, max)) : span)("Summary - ".concat([
         total("Lines", c.total.lines, o === null || o === void 0 ? void 0 : o.total.lines),
         total("Methods", c.total.methods, o === null || o === void 0 ? void 0 : o.total.methods),
         total("Branchs", c.total.branchs, o === null || o === void 0 ? void 0 : o.total.branchs),
@@ -8565,6 +8565,21 @@ var tableWrap = function (c) {
         }))));
     };
 };
+var between = function (v, min, max) {
+    return min <= (v || 0) && (v || 0) <= max;
+};
+var filterConverage = function (c, type, min, max) {
+    c.folders.forEach(function (f, k) {
+        var files = f.files.filter(function (f) {
+            return between(f.metrics[type].percentual * 100, min, max);
+        });
+        if (files.length === 0) {
+            return c.folders["delete"](k);
+        }
+        c.folders.set(k, Object.assign(f, { files: files }));
+    });
+    return c;
+};
 
 var workspace = core.getInput("dir-prefix") || process.env.GITHUB_WORKSPACE;
 var token = core.getInput("github-token") || process.env.GITHUB_TOKEN;
@@ -8573,6 +8588,9 @@ var baseFile = core.getInput("base-file") || process.env.BASE_FILE;
 var onlyWithCover = core.getInput("only-with-cover") == "true";
 var withChart = core.getInput("with-chart") == "true";
 var withTable = core.getInput("with-table") == "true";
+var tableWithOnlyBellow = Number(core.getInput("table-bellow-coverage") || 100);
+var tableWithOnlyAbove = Number(core.getInput("table-above-coverage") || 0);
+var tableWithTypeLimit = core.getInput("table-type-coverage") || "lines";
 var signature = "<sub data-file=" + JSON.stringify(file) + ">" + (core.getInput("signature") ||
     ':robot: comment via <a href="https://github.com/lucassabreu/comment-coverage-clover">lucassabreu/comment-coverage-clover</a>') + "</sub>";
 var github = token && getOctokit_1(token);
@@ -8580,7 +8598,7 @@ var maxLineCoverageDecrease = core.getInput("max-line-coverage-decrease");
 var maxMethodCoverageDecrease = core.getInput("max-method-coverage-decrease");
 var minLineCoverage = Number(core.getInput("min-line-coverage"));
 var minMethodCoverage = Number(core.getInput("min-method-coverage"));
-var comment = function (cStats, oldStats) { return __awaiter(void 0, void 0, void 0, function () {
+var comment = function (cStats, oldStats, coverageType) { return __awaiter(void 0, void 0, void 0, function () {
     var w;
     return __generator(this, function (_a) {
         w = workspace.endsWith("/") ? workspace : workspace.concat("/");
@@ -8590,7 +8608,7 @@ var comment = function (cStats, oldStats) { return __awaiter(void 0, void 0, voi
             }));
         });
         return [2 /*return*/, ((withChart ? chart(cStats, oldStats) : "") +
-                html(withTable, rmWithoutCover(cStats, onlyWithCover), oldStats))];
+                html(withTable, rmWithoutCover(cStats, onlyWithCover), oldStats, coverageType, tableWithOnlyAbove, tableWithOnlyBellow))];
     });
 }); };
 var rmWithoutCover = function (s, onlyWithCover) {
@@ -8647,6 +8665,10 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_j) {
         switch (_j.label) {
             case 0:
+                if (!["lines", "methods", "branchs"].includes(tableWithTypeLimit)) {
+                    core.error("there is no coverage type " + tableWithTypeLimit);
+                    return [2 /*return*/];
+                }
                 if (!github)
                     return [2 /*return*/];
                 if (!context.payload.pull_request)
@@ -8672,7 +8694,7 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                 msgs = Array.from(checkThreshold(cStats, oldStats));
                 msgs.map(core.setFailed);
                 _d = "\nCoverage report for commit: " + commit + "\nFile: `" + file + "`\n\n" + msgs.map(function (m) { return "> :warning: " + m; }).join("\n") + "\n\n";
-                return [4 /*yield*/, comment(cStats, oldStats)];
+                return [4 /*yield*/, comment(cStats, oldStats, tableWithTypeLimit)];
             case 4:
                 body = _d + (_j.sent()) + "\n\n" + signature;
                 commentId = null;

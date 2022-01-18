@@ -1,8 +1,9 @@
 import { error, getInput, setFailed } from "@actions/core";
 import { getOctokit } from "@actions/github";
 import { context } from "@actions/github/lib/utils";
-import { readFile, existsSync } from "fs";
+import { existsSync, readFile } from "fs";
 import { promisify } from "util";
+
 import { chart } from "./chart";
 import { fromString } from "./clover";
 import { html } from "./html";
@@ -15,6 +16,9 @@ let baseFile = getInput("base-file") || process.env.BASE_FILE;
 const onlyWithCover = getInput("only-with-cover") == "true";
 const withChart = getInput("with-chart") == "true";
 const withTable = getInput("with-table") == "true";
+const tableWithOnlyBellow = Number(getInput("table-bellow-coverage") || 100);
+const tableWithOnlyAbove = Number(getInput("table-above-coverage") || 0);
+const tableWithTypeLimit = getInput("table-type-coverage") || "lines";
 const signature = `<sub data-file=${JSON.stringify(file)}>${
   getInput("signature") ||
   ':robot: comment via <a href="https://github.com/lucassabreu/comment-coverage-clover">lucassabreu/comment-coverage-clover</a>'
@@ -25,7 +29,11 @@ const maxMethodCoverageDecrease = getInput("max-method-coverage-decrease");
 const minLineCoverage = Number(getInput("min-line-coverage"));
 const minMethodCoverage = Number(getInput("min-method-coverage"));
 
-const comment = async (cStats: Stats, oldStats?: Stats) => {
+const comment = async (
+  cStats: Stats,
+  oldStats: null | Stats,
+  coverageType: string
+) => {
   const w = workspace.endsWith("/") ? workspace : workspace.concat("/");
   cStats.folders.forEach((v, k) =>
     cStats.folders.set(
@@ -38,7 +46,14 @@ const comment = async (cStats: Stats, oldStats?: Stats) => {
 
   return (
     (withChart ? chart(cStats, oldStats) : "") +
-    html(withTable, rmWithoutCover(cStats, onlyWithCover), oldStats)
+    html(
+      withTable,
+      rmWithoutCover(cStats, onlyWithCover),
+      oldStats,
+      coverageType,
+      tableWithOnlyAbove,
+      tableWithOnlyBellow
+    )
   );
 };
 
@@ -89,6 +104,11 @@ function* checkThreshold(c: Stats, o?: Stats) {
 }
 
 const run = async () => {
+  if (!["lines", "methods", "branchs"].includes(tableWithTypeLimit)) {
+    error(`there is no coverage type ${tableWithTypeLimit}`);
+    return;
+  }
+
   if (!github) return;
   if (!context.payload.pull_request) return;
 
@@ -114,7 +134,7 @@ File: \`${file}\`
 
 ${msgs.map((m) => `> :warning: ${m}`).join("\n")}
 
-${await comment(cStats, oldStats)}
+${await comment(cStats, oldStats, tableWithTypeLimit)}
 
 ${signature}`;
 
