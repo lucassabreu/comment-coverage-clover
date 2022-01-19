@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.1] - 2022-01-19
+
+### Fixed
+
+- parameter should be name `table-below-coverage`, not `table-bellow-coverage`
+
 ## [0.5.0] - 2022-01-18
 
 ### Added
@@ -105,7 +111,8 @@ as bundling tool.
 - implemented base action reading clover.xml files and converting then.
 - release.yml workflow to auto-release tags
 
-[Unreleased]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.5.1...HEAD
+[0.5.1]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.4.2...v0.5.0
 [0.4.2]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.4.0...v0.4.1

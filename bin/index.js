@@ -8588,7 +8588,7 @@ var baseFile = core.getInput("base-file") || process.env.BASE_FILE;
 var onlyWithCover = core.getInput("only-with-cover") == "true";
 var withChart = core.getInput("with-chart") == "true";
 var withTable = core.getInput("with-table") == "true";
-var tableWithOnlyBellow = Number(core.getInput("table-bellow-coverage") || 100);
+var tableWithOnlyBellow = Number(core.getInput("table-below-coverage") || 100);
 var tableWithOnlyAbove = Number(core.getInput("table-above-coverage") || 0);
 var tableWithTypeLimit = core.getInput("table-type-coverage") || "lines";
 var signature = "<sub data-file=" + JSON.stringify(file) + ">" + (core.getInput("signature") ||

@@ -16,7 +16,7 @@ let baseFile = getInput("base-file") || process.env.BASE_FILE;
 const onlyWithCover = getInput("only-with-cover") == "true";
 const withChart = getInput("with-chart") == "true";
 const withTable = getInput("with-table") == "true";
-const tableWithOnlyBellow = Number(getInput("table-bellow-coverage") || 100);
+const tableWithOnlyBellow = Number(getInput("table-below-coverage") || 100);
 const tableWithOnlyAbove = Number(getInput("table-above-coverage") || 0);
 const tableWithTypeLimit = getInput("table-type-coverage") || "lines";
 const signature = `<sub data-file=${JSON.stringify(file)}>${

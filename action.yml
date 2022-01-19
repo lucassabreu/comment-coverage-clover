@@ -42,8 +42,8 @@ inputs:
   table-type-coverage:
     description: Which of the coverage percentages to filter
     default: "lines"
-  table-bellow-coverage:
-    description: Show only files bellow or equal to this coverage percentage
+  table-below-coverage:
+    description: Show only files below or equal to this coverage percentage
     default: 100
   table-above-coverage:
     description: Show only files above or equal to this coverage percentage
