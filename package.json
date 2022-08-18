@@ -7,10 +7,10 @@
   "author": "Lucas dos Santos Abreu <lucas.s.abreu@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.4.0",
-    "@actions/github": "^5.0.0",
-    "ts-node": "^10.2.0",
-    "typescript": "^4.3.5",
+    "@actions/core": "^1.9.1",
+    "@actions/github": "^5.0.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.7.4",
     "xml-js": "^1.6.11"
   },
   "scripts": {
@@ -20,12 +20,12 @@
     "build:watch": "rollup -c -w"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^13.0.4",
-    "prettier": "^2.3.2",
-    "rollup": "^2.56.2",
-    "rollup-plugin-node-externals": "^2.2.0",
-    "rollup-plugin-typescript2": "^0.30.0"
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "prettier": "^2.7.1",
+    "rollup": "^2.78.0",
+    "rollup-plugin-node-externals": "^4.1.1",
+    "rollup-plugin-typescript2": "^0.32.1"
   }
 }
