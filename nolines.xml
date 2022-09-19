@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1663673679">
+  <project timestamp="1663673679">
+    <file name="/var/www/html/src/Hugger/Common.php">
+      <class name="Hugger\Common" namespace="global">
+        <metrics complexity="2" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="6" coveredelements="6"/>
+      </class>
+      <line num="14" type="method" name="hug" visibility="public" complexity="2" crap="2" count="1"/>
+      <line num="16" type="stmt" count="1"/>
+      <line num="17" type="stmt" count="1"/>
+      <line num="18" type="stmt" count="1"/>
+      <line num="21" type="stmt" count="1"/>
+      <line num="22" type="stmt" count="1"/>
+      <metrics loc="24" ncloc="21" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="6" coveredelements="6"/>
+    </file>
+    <file name="/var/www/html/src/Hugger/DontHugMeException.php">
+      <class name="Hugger\DontHugMeException" namespace="global">
+        <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </class>
+      <metrics loc="7" ncloc="7" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="/var/www/html/src/Hugger/Friendly.php">
+      <class name="Hugger\Friendly" namespace="global">
+        <metrics complexity="5" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="10" elements="13" coveredelements="13"/>
+      </class>
+      <line num="13" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="19"/>
+      <line num="20" type="method" name="hug" visibility="public" complexity="3" crap="3" count="19"/>
+      <line num="22" type="stmt" count="19"/>
+      <line num="23" type="stmt" count="19"/>
+      <line num="24" type="stmt" count="19"/>
+      <line num="25" type="stmt" count="19"/>
+      <line num="28" type="stmt" count="19"/>
+      <line num="29" type="stmt" count="19"/>
+      <line num="30" type="stmt" count="19"/>
+      <line num="36" type="method" name="groupHug" visibility="public" complexity="1" crap="1" count="9"/>
+      <line num="38" type="stmt" count="9"/>
+      <line num="39" type="stmt" count="9"/>
+      <metrics loc="43" ncloc="37" classes="1" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="10" elements="13" coveredelements="13"/>
+    </file>
+    <file name="/var/www/html/src/Psr/Hug/GroupHuggable.php">
+      <metrics loc="25" ncloc="9" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="/var/www/html/src/Psr/Hug/Huggable.php">
+      <metrics loc="25" ncloc="9" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <metrics files="5" loc="124" ncloc="83" classes="2" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="15" elements="19" coveredelements="19"/>
+  </project>
+</coverage>

@@ -7,13 +7,14 @@ import { promisify } from "util";
 import { chart } from "./chart";
 import { fromString } from "./clover";
 import { html } from "./html";
-import { Stats } from "./types";
+import { Stats, File } from "./types";
 
 const workspace = getInput("dir-prefix") || process.env.GITHUB_WORKSPACE;
 const token = getInput("github-token") || process.env.GITHUB_TOKEN;
 const file = getInput("file") || process.env.FILE;
 let baseFile = getInput("base-file") || process.env.BASE_FILE;
 const onlyWithCover = getInput("only-with-cover") == "true";
+const onlyWithCoverableLines = getInput("only-with-coverable-lines") == "true";
 const withChart = getInput("with-chart") == "true";
 const withTable = getInput("with-table") == "true";
 const tableWithOnlyBellow = Number(getInput("table-below-coverage") || 100);
@@ -48,7 +49,10 @@ const comment = async (
     (withChart ? chart(cStats, oldStats) : "") +
     html(
       withTable,
-      rmWithoutCover(cStats, onlyWithCover),
+      rmWithout(cStats, {
+        cover: onlyWithCover,
+        coverableLines: onlyWithCoverableLines,
+      }),
       oldStats,
       coverageType,
       tableWithOnlyAbove,
@@ -57,11 +61,27 @@ const comment = async (
   );
 };
 
-const rmWithoutCover = (s: Stats, onlyWithCover: boolean): Stats => {
-  if (!onlyWithCover) return s;
+const rmWithout = (
+  s: Stats,
+  onlyWith: {
+    cover: boolean;
+    coverableLines: boolean;
+  }
+): Stats => {
+  let filters: ((f: File) => boolean)[] = [];
+  if (onlyWith.cover) {
+    filters.push((f) => f.metrics.lines.covered !== 0);
+  }
+  if (onlyWith.coverableLines) {
+    filters.push((f) => f.metrics.lines.total !== 0);
+  }
+
+  if (filters === []) return s;
 
   s.folders.forEach((folder, key) => {
-    folder.files = folder.files.filter((f) => f.metrics.lines.covered !== 0);
+    folder.files = folder.files.filter((f) =>
+      filters.reduce((r, fn) => r && fn(f), true)
+    );
     if (folder.files.length === 0) s.folders.delete(key);
   });
 

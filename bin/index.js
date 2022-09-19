@@ -89544,6 +89544,7 @@ var token = coreExports.getInput("github-token") || process.env.GITHUB_TOKEN;
 var file = coreExports.getInput("file") || process.env.FILE;
 var baseFile = coreExports.getInput("base-file") || process.env.BASE_FILE;
 var onlyWithCover = coreExports.getInput("only-with-cover") == "true";
+var onlyWithCoverableLines = coreExports.getInput("only-with-coverable-lines") == "true";
 var withChart = coreExports.getInput("with-chart") == "true";
 var withTable = coreExports.getInput("with-table") == "true";
 var tableWithOnlyBellow = Number(coreExports.getInput("table-below-coverage") || 100);
@@ -89566,14 +89567,26 @@ var comment = function (cStats, oldStats, coverageType) { return __awaiter$1(voi
             }));
         });
         return [2 /*return*/, ((withChart ? chart(cStats, oldStats) : "") +
-                html(withTable, rmWithoutCover(cStats, onlyWithCover), oldStats, coverageType, tableWithOnlyAbove, tableWithOnlyBellow))];
+                html(withTable, rmWithout(cStats, {
+                    cover: onlyWithCover,
+                    coverableLines: onlyWithCoverableLines
+                }), oldStats, coverageType, tableWithOnlyAbove, tableWithOnlyBellow))];
     });
 }); };
-var rmWithoutCover = function (s, onlyWithCover) {
-    if (!onlyWithCover)
+var rmWithout = function (s, onlyWith) {
+    var filters = [];
+    if (onlyWith.cover) {
+        filters.push(function (f) { return f.metrics.lines.covered !== 0; });
+    }
+    if (onlyWith.coverableLines) {
+        filters.push(function (f) { return f.metrics.lines.total !== 0; });
+    }
+    if (filters === [])
         return s;
     s.folders.forEach(function (folder, key) {
-        folder.files = folder.files.filter(function (f) { return f.metrics.lines.covered !== 0; });
+        folder.files = folder.files.filter(function (f) {
+            return filters.reduce(function (r, fn) { return r && fn(f); }, true);
+        });
         if (folder.files.length === 0)
             s.folders["delete"](key);
     });

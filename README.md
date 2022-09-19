@@ -33,6 +33,7 @@ Configuration
 | `dir-prefix`                   | Section of the file on clover report to remove <br/> Default: `github.workspace` <br/> **Required**                                                                       |
 | `dir-prefix-keep`              | Section of the `dir-prefix` to keep when creating link to file.<br/>Example: if your php application is at "$REPO/backend", then you should set this to "backend"         |
 | `only-with-cover`              | Should only list files with at least one line covered.                                                                                                                    |
+| `only-with-coverable-lines`    | Should only list files with at least one "coverable" line of code<br/>Example: interfaces or abstract classes with no implementation                                      |
 | `lang`                         | In which [language](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Intl#argumento_locales) to format the numbers <br/> Default: `en-US` |
 | `chart-size`                   | How many characters to use on chart's bar<br/> Default: `23`                                                                                                              |
 | `with-chart`                   | Add a chart with the distribution of coverage on files<br/> Default: `true`                                                                                               |
