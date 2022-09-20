@@ -135,7 +135,7 @@ jobs:
           table-type-coverage: banana
           signature: "clover file to comment - invalid coverage type"
 
-      - name: clover file to comment - obly between 50% and 80% line coverage
+      - name: clover file to comment - only between 50% and 80% line coverage
         uses: ./.
         with:
           dir-prefix: /var/www/html
@@ -144,4 +144,13 @@ jobs:
           with-chart: false
           table-above-coverage: 50
           table-below-coverage: 80
-          signature: "clover file to comment - obly between 50% and 80% line coverage"
+          signature: "clover file to comment - only between 50% and 80% line coverage"
+
+      - name: clover file to comment - only coverable lines
+        uses: ./.
+        with:
+          dir-prefix: /var/www/html
+          file: nolines.xml
+          with-chart: false
+          signature: "only coverable lines"
+          only-with-coverable-lines: true

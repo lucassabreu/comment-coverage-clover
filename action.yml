@@ -27,6 +27,9 @@ inputs:
   only-with-cover:
     description: Should only list files with at least one line covered
     default: false
+  only-with-coverable-lines:
+    description: Should only list files with at least one "coverable" line of code
+    default: false
   lang:
     description: In which language to format the numbers (https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Intl#argumento_locales)
     default: en-US
