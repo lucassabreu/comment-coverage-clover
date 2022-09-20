@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- new option `only-with-coverable-lines` to filter out files that don't have lines of code to check.
+
 ## [0.5.2] - 2022-08-18
 
 ### Fixed
