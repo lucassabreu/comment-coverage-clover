@@ -65,5 +65,5 @@ inputs:
     description: Custom signature to be used at the bottom of the comment
     required: false
 runs:
-  using: node12
+  using: node16
   main: bin/index.js
