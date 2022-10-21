@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Thanks
 
-Thank you to @sertxudev for the contribution at #21.
+Thank you to [@sertxudev](https://github.com/sertxudev) for the contribution at [#21](https://github.com/lucassabreu/comment-coverage-clover/pull/21).
 
 ## [0.6.0] - 2022-09-20
 
