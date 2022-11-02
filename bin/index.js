@@ -89504,8 +89504,9 @@ var total = function (name, c, oldC) {
 var link = function (folder, file) {
     return a("".concat(baseUrl, "/").concat(folder, "/").concat(file), file);
 };
-var html = function (withTable, c, o, type, min, max) {
-    return (withTable ? tableWrap(filterConverage(c, type, min, max)) : span)("Summary - ".concat([
+var html = function (withTable, c, o) {
+    if (o === void 0) { o = null; }
+    return (withTable ? tableWrap(c) : span)("Summary - ".concat([
         total("Lines", c.total.lines, o === null || o === void 0 ? void 0 : o.total.lines),
         total("Methods", c.total.methods, o === null || o === void 0 ? void 0 : o.total.methods),
         total("Branchs", c.total.branchs, o === null || o === void 0 ? void 0 : o.total.branchs),
@@ -89522,21 +89523,6 @@ var tableWrap = function (c) {
             }), false));
         }))));
     };
-};
-var between = function (v, min, max) {
-    return min <= (v || 0) && (v || 0) <= max;
-};
-var filterConverage = function (c, type, min, max) {
-    c.folders.forEach(function (f, k) {
-        var files = f.files.filter(function (f) {
-            return between(f.metrics[type].percentual * 100, min, max);
-        });
-        if (files.length === 0) {
-            return c.folders["delete"](k);
-        }
-        c.folders.set(k, Object.assign(f, { files: files }));
-    });
-    return c;
 };
 
 var workspace = coreExports.getInput("dir-prefix") || process.env.GITHUB_WORKSPACE;
@@ -89566,11 +89552,12 @@ var comment = function (cStats, oldStats, coverageType) { return __awaiter$1(voi
                 name: v.name.startsWith(w) ? v.name.slice(w.length) : v.name
             }));
         });
+        cStats = filterConverage(cStats, coverageType, tableWithOnlyAbove, tableWithOnlyBellow);
         return [2 /*return*/, ((withChart ? chart(cStats, oldStats) : "") +
                 html(withTable, rmWithout(cStats, {
                     cover: onlyWithCover,
                     coverableLines: onlyWithCoverableLines
-                }), oldStats, coverageType, tableWithOnlyAbove, tableWithOnlyBellow))];
+                }), oldStats))];
     });
 }); };
 var rmWithout = function (s, onlyWith) {
@@ -89591,6 +89578,23 @@ var rmWithout = function (s, onlyWith) {
             s.folders["delete"](key);
     });
     return s;
+};
+var between = function (v, min, max) {
+    return min <= (v || 0) && (v || 0) <= max;
+};
+var filterConverage = function (c, type, min, max) {
+    if (min <= 0 && max >= 100)
+        return c;
+    c.folders.forEach(function (f, k) {
+        var files = f.files.filter(function (f) {
+            return between(f.metrics[type].percentual * 100, min, max);
+        });
+        if (files.length === 0) {
+            return c.folders["delete"](k);
+        }
+        c.folders.set(k, Object.assign(f, { files: files }));
+    });
+    return c;
 };
 function checkThreshold(c, o) {
     var f, lcdiff, mcdiff;

@@ -45,6 +45,13 @@ const comment = async (
     )
   );
 
+  cStats = filterConverage(
+    cStats,
+    coverageType,
+    tableWithOnlyAbove,
+    tableWithOnlyBellow
+  );
+
   return (
     (withChart ? chart(cStats, oldStats) : "") +
     html(
@@ -53,10 +60,7 @@ const comment = async (
         cover: onlyWithCover,
         coverableLines: onlyWithCoverableLines,
       }),
-      oldStats,
-      coverageType,
-      tableWithOnlyAbove,
-      tableWithOnlyBellow
+      oldStats
     )
   );
 };
@@ -86,6 +90,32 @@ const rmWithout = (
   });
 
   return s;
+};
+
+const between = (v: number, min: number, max: number) =>
+  min <= (v || 0) && (v || 0) <= max;
+
+const filterConverage = (
+  c: Stats,
+  type: string,
+  min: number,
+  max: number
+): Stats => {
+  if (min <= 0 && max >= 100) return c;
+
+  c.folders.forEach((f, k) => {
+    const files = f.files.filter((f) =>
+      between(f.metrics[type].percentual * 100, min, max)
+    );
+
+    if (files.length === 0) {
+      return c.folders.delete(k);
+    }
+
+    c.folders.set(k, Object.assign(f, { files }));
+  });
+
+  return c;
 };
 
 function* checkThreshold(c: Stats, o?: Stats) {
