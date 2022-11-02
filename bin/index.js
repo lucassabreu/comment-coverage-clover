@@ -89630,6 +89630,7 @@ function checkThreshold(c, o) {
         }
     });
 }
+var notFoundMessage = "was not found, please check if the path is valid, or if it exists.";
 var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
     var commit, cStats, _a, oldStats, _b, _c, msgs, body, _d, _e, commentId, comments, i, c, e_1;
     var _g, _h, _j;
@@ -89645,12 +89646,15 @@ var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
                 if (!context.payload.pull_request)
                     return [2 /*return*/];
                 commit = (_g = context.payload.pull_request) === null || _g === void 0 ? void 0 : _g.head.sha.substring(0, 7);
+                if (!require$$0$1.existsSync(file)) {
+                    throw "file \"".concat(file, "\" ").concat(notFoundMessage);
+                }
                 _a = fromString;
                 return [4 /*yield*/, require$$6.promisify(require$$0$1.readFile)(file)];
             case 1:
                 cStats = _a.apply(void 0, [(_k.sent()).toString()]);
                 if (baseFile && !require$$0$1.existsSync(baseFile)) {
-                    coreExports.error("file ".concat(baseFile, " was not found"));
+                    coreExports.error("base file \"".concat(baseFile, "\" ").concat(notFoundMessage));
                     baseFile = undefined;
                 }
                 _b = baseFile;
@@ -89686,7 +89690,7 @@ var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
                 return [3 /*break*/, 8];
             case 7:
                 e_1 = _k.sent();
-                console.error(e_1);
+                coreExports.error(e_1);
                 return [3 /*break*/, 8];
             case 8:
                 if (!commentId) return [3 /*break*/, 12];
@@ -89707,5 +89711,5 @@ var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
         }
     });
 }); };
-run();
+run()["catch"](coreExports.setFailed);
 //# sourceMappingURL=index.js.map

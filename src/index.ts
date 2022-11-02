@@ -123,6 +123,9 @@ function* checkThreshold(c: Stats, o?: Stats) {
   }
 }
 
+const notFoundMessage =
+  "was not found, please check if the path is valid, or if it exists.";
+
 const run = async () => {
   if (!["lines", "methods", "branchs"].includes(tableWithTypeLimit)) {
     error(`there is no coverage type ${tableWithTypeLimit}`);
@@ -134,10 +137,14 @@ const run = async () => {
 
   const commit = context.payload.pull_request?.head.sha.substring(0, 7);
 
+  if (!existsSync(file)) {
+    throw `file "${file}" ${notFoundMessage}`;
+  }
+
   const cStats = fromString((await promisify(readFile)(file)).toString());
 
   if (baseFile && !existsSync(baseFile)) {
-    error(`file ${baseFile} was not found`);
+    error(`base file "${baseFile}" ${notFoundMessage}`);
     baseFile = undefined;
   }
 
@@ -174,7 +181,7 @@ ${signature}`;
       commentId = c.id;
     }
   } catch (e) {
-    console.error(e);
+    error(e);
   }
 
   if (commentId) {
@@ -195,4 +202,4 @@ ${signature}`;
   });
 };
 
-run();
+run().catch(setFailed);

@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- action was "panicking" when the `file` with the coverage was not found, a clearer message is shown now.
+
 ## [0.7.0] - 2022-10-21
 
 ### Changed
