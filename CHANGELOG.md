@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.1] - 2022-11-02
+
 ### Fixed
 
 - action was "panicking" when the `file` with the coverage was not found, a clearer message is shown now.
@@ -137,7 +139,8 @@ as bundling tool.
 - implemented base action reading clover.xml files and converting then.
 - release.yml workflow to auto-release tags
 
-[Unreleased]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.7.1...HEAD
+[0.7.1]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.5.2...v0.6.0
 [0.5.2]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.5.1...v0.5.2
