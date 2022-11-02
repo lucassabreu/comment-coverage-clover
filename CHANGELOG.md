@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- option `table-coverage-change` to filter files shown on table by percentage change of a file.
+- option `show-percentage-change-on-table` to show coverage changes on the table
+
 ## [0.7.1] - 2022-11-02
 
 ### Fixed

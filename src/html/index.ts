@@ -25,9 +25,9 @@ if (getInput("dir-prefix-keep")) {
   baseUrl = `${baseUrl}/${getInput("dir-prefix-keep")}`.replace(/\/$/, "");
 }
 
-const p2s = (p: number | undefined, lang: string): string =>
+const p2s = (p: number | undefined, lang: string, zero = "-"): string =>
   p === undefined || p == 0
-    ? "-"
+    ? zero
     : p.toLocaleString(lang, {
         style: "percent",
         minimumFractionDigits: 2,
@@ -41,15 +41,41 @@ const c2s = (c: Coverage, lang: string): string =>
       c.total.toLocaleString(lang, { useGrouping: true }),
   });
 
-const line = (name: string, m: Metrics, lang: string) =>
+const json = (o: any, ident = true) =>
+  `<pre>${JSON.stringify(o, null, ident ? 2 : null)}</pre>`;
+
+const compareFile = (n: Coverage, o: null | Coverage, lang: string) =>
+  " " +
+  (o === null
+    ? span(":new:", { title: "new file" })
+    : compare(n, o, lang, true));
+
+const line = (
+  name: string,
+  m: Metrics,
+  lang: string,
+  o: Metrics = null,
+  showDelta = false
+) =>
   tr(
     td(name),
-    td(c2s(m.lines, lang)),
-    td(c2s(m.methods, lang)),
-    td(c2s(m.branchs, lang))
+    ...["lines", "methods", "branchs"].map((p) =>
+      td(
+        c2s(m[p], lang) +
+          (!showDelta ? "" : compareFile(m[p], o && o[p], lang)),
+        {
+          align: "right",
+        }
+      )
+    )
   );
 
-const compare = (n: Coverage, o: Coverage, lang: string): string =>
+const compare = (
+  n: Coverage,
+  o: Coverage,
+  lang: string,
+  showDelta = false
+): string =>
   span(
     n.percentual == o.percentual
       ? ":stop_button:"
@@ -57,7 +83,14 @@ const compare = (n: Coverage, o: Coverage, lang: string): string =>
       ? ":arrow_down_small:"
       : ":arrow_up_small:",
     {
-      title: `Was ${p2s(o.percentual || 0, lang)} before`,
+      title:
+        `Was ${p2s(o.percentual || 0, lang, "0%")} before` +
+        (showDelta && (n.percentual || 0) !== (o.percentual || 0)
+          ? ` (${n.percentual > o.percentual ? "+" : "-"}${p2s(
+              Math.abs(n.percentual - o.percentual),
+              lang
+            )})`
+          : ""),
     }
   );
 
@@ -77,12 +110,10 @@ const link = (folder: string, file: string) =>
 export const html = (
   withTable: boolean,
   c: Stats,
-  o: null | Stats,
-  type: string,
-  min: number,
-  max: number
+  o: Stats = null,
+  deltaPerFile = false
 ): string =>
-  (withTable ? tableWrap(filterConverage(c, type, min, max)) : span)(
+  (withTable ? tableWrap(c, o, deltaPerFile) : span)(
     "Summary - ".concat(
       [
         total("Lines", c.total.lines, o?.total.lines),
@@ -95,22 +126,24 @@ export const html = (
   );
 
 const tableWrap =
-  (c: Stats) =>
+  (c: Stats, o: Stats = null, showDelta = false) =>
   (summaryText: string): string =>
     details(
       summary(summaryText),
-      "<br/>",
+      "<br />",
       table(
         thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branchs"))),
         tbody(
-          ...Array.from(c.folders.entries()).map(([, folder]) =>
+          ...Array.from(c.folders.entries()).map(([k, folder]) =>
             fragment(
               tr(td(b(folder.name), { colspan: 4 })),
               ...folder.files.map((f: File) =>
                 line(
                   `&nbsp; &nbsp;${link(folder.name, f.name)}`,
                   f.metrics,
-                  lang
+                  lang,
+                  o?.get(k, f.name)?.metrics,
+                  showDelta
                 )
               )
             )
@@ -118,27 +151,3 @@ const tableWrap =
         )
       )
     );
-
-const between = (v: number, min: number, max: number) =>
-  min <= (v || 0) && (v || 0) <= max;
-
-const filterConverage = (
-  c: Stats,
-  type: string,
-  min: number,
-  max: number
-): Stats => {
-  c.folders.forEach((f, k) => {
-    const files = f.files.filter((f) =>
-      between(f.metrics[type].percentual * 100, min, max)
-    );
-
-    if (files.length === 0) {
-      return c.folders.delete(k);
-    }
-
-    c.folders.set(k, Object.assign(f, { files }));
-  });
-
-  return c;
-};

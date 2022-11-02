@@ -5,7 +5,10 @@ export class Coverage {
   constructor(total: number, covered: number) {
     this.total = Number(total);
     this.covered = Number(covered);
-    this.percentual = this.total == 0 ? undefined : this.covered / this.total;
+    this.percentual =
+      this.total == 0
+        ? undefined
+        : parseFloat((this.covered / this.total).toFixed(4));
   }
 }
 
@@ -20,13 +23,24 @@ export interface File {
   metrics: Metrics;
 }
 
-export interface Stats {
-  total: Metrics;
-  folders: Map<
-    string,
-    {
-      name: string;
-      files: File[];
-    }
-  >;
+export class Folder {
+  constructor(public name: string, public files: File[] = []) {}
+
+  push(...files: File[]): Folder {
+    this.files.push(...files);
+    return this;
+  }
+
+  get(name: string): File | null {
+    const i = this.files.findIndex((f) => f.name === name);
+    return i === -1 ? null : this.files[i];
+  }
+}
+
+export class Stats {
+  constructor(public total: Metrics, public folders: Map<string, Folder>) {}
+
+  get(folder: string, file: string): File | null {
+    return this.folders.get(folder)?.get(file);
+  }
 }
