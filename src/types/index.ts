@@ -5,7 +5,10 @@ export class Coverage {
   constructor(total: number, covered: number) {
     this.total = Number(total);
     this.covered = Number(covered);
-    this.percentual = this.total == 0 ? undefined : this.covered / this.total;
+    this.percentual =
+      this.total == 0
+        ? undefined
+        : parseFloat((this.covered / this.total).toFixed(4));
   }
 }
 

@@ -89386,7 +89386,10 @@ var Coverage = /** @class */ (function () {
     function Coverage(total, covered) {
         this.total = Number(total);
         this.covered = Number(covered);
-        this.percentual = this.total == 0 ? undefined : this.covered / this.total;
+        this.percentual =
+            this.total == 0
+                ? undefined
+                : parseFloat((this.covered / this.total).toFixed(4));
     }
     return Coverage;
 }());
@@ -89546,7 +89549,6 @@ var total = function (name, c, oldC) {
 var link = function (folder, file) {
     return a("".concat(baseUrl, "/").concat(folder, "/").concat(file), file);
 };
-var br = function () { return "<br/>"; };
 var html = function (withTable, c, o, deltaPerFile) {
     if (o === void 0) { o = null; }
     if (deltaPerFile === void 0) { deltaPerFile = false; }
@@ -89562,7 +89564,7 @@ var tableWrap = function (c, o, showDelta) {
     if (o === void 0) { o = null; }
     if (showDelta === void 0) { showDelta = false; }
     return function (summaryText) {
-        return details(summary(summaryText), br(), table(thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branchs"))), tbody.apply(void 0, Array.from(c.folders.entries()).map(function (_a) {
+        return details(summary(summaryText), "<br />", table(thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branchs"))), tbody.apply(void 0, Array.from(c.folders.entries()).map(function (_a) {
             var k = _a[0], folder = _a[1];
             return fragment.apply(void 0, __spreadArray([tr(td(b(folder.name), { colspan: 4 }))], folder.files.map(function (f) {
                 var _a;
