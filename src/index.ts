@@ -1,4 +1,4 @@
-import { error, getInput, setFailed } from "@actions/core";
+import { error, getBooleanInput, getInput, setFailed } from "@actions/core";
 import { getOctokit } from "@actions/github";
 import { context } from "@actions/github/lib/utils";
 import { existsSync, readFile } from "fs";
@@ -7,18 +7,19 @@ import { promisify } from "util";
 import { chart } from "./chart";
 import { fromString } from "./clover";
 import { html } from "./html";
-import { Stats, File } from "./types";
+import { Stats, File, Metrics } from "./types";
 
 const workspace = getInput("dir-prefix") || process.env.GITHUB_WORKSPACE;
 const token = getInput("github-token") || process.env.GITHUB_TOKEN;
 const file = getInput("file") || process.env.FILE;
 let baseFile = getInput("base-file") || process.env.BASE_FILE;
-const onlyWithCover = getInput("only-with-cover") == "true";
-const onlyWithCoverableLines = getInput("only-with-coverable-lines") == "true";
+const onlyWithCover = getBooleanInput("only-with-cover");
+const onlyWithCoverableLines = getBooleanInput("only-with-coverable-lines");
 const withChart = getInput("with-chart") == "true";
 const withTable = getInput("with-table") == "true";
 const tableWithOnlyBellow = Number(getInput("table-below-coverage") || 100);
 const tableWithOnlyAbove = Number(getInput("table-above-coverage") || 0);
+const tableWithChangeAbove = Number(getInput("table-coverage-change") || 0);
 const tableWithTypeLimit = getInput("table-type-coverage") || "lines";
 const signature = `<sub data-file=${JSON.stringify(file)}>${
   getInput("signature") ||
@@ -29,11 +30,14 @@ const maxLineCoverageDecrease = getInput("max-line-coverage-decrease");
 const maxMethodCoverageDecrease = getInput("max-method-coverage-decrease");
 const minLineCoverage = Number(getInput("min-line-coverage"));
 const minMethodCoverage = Number(getInput("min-method-coverage"));
+const showPercentageChangePerFile = getBooleanInput(
+  "show-percentage-change-on-table"
+);
 
 const comment = async (
   cStats: Stats,
   oldStats: null | Stats,
-  coverageType: string
+  coverageType: keyof Metrics
 ) => {
   const w = workspace.endsWith("/") ? workspace : workspace.concat("/");
   cStats.folders.forEach((v, k) =>
@@ -45,46 +49,80 @@ const comment = async (
     )
   );
 
-  cStats = filterConverage(
-    cStats,
-    coverageType,
-    tableWithOnlyAbove,
-    tableWithOnlyBellow
-  );
-
   return (
     (withChart ? chart(cStats, oldStats) : "") +
     html(
       withTable,
-      rmWithout(cStats, {
-        cover: onlyWithCover,
-        coverableLines: onlyWithCoverableLines,
-      }),
-      oldStats
+      filter(
+        cStats,
+        {
+          cover: onlyWithCover,
+          coverableLines: onlyWithCoverableLines,
+        },
+        {
+          type: coverageType,
+          min: tableWithOnlyAbove,
+          max: tableWithOnlyBellow,
+          delta: tableWithChangeAbove,
+        },
+        oldStats
+      ),
+      oldStats,
+      showPercentageChangePerFile
     )
   );
 };
 
-const rmWithout = (
+const filter = (
   s: Stats,
   onlyWith: {
     cover: boolean;
     coverableLines: boolean;
-  }
+  },
+  onlyBetween: {
+    type: keyof Metrics;
+    min: number;
+    max: number;
+    delta: number;
+  },
+  o: Stats = null
 ): Stats => {
-  let filters: ((f: File) => boolean)[] = [];
-  if (onlyWith.cover) {
-    filters.push((f) => f.metrics.lines.covered !== 0);
-  }
-  if (onlyWith.coverableLines) {
-    filters.push((f) => f.metrics.lines.total !== 0);
+  let filters: ((f: File, folder: string) => boolean)[] = [];
+  if (onlyWith.cover) filters.push((f) => f.metrics.lines.covered !== 0);
+
+  if (onlyWith.coverableLines) filters.push((f) => f.metrics.lines.total !== 0);
+
+  if (onlyBetween.type) {
+    if (onlyBetween.min > 0 || onlyBetween.max < 100)
+      filters.push((f) =>
+        between(
+          f.metrics[onlyBetween.type].percentual * 100,
+          onlyBetween.min,
+          onlyBetween.max
+        )
+      );
+
+    if (onlyBetween.delta > 0 && o !== null)
+      filters.push((f, folder) => {
+        const of = o.get(folder, f.name);
+
+        return (
+          !of ||
+          Math.abs(
+            f.metrics[onlyBetween.type].percentual -
+              of.metrics[onlyBetween.type].percentual
+          ) *
+            100 >
+            onlyBetween.delta
+        );
+      });
   }
 
   if (filters === []) return s;
 
   s.folders.forEach((folder, key) => {
     folder.files = folder.files.filter((f) =>
-      filters.reduce((r, fn) => r && fn(f), true)
+      filters.reduce((r, fn) => r && fn(f, key), true)
     );
     if (folder.files.length === 0) s.folders.delete(key);
   });
@@ -94,29 +132,6 @@ const rmWithout = (
 
 const between = (v: number, min: number, max: number) =>
   min <= (v || 0) && (v || 0) <= max;
-
-const filterConverage = (
-  c: Stats,
-  type: string,
-  min: number,
-  max: number
-): Stats => {
-  if (min <= 0 && max >= 100) return c;
-
-  c.folders.forEach((f, k) => {
-    const files = f.files.filter((f) =>
-      between(f.metrics[type].percentual * 100, min, max)
-    );
-
-    if (files.length === 0) {
-      return c.folders.delete(k);
-    }
-
-    c.folders.set(k, Object.assign(f, { files }));
-  });
-
-  return c;
-};
 
 function* checkThreshold(c: Stats, o?: Stats) {
   const f = (n: number) => n.toFixed(2) + "%";
@@ -191,7 +206,7 @@ File: \`${file}\`
 
 ${msgs.map((m) => `> :warning: ${m}`).join("\n")}
 
-${await comment(cStats, oldStats, tableWithTypeLimit)}
+${await comment(cStats, oldStats, tableWithTypeLimit as keyof Metrics)}
 
 ${signature}`;
 
@@ -232,4 +247,4 @@ ${signature}`;
   });
 };
 
-run().catch(setFailed);
+run().catch((err: Error) => setFailed(err + " Stack: " + err.stack));

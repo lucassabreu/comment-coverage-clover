@@ -42,6 +42,9 @@ inputs:
   with-table:
     description: Add a table with a list of files and its coverage
     default: true
+  show-percentage-change-on-table:
+    description: Show in percentage how much the file coverage changed per file
+    default: false
   table-type-coverage:
     description: Which of the coverage percentages to filter
     default: "lines"
@@ -50,6 +53,9 @@ inputs:
     default: 100
   table-above-coverage:
     description: Show only files above or equal to this coverage percentage
+    default: 0
+  table-coverage-change:
+    description: Show only files which their coverage changed equal or above this percentage
     default: 0
   max-line-coverage-decrease:
     description: how much the line coverage percentage can decrease without failing

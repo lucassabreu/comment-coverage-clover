@@ -89390,36 +89390,60 @@ var Coverage = /** @class */ (function () {
     }
     return Coverage;
 }());
+var Folder = /** @class */ (function () {
+    function Folder(name, files) {
+        if (files === void 0) { files = []; }
+        this.name = name;
+        this.files = files;
+    }
+    Folder.prototype.push = function () {
+        var _a;
+        var files = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            files[_i] = arguments[_i];
+        }
+        (_a = this.files).push.apply(_a, files);
+        return this;
+    };
+    Folder.prototype.get = function (name) {
+        var i = this.files.findIndex(function (f) { return f.name === name; });
+        return i === -1 ? null : this.files[i];
+    };
+    return Folder;
+}());
+var Stats = /** @class */ (function () {
+    function Stats(total, folders) {
+        this.total = total;
+        this.folders = folders;
+    }
+    Stats.prototype.get = function (folder, file) {
+        var _a;
+        return (_a = this.folders.get(folder)) === null || _a === void 0 ? void 0 : _a.get(file);
+    };
+    return Stats;
+}());
 
 var fromString = function (str) {
     var _a = JSON.parse(lib.xml2json(str, { compact: true })).coverage.project, m = _a.metrics._attributes, files = _a.file, packages = _a.package;
     var allFiles = (packages || []).reduce(function (files, p) { return __spreadArray(__spreadArray([], files, true), p.file, true); }, files || []);
-    return {
-        total: {
-            lines: new Coverage(m.statements, m.coveredstatements),
-            methods: new Coverage(m.methods, m.coveredmethods),
-            branchs: new Coverage(m.conditionals, m.coveredconditionals)
-        },
-        folders: allFiles
-            .sort(function (a, b) { return (a._attributes.name < b._attributes.name ? -1 : 1); })
-            .map(function (f) { return (__assign(__assign({}, f), { folder: f._attributes.name.split("/").slice(0, -1).join("/") })); })
-            .reduce(function (files, _a) {
-            var _b;
-            var folder = _a.folder, name = _a._attributes.name, m = _a.metrics._attributes;
-            return files.set(folder, Object.assign(files[folder] || { name: folder }, {
-                files: __spreadArray(__spreadArray([], (((_b = files.get(folder)) === null || _b === void 0 ? void 0 : _b.files) || []), true), [
-                    {
-                        name: name.split("/").pop(),
-                        metrics: {
-                            lines: new Coverage(m.statements, m.coveredstatements),
-                            methods: new Coverage(m.methods, m.coveredmethods),
-                            branchs: new Coverage(m.conditionals, m.coveredconditionals)
-                        }
-                    },
-                ], false)
-            }));
-        }, new Map())
-    };
+    return new Stats({
+        lines: new Coverage(m.statements, m.coveredstatements),
+        methods: new Coverage(m.methods, m.coveredmethods),
+        branchs: new Coverage(m.conditionals, m.coveredconditionals)
+    }, allFiles
+        .sort(function (a, b) { return (a._attributes.name < b._attributes.name ? -1 : 1); })
+        .map(function (f) { return (__assign(__assign({}, f), { folder: f._attributes.name.split("/").slice(0, -1).join("/") })); })
+        .reduce(function (files, _a) {
+        var folder = _a.folder, name = _a._attributes.name, m = _a.metrics._attributes;
+        return files.set(folder, (files.get(folder) || new Folder(folder)).push({
+            name: name.split("/").pop(),
+            metrics: {
+                lines: new Coverage(m.statements, m.coveredstatements),
+                methods: new Coverage(m.methods, m.coveredmethods),
+                branchs: new Coverage(m.conditionals, m.coveredconditionals)
+            }
+        }));
+    }, new Map()));
 };
 
 var tag = function (name) {
@@ -89470,9 +89494,10 @@ var baseUrl = "".concat(context.serverUrl, "/").concat(context.repo.owner, "/").
 if (coreExports.getInput("dir-prefix-keep")) {
     baseUrl = "".concat(baseUrl, "/").concat(coreExports.getInput("dir-prefix-keep")).replace(/\/$/, "");
 }
-var p2s = function (p, lang) {
+var p2s = function (p, lang, zero) {
+    if (zero === void 0) { zero = "-"; }
     return p === undefined || p == 0
-        ? "-"
+        ? zero
         : p.toLocaleString(lang, {
             style: "percent",
             minimumFractionDigits: 2
@@ -89485,16 +89510,33 @@ var c2s = function (c, lang) {
             c.total.toLocaleString(lang, { useGrouping: true })
     });
 };
-var line = function (name, m, lang) {
-    return tr(td(name), td(c2s(m.lines, lang)), td(c2s(m.methods, lang)), td(c2s(m.branchs, lang)));
+var compareFile = function (n, o, lang) {
+    return " " +
+        (o === null
+            ? span(":new:", { title: "new file" })
+            : compare(n, o, lang, true));
 };
-var compare = function (n, o, lang) {
+var line = function (name, m, lang, o, showDelta) {
+    if (o === void 0) { o = null; }
+    if (showDelta === void 0) { showDelta = false; }
+    return tr.apply(void 0, __spreadArray([td(name)], ["lines", "methods", "branchs"].map(function (p) {
+        return td(c2s(m[p], lang) +
+            (!showDelta ? "" : compareFile(m[p], o && o[p], lang)), {
+            align: "right"
+        });
+    }), false));
+};
+var compare = function (n, o, lang, showDelta) {
+    if (showDelta === void 0) { showDelta = false; }
     return span(n.percentual == o.percentual
         ? ":stop_button:"
         : n.percentual < o.percentual
             ? ":arrow_down_small:"
             : ":arrow_up_small:", {
-        title: "Was ".concat(p2s(o.percentual || 0, lang), " before")
+        title: "Was ".concat(p2s(o.percentual || 0, lang, "0%"), " before") +
+            (showDelta && (n.percentual || 0) !== (o.percentual || 0)
+                ? " (".concat(n.percentual > o.percentual ? "+" : "-").concat(p2s(Math.abs(n.percentual - o.percentual), lang), ")")
+                : "")
     });
 };
 var total = function (name, c, oldC) {
@@ -89504,9 +89546,11 @@ var total = function (name, c, oldC) {
 var link = function (folder, file) {
     return a("".concat(baseUrl, "/").concat(folder, "/").concat(file), file);
 };
-var html = function (withTable, c, o) {
+var br = function () { return "<br/>"; };
+var html = function (withTable, c, o, deltaPerFile) {
     if (o === void 0) { o = null; }
-    return (withTable ? tableWrap(c) : span)("Summary - ".concat([
+    if (deltaPerFile === void 0) { deltaPerFile = false; }
+    return (withTable ? tableWrap(c, o, deltaPerFile) : span)("Summary - ".concat([
         total("Lines", c.total.lines, o === null || o === void 0 ? void 0 : o.total.lines),
         total("Methods", c.total.methods, o === null || o === void 0 ? void 0 : o.total.methods),
         total("Branchs", c.total.branchs, o === null || o === void 0 ? void 0 : o.total.branchs),
@@ -89514,12 +89558,15 @@ var html = function (withTable, c, o) {
         .filter(function (v) { return v; })
         .join(" | ")));
 };
-var tableWrap = function (c) {
+var tableWrap = function (c, o, showDelta) {
+    if (o === void 0) { o = null; }
+    if (showDelta === void 0) { showDelta = false; }
     return function (summaryText) {
-        return details(summary(summaryText), "<br/>", table(thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branchs"))), tbody.apply(void 0, Array.from(c.folders.entries()).map(function (_a) {
-            var folder = _a[1];
+        return details(summary(summaryText), br(), table(thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branchs"))), tbody.apply(void 0, Array.from(c.folders.entries()).map(function (_a) {
+            var k = _a[0], folder = _a[1];
             return fragment.apply(void 0, __spreadArray([tr(td(b(folder.name), { colspan: 4 }))], folder.files.map(function (f) {
-                return line("&nbsp; &nbsp;".concat(link(folder.name, f.name)), f.metrics, lang);
+                var _a;
+                return line("&nbsp; &nbsp;".concat(link(folder.name, f.name)), f.metrics, lang, (_a = o === null || o === void 0 ? void 0 : o.get(k, f.name)) === null || _a === void 0 ? void 0 : _a.metrics, showDelta);
             }), false));
         }))));
     };
@@ -89529,12 +89576,13 @@ var workspace = coreExports.getInput("dir-prefix") || process.env.GITHUB_WORKSPA
 var token = coreExports.getInput("github-token") || process.env.GITHUB_TOKEN;
 var file = coreExports.getInput("file") || process.env.FILE;
 var baseFile = coreExports.getInput("base-file") || process.env.BASE_FILE;
-var onlyWithCover = coreExports.getInput("only-with-cover") == "true";
-var onlyWithCoverableLines = coreExports.getInput("only-with-coverable-lines") == "true";
+var onlyWithCover = coreExports.getBooleanInput("only-with-cover");
+var onlyWithCoverableLines = coreExports.getBooleanInput("only-with-coverable-lines");
 var withChart = coreExports.getInput("with-chart") == "true";
 var withTable = coreExports.getInput("with-table") == "true";
 var tableWithOnlyBellow = Number(coreExports.getInput("table-below-coverage") || 100);
 var tableWithOnlyAbove = Number(coreExports.getInput("table-above-coverage") || 0);
+var tableWithChangeAbove = Number(coreExports.getInput("table-coverage-change") || 0);
 var tableWithTypeLimit = coreExports.getInput("table-type-coverage") || "lines";
 var signature = "<sub data-file=".concat(JSON.stringify(file), ">").concat(coreExports.getInput("signature") ||
     ':robot: comment via <a href="https://github.com/lucassabreu/comment-coverage-clover">lucassabreu/comment-coverage-clover</a>', "</sub>");
@@ -89543,6 +89591,7 @@ var maxLineCoverageDecrease = coreExports.getInput("max-line-coverage-decrease")
 var maxMethodCoverageDecrease = coreExports.getInput("max-method-coverage-decrease");
 var minLineCoverage = Number(coreExports.getInput("min-line-coverage"));
 var minMethodCoverage = Number(coreExports.getInput("min-method-coverage"));
+var showPercentageChangePerFile = coreExports.getBooleanInput("show-percentage-change-on-table");
 var comment = function (cStats, oldStats, coverageType) { return __awaiter$1(void 0, void 0, void 0, function () {
     var w;
     return __generator(this, function (_a) {
@@ -89552,27 +89601,45 @@ var comment = function (cStats, oldStats, coverageType) { return __awaiter$1(voi
                 name: v.name.startsWith(w) ? v.name.slice(w.length) : v.name
             }));
         });
-        cStats = filterConverage(cStats, coverageType, tableWithOnlyAbove, tableWithOnlyBellow);
         return [2 /*return*/, ((withChart ? chart(cStats, oldStats) : "") +
-                html(withTable, rmWithout(cStats, {
+                html(withTable, filter(cStats, {
                     cover: onlyWithCover,
                     coverableLines: onlyWithCoverableLines
-                }), oldStats))];
+                }, {
+                    type: coverageType,
+                    min: tableWithOnlyAbove,
+                    max: tableWithOnlyBellow,
+                    delta: tableWithChangeAbove
+                }, oldStats), oldStats, showPercentageChangePerFile))];
     });
 }); };
-var rmWithout = function (s, onlyWith) {
+var filter = function (s, onlyWith, onlyBetween, o) {
+    if (o === void 0) { o = null; }
     var filters = [];
-    if (onlyWith.cover) {
+    if (onlyWith.cover)
         filters.push(function (f) { return f.metrics.lines.covered !== 0; });
-    }
-    if (onlyWith.coverableLines) {
+    if (onlyWith.coverableLines)
         filters.push(function (f) { return f.metrics.lines.total !== 0; });
+    if (onlyBetween.type) {
+        if (onlyBetween.min > 0 || onlyBetween.max < 100)
+            filters.push(function (f) {
+                return between(f.metrics[onlyBetween.type].percentual * 100, onlyBetween.min, onlyBetween.max);
+            });
+        if (onlyBetween.delta > 0 && o !== null)
+            filters.push(function (f, folder) {
+                var of = o.get(folder, f.name);
+                return (!of ||
+                    Math.abs(f.metrics[onlyBetween.type].percentual -
+                        of.metrics[onlyBetween.type].percentual) *
+                        100 >
+                        onlyBetween.delta);
+            });
     }
     if (filters === [])
         return s;
     s.folders.forEach(function (folder, key) {
         folder.files = folder.files.filter(function (f) {
-            return filters.reduce(function (r, fn) { return r && fn(f); }, true);
+            return filters.reduce(function (r, fn) { return r && fn(f, key); }, true);
         });
         if (folder.files.length === 0)
             s.folders["delete"](key);
@@ -89581,20 +89648,6 @@ var rmWithout = function (s, onlyWith) {
 };
 var between = function (v, min, max) {
     return min <= (v || 0) && (v || 0) <= max;
-};
-var filterConverage = function (c, type, min, max) {
-    if (min <= 0 && max >= 100)
-        return c;
-    c.folders.forEach(function (f, k) {
-        var files = f.files.filter(function (f) {
-            return between(f.metrics[type].percentual * 100, min, max);
-        });
-        if (files.length === 0) {
-            return c.folders["delete"](k);
-        }
-        c.folders.set(k, Object.assign(f, { files: files }));
-    });
-    return c;
 };
 function checkThreshold(c, o) {
     var f, lcdiff, mcdiff;
@@ -89715,5 +89768,5 @@ var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
         }
     });
 }); };
-run()["catch"](coreExports.setFailed);
+run()["catch"](function (err) { return coreExports.setFailed(err + " Stack: " + err.stack); });
 //# sourceMappingURL=index.js.map

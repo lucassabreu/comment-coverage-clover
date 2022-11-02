@@ -1,5 +1,5 @@
 import { xml2json } from "xml-js";
-import { Coverage, Stats } from "../types";
+import { Coverage, Folder, Stats } from "../types";
 
 interface CloverXMLMetrics {
   _attributes: {
@@ -54,13 +54,13 @@ export const fromString = (str: string): Stats => {
     files || []
   );
 
-  return {
-    total: {
+  return new Stats(
+    {
       lines: new Coverage(m.statements, m.coveredstatements),
       methods: new Coverage(m.methods, m.coveredmethods),
       branchs: new Coverage(m.conditionals, m.coveredconditionals),
     },
-    folders: allFiles
+    allFiles
       .sort((a, b) => (a._attributes.name < b._attributes.name ? -1 : 1))
       .map((f) => ({
         ...f,
@@ -73,24 +73,16 @@ export const fromString = (str: string): Stats => {
         ) =>
           files.set(
             folder,
-            Object.assign(files[folder] || { name: folder }, {
-              files: [
-                ...(files.get(folder)?.files || []),
-                {
-                  name: name.split("/").pop(),
-                  metrics: {
-                    lines: new Coverage(m.statements, m.coveredstatements),
-                    methods: new Coverage(m.methods, m.coveredmethods),
-                    branchs: new Coverage(
-                      m.conditionals,
-                      m.coveredconditionals
-                    ),
-                  },
-                },
-              ],
+            (files.get(folder) || new Folder(folder)).push({
+              name: name.split("/").pop(),
+              metrics: {
+                lines: new Coverage(m.statements, m.coveredstatements),
+                methods: new Coverage(m.methods, m.coveredmethods),
+                branchs: new Coverage(m.conditionals, m.coveredconditionals),
+              },
             })
           ),
-        new Map()
-      ),
-  } as Stats;
+        new Map<string, Folder>()
+      )
+  );
 };
