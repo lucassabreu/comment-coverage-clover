@@ -183,8 +183,8 @@ jobs:
           dir-prefix: /var/www/html
           file: nolines.xml
           with-chart: false
-          signature: "only coverable lines"
           only-with-coverable-lines: true
+          signature: "only coverable lines"
 
       - name: clover file to comment - only with percentage change and with some cover
         uses: ./.
@@ -198,3 +198,13 @@ jobs:
           show-percentage-change-on-table: true
           only-with-cover: true
           signature: "clover file to comment - only with percentage change and with some cover"
+
+      - name: clover file to comment - no lines after filter
+        uses: ./.
+        with:
+          dir-prefix: /var/www/html
+          file: nolines.xml
+          with-chart: true
+          table-below-coverage: 80
+          only-with-coverable-lines: true
+          signature: "clover file to comment - no lines after filter"
