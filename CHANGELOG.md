@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- when no files/lines are left after the filters the comment will show "No files reported or matching filters"
+  on the table.
+
 ## [0.8.0] - 2022-11-02
 
 ### Added
