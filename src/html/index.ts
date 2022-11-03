@@ -134,20 +134,22 @@ const tableWrap =
       table(
         thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branchs"))),
         tbody(
-          ...Array.from(c.folders.entries()).map(([k, folder]) =>
-            fragment(
-              tr(td(b(folder.name), { colspan: 4 })),
-              ...folder.files.map((f: File) =>
-                line(
-                  `&nbsp; &nbsp;${link(folder.name, f.name)}`,
-                  f.metrics,
-                  lang,
-                  o?.get(k, f.name)?.metrics,
-                  showDelta
+          ...(c.folders.size === 0
+            ? [tr(td("No files reported or matching filters", { colspan: 4 }))]
+            : Array.from(c.folders.entries()).map(([k, folder]) =>
+                fragment(
+                  tr(td(b(folder.name), { colspan: 4 })),
+                  ...folder.files.map((f: File) =>
+                    line(
+                      `&nbsp; &nbsp;${link(folder.name, f.name)}`,
+                      f.metrics,
+                      lang,
+                      o?.get(k, f.name)?.metrics,
+                      showDelta
+                    )
+                  )
                 )
-              )
-            )
-          )
+              ))
         )
       )
     );

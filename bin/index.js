@@ -89564,13 +89564,15 @@ var tableWrap = function (c, o, showDelta) {
     if (o === void 0) { o = null; }
     if (showDelta === void 0) { showDelta = false; }
     return function (summaryText) {
-        return details(summary(summaryText), "<br />", table(thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branchs"))), tbody.apply(void 0, Array.from(c.folders.entries()).map(function (_a) {
-            var k = _a[0], folder = _a[1];
-            return fragment.apply(void 0, __spreadArray([tr(td(b(folder.name), { colspan: 4 }))], folder.files.map(function (f) {
-                var _a;
-                return line("&nbsp; &nbsp;".concat(link(folder.name, f.name)), f.metrics, lang, (_a = o === null || o === void 0 ? void 0 : o.get(k, f.name)) === null || _a === void 0 ? void 0 : _a.metrics, showDelta);
-            }), false));
-        }))));
+        return details(summary(summaryText), "<br />", table(thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branchs"))), tbody.apply(void 0, (c.folders.size === 0
+            ? [tr(td("No files reported or matching filters", { colspan: 4 }))]
+            : Array.from(c.folders.entries()).map(function (_a) {
+                var k = _a[0], folder = _a[1];
+                return fragment.apply(void 0, __spreadArray([tr(td(b(folder.name), { colspan: 4 }))], folder.files.map(function (f) {
+                    var _a;
+                    return line("&nbsp; &nbsp;".concat(link(folder.name, f.name)), f.metrics, lang, (_a = o === null || o === void 0 ? void 0 : o.get(k, f.name)) === null || _a === void 0 ? void 0 : _a.metrics, showDelta);
+                }), false));
+            })))));
     };
 };
 
