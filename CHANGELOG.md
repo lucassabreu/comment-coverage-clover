@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0] - 2023-02-17
+
 ### Fixed
 
 - when no files/lines are left after the filters the comment will show "No files reported or matching filters"
@@ -153,7 +155,8 @@ as bundling tool.
 - implemented base action reading clover.xml files and converting then.
 - release.yml workflow to auto-release tags
 
-[Unreleased]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.7.1...v0.8.0
 [0.7.1]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.6.0...v0.7.0
