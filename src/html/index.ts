@@ -50,6 +50,27 @@ const compareFile = (n: Coverage, o: null | Coverage, lang: string) =>
     ? span(":new:", { title: "new file" })
     : compare(n, o, lang, true));
 
+interface Stringable {
+  toString: () => string;
+}
+
+const limitedFragment = (
+  limit: number,
+  noSpaceLeft: string,
+  ...children: Stringable[]
+) => {
+  limit -= noSpaceLeft.length;
+  let html = "";
+  for (let c of children) {
+    const s = c.toString();
+    if (s.length > limit) return html + noSpaceLeft;
+    limit -= s.length;
+    html += s;
+  }
+
+  return html;
+};
+
 const line = (
   name: string,
   m: Metrics,
@@ -134,22 +155,26 @@ const tableWrap =
       table(
         thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branchs"))),
         tbody(
-          ...(c.folders.size === 0
-            ? [tr(td("No files reported or matching filters", { colspan: 4 }))]
-            : Array.from(c.folders.entries()).map(([k, folder]) =>
-                fragment(
-                  tr(td(b(folder.name), { colspan: 4 })),
-                  ...folder.files.map((f: File) =>
-                    line(
-                      `&nbsp; &nbsp;${link(folder.name, f.name)}`,
-                      f.metrics,
-                      lang,
-                      o?.get(k, f.name)?.metrics,
-                      showDelta
-                    )
-                  )
-                )
-              ))
+          c.folders.size === 0
+            ? tr(td("No files reported or matching filters", { colspan: 4 }))
+            : limitedFragment(
+                65536 - 4000,
+                tr(td(b("Table truncated to fit comment"), { colspan: 4 })),
+                ...Array.from(c.folders.entries())
+                  .map(([k, folder]) => [
+                    tr(td(b(folder.name), { colspan: 4 })),
+                    ...folder.files.map((f: File) =>
+                      line(
+                        `&nbsp; &nbsp;${link(folder.name, f.name)}`,
+                        f.metrics,
+                        lang,
+                        o?.get(k, f.name)?.metrics,
+                        showDelta
+                      )
+                    ),
+                  ])
+                  .reduce((accum, item) => [...accum, ...item], [])
+              )
         )
       )
     );
