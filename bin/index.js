@@ -89519,6 +89519,23 @@ var compareFile = function (n, o, lang) {
             ? span(":new:", { title: "new file" })
             : compare(n, o, lang, true));
 };
+var limitedFragment = function (limit, noSpaceLeft) {
+    var children = [];
+    for (var _i = 2; _i < arguments.length; _i++) {
+        children[_i - 2] = arguments[_i];
+    }
+    limit -= noSpaceLeft.length;
+    var html = "";
+    for (var _a = 0, children_1 = children; _a < children_1.length; _a++) {
+        var c = children_1[_a];
+        var s = c.toString();
+        if (s.length > limit)
+            return html + noSpaceLeft;
+        limit -= s.length;
+        html += s;
+    }
+    return html;
+};
 var line = function (name, m, lang, o, showDelta) {
     if (o === void 0) { o = null; }
     if (showDelta === void 0) { showDelta = false; }
@@ -89564,15 +89581,20 @@ var tableWrap = function (c, o, showDelta) {
     if (o === void 0) { o = null; }
     if (showDelta === void 0) { showDelta = false; }
     return function (summaryText) {
-        return details(summary(summaryText), "<br />", table(thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branchs"))), tbody.apply(void 0, (c.folders.size === 0
-            ? [tr(td("No files reported or matching filters", { colspan: 4 }))]
-            : Array.from(c.folders.entries()).map(function (_a) {
+        return details(summary(summaryText), "<br />", table(thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branchs"))), tbody(c.folders.size === 0
+            ? tr(td("No files reported or matching filters", { colspan: 4 }))
+            : limitedFragment.apply(void 0, __spreadArray([65536 - 4000,
+                tr(td(b("Table truncated to fit comment"), { colspan: 4 }))], Array.from(c.folders.entries())
+                .map(function (_a) {
                 var k = _a[0], folder = _a[1];
-                return fragment.apply(void 0, __spreadArray([tr(td(b(folder.name), { colspan: 4 }))], folder.files.map(function (f) {
+                return __spreadArray([
+                    tr(td(b(folder.name), { colspan: 4 }))
+                ], folder.files.map(function (f) {
                     var _a;
                     return line("&nbsp; &nbsp;".concat(link(folder.name, f.name)), f.metrics, lang, (_a = o === null || o === void 0 ? void 0 : o.get(k, f.name)) === null || _a === void 0 ? void 0 : _a.metrics, showDelta);
-                }), false));
-            })))));
+                }), true);
+            })
+                .reduce(function (accum, item) { return __spreadArray(__spreadArray([], accum, true), item, true); }, []), false)))));
     };
 };
 
