@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - when no files/lines are left after the filters the comment will show "No files reported or matching filters"
   on the table.
+- when the size of the comment becomes too big for Github, the table will be cut short with the comment
+  "Table truncated to fit comment"
 
 ## [0.8.0] - 2022-11-02
 
