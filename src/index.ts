@@ -118,7 +118,7 @@ const filter = (
       });
   }
 
-  if (filters === []) return s;
+  if (filters.length === 0) return s;
 
   s.folders.forEach((folder, key) => {
     folder.files = folder.files.filter((f) =>

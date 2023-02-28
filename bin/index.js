@@ -89661,7 +89661,7 @@ var filter = function (s, onlyWith, onlyBetween, o) {
                         onlyBetween.delta);
             });
     }
-    if (filters === [])
+    if (filters.length === 0)
         return s;
     s.folders.forEach(function (folder, key) {
         folder.files = folder.files.filter(function (f) {
