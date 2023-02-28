@@ -89428,26 +89428,30 @@ var Stats = /** @class */ (function () {
 
 var fromString = function (str) {
     var _a = JSON.parse(lib.xml2json(str, { compact: true })).coverage.project, m = _a.metrics._attributes, files = _a.file, packages = _a.package;
-    var allFiles = (packages || []).reduce(function (files, p) { return __spreadArray(__spreadArray([], files, true), p.file, true); }, files || []);
+    var allFiles = (packages || []).reduce(function (acc, p) { return __spreadArray(__spreadArray([], acc, true), (Array.isArray(p.file) ? p.file : [p.file]), true); }, files || []);
     return new Stats({
         lines: new Coverage(m.statements, m.coveredstatements),
         methods: new Coverage(m.methods, m.coveredmethods),
         branchs: new Coverage(m.conditionals, m.coveredconditionals)
     }, allFiles
-        .sort(function (a, b) { return (a._attributes.name < b._attributes.name ? -1 : 1); })
-        .map(function (f) { return (__assign(__assign({}, f), { folder: (f._attributes.path || f._attributes.name).split("/").slice(0, -1).join("/") })); })
-        .reduce(function (files, _a) {
-        var folder = _a.folder, _b = _a._attributes, path = _b.path, name = _b.name, m = _a.metrics._attributes;
-        return files.set(folder, (files.get(folder) || new Folder(folder)).push({
-            name: (path || name).split("/").pop(),
+        .sort(function (a, b) { return (getCloverFileName(a) < getCloverFileName(b) ? -1 : 1); })
+        .map(function (file) { return (__assign(__assign({}, file), { folder: getCloverFileName(file).split("/").slice(0, -1).join("/") })); })
+        .reduce(function (acc, file) {
+        var mAttrs = file.metrics._attributes;
+        acc.set(file.folder, (acc.get(file.folder) || new Folder(file.folder)).push({
+            name: getCloverFileName(file).split("/").pop(),
             metrics: {
-                lines: new Coverage(m.statements, m.coveredstatements),
-                methods: new Coverage(m.methods, m.coveredmethods),
-                branchs: new Coverage(m.conditionals, m.coveredconditionals)
+                lines: new Coverage(mAttrs.statements, mAttrs.coveredstatements),
+                methods: new Coverage(mAttrs.methods, mAttrs.coveredmethods),
+                branchs: new Coverage(mAttrs.conditionals, mAttrs.coveredconditionals)
             }
         }));
+        return acc;
     }, new Map()));
 };
+function getCloverFileName(file) {
+    return file._attributes.path || file._attributes.name;
+}
 
 var tag = function (name) {
     return function (children, attr) {
@@ -89654,21 +89658,23 @@ var filter = function (s, onlyWith, onlyBetween, o) {
         if (onlyBetween.delta > 0 && o !== null)
             filters.push(function (f, folder) {
                 var of = o.get(folder, f.name);
-                return (!of ||
-                    Math.abs(f.metrics[onlyBetween.type].percentual -
-                        of.metrics[onlyBetween.type].percentual) *
-                        100 >
-                        onlyBetween.delta);
+                if (!of) {
+                    return true;
+                }
+                var absDiff = Math.abs(f.metrics[onlyBetween.type].percentual - of.metrics[onlyBetween.type].percentual);
+                return (absDiff * 100) > onlyBetween.delta;
             });
     }
-    if (filters.length === 0)
+    if (filters.length === 0) {
         return s;
+    }
     s.folders.forEach(function (folder, key) {
         folder.files = folder.files.filter(function (f) {
             return filters.reduce(function (r, fn) { return r && fn(f, key); }, true);
         });
-        if (folder.files.length === 0)
+        if (folder.files.length === 0) {
             s.folders["delete"](key);
+        }
     });
     return s;
 };

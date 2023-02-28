@@ -35,7 +35,7 @@ interface CloverXML {
     project: {
       timespamp: number;
       file?: CloverFileXML[];
-      package?: { file: CloverFileXML[] }[];
+      package?: { file: CloverFileXML | CloverFileXML[] }[];
       metrics: CloverXMLMetrics & { files: number };
     };
   };
@@ -52,8 +52,8 @@ export const fromString = (str: string): Stats => {
     },
   } = JSON.parse(xml2json(str, { compact: true })) as CloverXML;
 
-  let allFiles = (packages || []).reduce(
-    (files, p) => [...files, ...p.file],
+  const allFiles = (packages || []).reduce(
+    (acc, p) => [...acc, ...(Array.isArray(p.file) ? p.file : [p.file])],
     files || []
   );
 
@@ -64,28 +64,34 @@ export const fromString = (str: string): Stats => {
       branchs: new Coverage(m.conditionals, m.coveredconditionals),
     },
     allFiles
-      .sort((a, b) => (a._attributes.name < b._attributes.name ? -1 : 1))
-      .map((f) => ({
-        ...f,
-        folder: (f._attributes.path || f._attributes.name).split("/").slice(0, -1).join("/"),
+      .sort((a, b) => (getCloverFileName(a) < getCloverFileName(b) ? -1 : 1))
+      .map((file) => ({
+        ...file,
+        folder: getCloverFileName(file).split("/").slice(0, -1).join("/"),
       }))
       .reduce(
-        (
-          files,
-          { folder, _attributes: { path, name }, metrics: { _attributes: m } }
-        ) =>
-          files.set(
-            folder,
-            (files.get(folder) || new Folder(folder)).push({
-              name: (path || name).split("/").pop(),
+        (acc, file) => {
+          const mAttrs = file.metrics._attributes;
+
+          acc.set(
+            file.folder,
+            (acc.get(file.folder) || new Folder(file.folder)).push({
+              name: getCloverFileName(file).split("/").pop(),
               metrics: {
-                lines: new Coverage(m.statements, m.coveredstatements),
-                methods: new Coverage(m.methods, m.coveredmethods),
-                branchs: new Coverage(m.conditionals, m.coveredconditionals),
+                lines: new Coverage(mAttrs.statements, mAttrs.coveredstatements),
+                methods: new Coverage(mAttrs.methods, mAttrs.coveredmethods),
+                branchs: new Coverage(mAttrs.conditionals, mAttrs.coveredconditionals),
               },
             })
-          ),
+          );
+
+          return acc;
+        },
         new Map<string, Folder>()
       )
   );
 };
+
+function getCloverFileName(file: CloverFileXML): string {
+  return file._attributes.path || file._attributes.name;
+}
