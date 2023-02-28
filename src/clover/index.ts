@@ -19,7 +19,10 @@ interface CloverXMLMetrics {
 }
 
 interface CloverFileXML {
-  _attributes: { name: string };
+  _attributes: {
+    name: string;
+    path?: string;
+  };
   class: {
     name: string;
   };
@@ -64,17 +67,17 @@ export const fromString = (str: string): Stats => {
       .sort((a, b) => (a._attributes.name < b._attributes.name ? -1 : 1))
       .map((f) => ({
         ...f,
-        folder: f._attributes.name.split("/").slice(0, -1).join("/"),
+        folder: (f._attributes.path || f._attributes.name).split("/").slice(0, -1).join("/"),
       }))
       .reduce(
         (
           files,
-          { folder, _attributes: { name }, metrics: { _attributes: m } }
+          { folder, _attributes: { path, name }, metrics: { _attributes: m } }
         ) =>
           files.set(
             folder,
             (files.get(folder) || new Folder(folder)).push({
-              name: name.split("/").pop(),
+              name: (path || name).split("/").pop(),
               metrics: {
                 lines: new Coverage(m.statements, m.coveredstatements),
                 methods: new Coverage(m.methods, m.coveredmethods),

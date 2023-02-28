@@ -89435,11 +89435,11 @@ var fromString = function (str) {
         branchs: new Coverage(m.conditionals, m.coveredconditionals)
     }, allFiles
         .sort(function (a, b) { return (a._attributes.name < b._attributes.name ? -1 : 1); })
-        .map(function (f) { return (__assign(__assign({}, f), { folder: f._attributes.name.split("/").slice(0, -1).join("/") })); })
+        .map(function (f) { return (__assign(__assign({}, f), { folder: (f._attributes.path || f._attributes.name).split("/").slice(0, -1).join("/") })); })
         .reduce(function (files, _a) {
-        var folder = _a.folder, name = _a._attributes.name, m = _a.metrics._attributes;
+        var folder = _a.folder, _b = _a._attributes, path = _b.path, name = _b.name, m = _a.metrics._attributes;
         return files.set(folder, (files.get(folder) || new Folder(folder)).push({
-            name: name.split("/").pop(),
+            name: (path || name).split("/").pop(),
             metrics: {
                 lines: new Coverage(m.statements, m.coveredstatements),
                 methods: new Coverage(m.methods, m.coveredmethods),
