@@ -87,7 +87,8 @@ const filter = (
   },
   o: Stats = null
 ): Stats => {
-  let filters: ((f: File, folder: string) => boolean)[] = [];
+  const filters: ((f: File, folder: string) => boolean)[] = [];
+
   if (onlyWith.cover) filters.push((f) => f.metrics.lines.covered !== 0);
 
   if (onlyWith.coverableLines) filters.push((f) => f.metrics.lines.total !== 0);
@@ -118,13 +119,17 @@ const filter = (
       });
   }
 
-  if (filters === []) return s;
+  if (filters.length === 0) {
+    return s;
+  }
 
   s.folders.forEach((folder, key) => {
     folder.files = folder.files.filter((f) =>
       filters.reduce((r, fn) => r && fn(f, key), true)
     );
-    if (folder.files.length === 0) s.folders.delete(key);
+    if (folder.files.length === 0) {
+      s.folders.delete(key);
+    }
   });
 
   return s;

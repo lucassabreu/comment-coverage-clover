@@ -89428,12 +89428,16 @@ var Stats = /** @class */ (function () {
 
 var fromString = function (str) {
     var _a = JSON.parse(lib.xml2json(str, { compact: true })).coverage.project, m = _a.metrics._attributes, files = _a.file, packages = _a.package;
-    var allFiles = (packages || []).reduce(function (files, p) { return __spreadArray(__spreadArray([], files, true), p.file, true); }, files || []);
+    var allFiles = (packages || []).reduce(function (acc, p) { return __spreadArray(__spreadArray([], acc, true), (Array.isArray(p.file) ? p.file : [p.file]), true); }, files || []);
     return new Stats({
         lines: new Coverage(m.statements, m.coveredstatements),
         methods: new Coverage(m.methods, m.coveredmethods),
         branchs: new Coverage(m.conditionals, m.coveredconditionals)
     }, allFiles
+        .map(function (f) {
+        f._attributes.name = f._attributes.path || f._attributes.name;
+        return f;
+    })
         .sort(function (a, b) { return (a._attributes.name < b._attributes.name ? -1 : 1); })
         .map(function (f) { return (__assign(__assign({}, f), { folder: f._attributes.name.split("/").slice(0, -1).join("/") })); })
         .reduce(function (files, _a) {
@@ -89661,14 +89665,16 @@ var filter = function (s, onlyWith, onlyBetween, o) {
                         onlyBetween.delta);
             });
     }
-    if (filters === [])
+    if (filters.length === 0) {
         return s;
+    }
     s.folders.forEach(function (folder, key) {
         folder.files = folder.files.filter(function (f) {
             return filters.reduce(function (r, fn) { return r && fn(f, key); }, true);
         });
-        if (folder.files.length === 0)
+        if (folder.files.length === 0) {
             s.folders["delete"](key);
+        }
     });
     return s;
 };

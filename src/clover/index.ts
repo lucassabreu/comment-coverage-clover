@@ -19,7 +19,10 @@ interface CloverXMLMetrics {
 }
 
 interface CloverFileXML {
-  _attributes: { name: string };
+  _attributes: {
+    name: string;
+    path?: string;
+  };
   class: {
     name: string;
   };
@@ -32,7 +35,7 @@ interface CloverXML {
     project: {
       timespamp: number;
       file?: CloverFileXML[];
-      package?: { file: CloverFileXML[] }[];
+      package?: { file: CloverFileXML | CloverFileXML[] }[];
       metrics: CloverXMLMetrics & { files: number };
     };
   };
@@ -49,8 +52,8 @@ export const fromString = (str: string): Stats => {
     },
   } = JSON.parse(xml2json(str, { compact: true })) as CloverXML;
 
-  let allFiles = (packages || []).reduce(
-    (files, p) => [...files, ...p.file],
+  const allFiles = (packages || []).reduce(
+    (acc, p) => [...acc, ...(Array.isArray(p.file) ? p.file : [p.file])],
     files || []
   );
 
@@ -61,6 +64,10 @@ export const fromString = (str: string): Stats => {
       branchs: new Coverage(m.conditionals, m.coveredconditionals),
     },
     allFiles
+      .map((f) => {
+        f._attributes.name = f._attributes.path || f._attributes.name
+        return f;
+      })
       .sort((a, b) => (a._attributes.name < b._attributes.name ? -1 : 1))
       .map((f) => ({
         ...f,
