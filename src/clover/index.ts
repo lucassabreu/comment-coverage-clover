@@ -65,10 +65,10 @@ export const fromString = (str: string): Stats => {
     },
     allFiles
       .map((f) => {
-        f._attributes.name = f._attributes.path || f._attributes.name
+        f._attributes.name = f._attributes.path || f._attributes.name;
         return f;
       })
-      .sort((a, b) => a._attributes.name < b._attributes.name ? -1 : 1)
+      .sort((a, b) => (a._attributes.name < b._attributes.name ? -1 : 1))
       .map((file) => ({
         ...file,
         folder: file._attributes.name.split("/").slice(0, -1).join("/"),
@@ -76,8 +76,8 @@ export const fromString = (str: string): Stats => {
       .reduce(
         (
           files,
-          { folder, _attributes: { name }, metrics: { _attributes: m }
-        }) => 
+          { folder, _attributes: { name }, metrics: { _attributes: m } }
+        ) =>
           files.set(
             folder,
             (files.get(folder) || new Folder(folder)).push({

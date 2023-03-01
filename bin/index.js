@@ -89438,7 +89438,7 @@ var fromString = function (str) {
         f._attributes.name = f._attributes.path || f._attributes.name;
         return f;
     })
-        .sort(function (a, b) { return a._attributes.name < b._attributes.name ? -1 : 1; })
+        .sort(function (a, b) { return (a._attributes.name < b._attributes.name ? -1 : 1); })
         .map(function (file) { return (__assign(__assign({}, file), { folder: file._attributes.name.split("/").slice(0, -1).join("/") })); })
         .reduce(function (files, _a) {
         var folder = _a.folder, name = _a._attributes.name, m = _a.metrics._attributes;
