@@ -65,7 +65,7 @@ export const fromString = (str: string): Stats => {
     },
     allFiles
       .map((f) => {
-        f._attributes.name = f._attributes.path || f._attributes.name
+        f._attributes.name = f._attributes.path || f._attributes.name;
         return f;
       })
       .sort((a, b) => (a._attributes.name < b._attributes.name ? -1 : 1))
