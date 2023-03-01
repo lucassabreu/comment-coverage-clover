@@ -106,13 +106,16 @@ const filter = (
     if (onlyBetween.delta > 0 && o !== null)
       filters.push((f, folder) => {
         const of = o.get(folder, f.name);
-        if (!of) {
-          return true;
-        }
 
-        const absDiff = Math.abs(f.metrics[onlyBetween.type].percentual - of.metrics[onlyBetween.type].percentual)
-
-        return (absDiff * 100) > onlyBetween.delta;
+        return (
+          !of ||
+          Math.abs(
+            f.metrics[onlyBetween.type].percentual -
+              of.metrics[onlyBetween.type].percentual
+          ) *
+            100 >
+            onlyBetween.delta
+        );
       });
   }
 

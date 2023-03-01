@@ -89434,24 +89434,24 @@ var fromString = function (str) {
         methods: new Coverage(m.methods, m.coveredmethods),
         branchs: new Coverage(m.conditionals, m.coveredconditionals)
     }, allFiles
-        .sort(function (a, b) { return (getCloverFileName(a) < getCloverFileName(b) ? -1 : 1); })
-        .map(function (file) { return (__assign(__assign({}, file), { folder: getCloverFileName(file).split("/").slice(0, -1).join("/") })); })
-        .reduce(function (acc, file) {
-        var mAttrs = file.metrics._attributes;
-        acc.set(file.folder, (acc.get(file.folder) || new Folder(file.folder)).push({
-            name: getCloverFileName(file).split("/").pop(),
+        .map(function (f) {
+        f._attributes.name = f._attributes.path || f._attributes.name;
+        return f;
+    })
+        .sort(function (a, b) { return (a._attributes.name < b._attributes.name ? -1 : 1); })
+        .map(function (f) { return (__assign(__assign({}, f), { folder: f._attributes.name.split("/").slice(0, -1).join("/") })); })
+        .reduce(function (files, _a) {
+        var folder = _a.folder, name = _a._attributes.name, m = _a.metrics._attributes;
+        return files.set(folder, (files.get(folder) || new Folder(folder)).push({
+            name: name.split("/").pop(),
             metrics: {
-                lines: new Coverage(mAttrs.statements, mAttrs.coveredstatements),
-                methods: new Coverage(mAttrs.methods, mAttrs.coveredmethods),
-                branchs: new Coverage(mAttrs.conditionals, mAttrs.coveredconditionals)
+                lines: new Coverage(m.statements, m.coveredstatements),
+                methods: new Coverage(m.methods, m.coveredmethods),
+                branchs: new Coverage(m.conditionals, m.coveredconditionals)
             }
         }));
-        return acc;
     }, new Map()));
 };
-function getCloverFileName(file) {
-    return file._attributes.path || file._attributes.name;
-}
 
 var tag = function (name) {
     return function (children, attr) {
@@ -89658,11 +89658,11 @@ var filter = function (s, onlyWith, onlyBetween, o) {
         if (onlyBetween.delta > 0 && o !== null)
             filters.push(function (f, folder) {
                 var of = o.get(folder, f.name);
-                if (!of) {
-                    return true;
-                }
-                var absDiff = Math.abs(f.metrics[onlyBetween.type].percentual - of.metrics[onlyBetween.type].percentual);
-                return (absDiff * 100) > onlyBetween.delta;
+                return (!of ||
+                    Math.abs(f.metrics[onlyBetween.type].percentual -
+                        of.metrics[onlyBetween.type].percentual) *
+                        100 >
+                        onlyBetween.delta);
             });
     }
     if (filters.length === 0) {
