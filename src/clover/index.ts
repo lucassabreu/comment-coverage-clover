@@ -29,17 +29,24 @@ interface CloverFileXML {
   metrics: CloverXMLMetrics;
 }
 
+interface CloverPackageXML {
+  file: CloverFileXML | CloverFileXML[];
+}
+
 interface CloverXML {
   coverage: {
     generated: string;
     project: {
       timespamp: number;
-      file?: CloverFileXML[];
-      package?: { file: CloverFileXML | CloverFileXML[] }[];
+      file?: CloverFileXML[] | CloverFileXML;
+      package?: CloverPackageXML[] | CloverPackageXML;
       metrics: CloverXMLMetrics & { files: number };
     };
   };
 }
+
+const asList = <T>(arg: undefined | T | T[]): T[] =>
+  !!arg ? (Array.isArray(arg) ? arg : [arg]) : [];
 
 export const fromString = (str: string): Stats => {
   const {
@@ -52,9 +59,9 @@ export const fromString = (str: string): Stats => {
     },
   } = JSON.parse(xml2json(str, { compact: true })) as CloverXML;
 
-  const allFiles = (packages || []).reduce(
-    (acc, p) => [...acc, ...(Array.isArray(p.file) ? p.file : [p.file])],
-    files || []
+  const allFiles = asList(packages).reduce(
+    (acc, p) => [...acc, ...asList(p.file)],
+    asList(files)
   );
 
   return new Stats(
