@@ -208,3 +208,13 @@ jobs:
           table-below-coverage: 80
           only-with-coverable-lines: true
           signature: "clover file to comment - no lines after filter"
+
+      - name: clover file to comment - only one package
+        uses: ./.
+        with:
+          dir-prefix: /var/www/html
+          file: clover.onepackage.xml
+          base-file: clover.onepackage.base.xml
+          with-chart: true
+          show-percentage-change-on-table: true
+          signature: "clover file to comment - only one package"

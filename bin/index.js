@@ -89426,9 +89426,12 @@ var Stats = /** @class */ (function () {
     return Stats;
 }());
 
+var asList = function (arg) {
+    return !!arg ? (Array.isArray(arg) ? arg : [arg]) : [];
+};
 var fromString = function (str) {
     var _a = JSON.parse(lib.xml2json(str, { compact: true })).coverage.project, m = _a.metrics._attributes, files = _a.file, packages = _a.package;
-    var allFiles = (packages || []).reduce(function (acc, p) { return __spreadArray(__spreadArray([], acc, true), (Array.isArray(p.file) ? p.file : [p.file]), true); }, files || []);
+    var allFiles = asList(packages).reduce(function (acc, p) { return __spreadArray(__spreadArray([], acc, true), asList(p.file), true); }, asList(files));
     return new Stats({
         lines: new Coverage(m.statements, m.coveredstatements),
         methods: new Coverage(m.methods, m.coveredmethods),
