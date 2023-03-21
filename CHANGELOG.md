@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- when there was one package or file on a package the action failed to process the files
+
 ## [0.9.1] - 2023-03-01
 
 ### Added
