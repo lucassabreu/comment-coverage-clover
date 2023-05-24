@@ -15,8 +15,9 @@ const file = getInput("file") || process.env.FILE;
 let baseFile = getInput("base-file") || process.env.BASE_FILE;
 const onlyWithCover = getBooleanInput("only-with-cover");
 const onlyWithCoverableLines = getBooleanInput("only-with-coverable-lines");
-const withChart = getInput("with-chart") == "true";
-const withTable = getInput("with-table") == "true";
+const withChart = getBooleanInput("with-chart");
+const withTable = getBooleanInput("with-table");
+const showBranchesColumn = getBooleanInput("with-branches");
 const tableWithOnlyBellow = Number(getInput("table-below-coverage") || 100);
 const tableWithOnlyAbove = Number(getInput("table-above-coverage") || 0);
 const tableWithChangeAbove = Number(getInput("table-coverage-change") || 0);
@@ -52,7 +53,6 @@ const comment = async (
   return (
     (withChart ? chart(cStats, oldStats) : "") +
     html(
-      withTable,
       filter(
         cStats,
         {
@@ -68,7 +68,11 @@ const comment = async (
         oldStats
       ),
       oldStats,
-      showPercentageChangePerFile
+      {
+        withTable,
+        deltaPerFile: showPercentageChangePerFile,
+        showBranchesColumn,
+      }
     )
   );
 };
@@ -177,7 +181,7 @@ const notFoundMessage =
   "was not found, please check if the path is valid, or if it exists.";
 
 const run = async () => {
-  if (!["lines", "methods", "branchs"].includes(tableWithTypeLimit)) {
+  if (!["lines", "methods", "branches"].includes(tableWithTypeLimit)) {
     error(`there is no coverage type ${tableWithTypeLimit}`);
     return;
   }

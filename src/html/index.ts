@@ -76,18 +76,20 @@ const line = (
   m: Metrics,
   lang: string,
   o: Metrics = null,
-  showDelta = false
+  showDelta = false,
+  showBranchesColumn = true
 ) =>
   tr(
     td(name),
-    ...["lines", "methods", "branchs"].map((p) =>
-      td(
-        c2s(m[p], lang) +
-          (!showDelta ? "" : compareFile(m[p], o && o[p], lang)),
-        {
-          align: "right",
-        }
-      )
+    ...["lines", "methods", ...(showBranchesColumn ? ["branches"] : [])].map(
+      (p) =>
+        td(
+          c2s(m[p], lang) +
+            (!showDelta ? "" : compareFile(m[p], o && o[p], lang)),
+          {
+            align: "right",
+          }
+        )
     )
   );
 
@@ -129,17 +131,23 @@ const link = (folder: string, file: string) =>
   a(`${baseUrl}/${folder}/${file}`, file);
 
 export const html = (
-  withTable: boolean,
   c: Stats,
   o: Stats = null,
-  deltaPerFile = false
+  configs: {
+    withTable: boolean;
+    deltaPerFile?: boolean;
+    showBranchesColumn?: boolean;
+  } = { withTable: false, deltaPerFile: false, showBranchesColumn: true }
 ): string =>
-  (withTable ? tableWrap(c, o, deltaPerFile) : span)(
+  (configs.withTable
+    ? tableWrap(c, o, configs.deltaPerFile, configs.showBranchesColumn)
+    : span)(
     "Summary - ".concat(
       [
         total("Lines", c.total.lines, o?.total.lines),
         total("Methods", c.total.methods, o?.total.methods),
-        total("Branchs", c.total.branchs, o?.total.branchs),
+        configs.showBranchesColumn &&
+          total("Branches", c.total.branches, o?.total.branches),
       ]
         .filter((v) => v)
         .join(" | ")
@@ -147,13 +155,20 @@ export const html = (
   );
 
 const tableWrap =
-  (c: Stats, o: Stats = null, showDelta = false) =>
+  (c: Stats, o: Stats = null, showDelta = false, showBranchesColumn = true) =>
   (summaryText: string): string =>
     details(
       summary(summaryText),
       "<br />",
       table(
-        thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branchs"))),
+        thead(
+          tr(
+            th("Files"),
+            th("Lines"),
+            th("Methods"),
+            showBranchesColumn && th("Branches")
+          )
+        ),
         tbody(
           c.folders.size === 0
             ? tr(td("No files reported or matching filters", { colspan: 4 }))
@@ -169,7 +184,8 @@ const tableWrap =
                         f.metrics,
                         lang,
                         o?.get(k, f.name)?.metrics,
-                        showDelta
+                        showDelta,
+                        showBranchesColumn
                       )
                     ),
                   ])

@@ -15,7 +15,7 @@ export class Coverage {
 export interface Metrics {
   lines: Coverage;
   methods: Coverage;
-  branchs: Coverage;
+  branches: Coverage;
 }
 
 export interface File {

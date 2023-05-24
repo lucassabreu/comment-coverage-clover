@@ -42,6 +42,9 @@ inputs:
   with-table:
     description: Add a table with a list of files and its coverage
     default: true
+  with-branches:
+    description: Adds the column "Branches" with the branching coverage
+    default: true
   show-percentage-change-on-table:
     description: Show in percentage how much the file coverage changed per file
     default: false

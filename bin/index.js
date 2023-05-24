@@ -89435,7 +89435,7 @@ var fromString = function (str) {
     return new Stats({
         lines: new Coverage(m.statements, m.coveredstatements),
         methods: new Coverage(m.methods, m.coveredmethods),
-        branchs: new Coverage(m.conditionals, m.coveredconditionals)
+        branches: new Coverage(m.conditionals, m.coveredconditionals)
     }, allFiles
         .map(function (f) {
         f._attributes.name = f._attributes.path || f._attributes.name;
@@ -89450,7 +89450,7 @@ var fromString = function (str) {
             metrics: {
                 lines: new Coverage(m.statements, m.coveredstatements),
                 methods: new Coverage(m.methods, m.coveredmethods),
-                branchs: new Coverage(m.conditionals, m.coveredconditionals)
+                branches: new Coverage(m.conditionals, m.coveredconditionals)
             }
         }));
     }, new Map()));
@@ -89543,10 +89543,11 @@ var limitedFragment = function (limit, noSpaceLeft) {
     }
     return html;
 };
-var line = function (name, m, lang, o, showDelta) {
+var line = function (name, m, lang, o, showDelta, showBranchesColumn) {
     if (o === void 0) { o = null; }
     if (showDelta === void 0) { showDelta = false; }
-    return tr.apply(void 0, __spreadArray([td(name)], ["lines", "methods", "branchs"].map(function (p) {
+    if (showBranchesColumn === void 0) { showBranchesColumn = true; }
+    return tr.apply(void 0, __spreadArray([td(name)], __spreadArray(["lines", "methods"], (showBranchesColumn ? ["branches"] : []), true).map(function (p) {
         return td(c2s(m[p], lang) +
             (!showDelta ? "" : compareFile(m[p], o && o[p], lang)), {
             align: "right"
@@ -89573,22 +89574,26 @@ var total = function (name, c, oldC) {
 var link = function (folder, file) {
     return a("".concat(baseUrl, "/").concat(folder, "/").concat(file), file);
 };
-var html = function (withTable, c, o, deltaPerFile) {
+var html = function (c, o, configs) {
     if (o === void 0) { o = null; }
-    if (deltaPerFile === void 0) { deltaPerFile = false; }
-    return (withTable ? tableWrap(c, o, deltaPerFile) : span)("Summary - ".concat([
+    if (configs === void 0) { configs = { withTable: false, deltaPerFile: false, showBranchesColumn: true }; }
+    return (configs.withTable
+        ? tableWrap(c, o, configs.deltaPerFile, configs.showBranchesColumn)
+        : span)("Summary - ".concat([
         total("Lines", c.total.lines, o === null || o === void 0 ? void 0 : o.total.lines),
         total("Methods", c.total.methods, o === null || o === void 0 ? void 0 : o.total.methods),
-        total("Branchs", c.total.branchs, o === null || o === void 0 ? void 0 : o.total.branchs),
+        configs.showBranchesColumn &&
+            total("Branches", c.total.branches, o === null || o === void 0 ? void 0 : o.total.branches),
     ]
         .filter(function (v) { return v; })
         .join(" | ")));
 };
-var tableWrap = function (c, o, showDelta) {
+var tableWrap = function (c, o, showDelta, showBranchesColumn) {
     if (o === void 0) { o = null; }
     if (showDelta === void 0) { showDelta = false; }
+    if (showBranchesColumn === void 0) { showBranchesColumn = true; }
     return function (summaryText) {
-        return details(summary(summaryText), "<br />", table(thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branchs"))), tbody(c.folders.size === 0
+        return details(summary(summaryText), "<br />", table(thead(tr(th("Files"), th("Lines"), th("Methods"), showBranchesColumn && th("Branches"))), tbody(c.folders.size === 0
             ? tr(td("No files reported or matching filters", { colspan: 4 }))
             : limitedFragment.apply(void 0, __spreadArray([65536 - 4000,
                 tr(td(b("Table truncated to fit comment"), { colspan: 4 }))], Array.from(c.folders.entries())
@@ -89598,7 +89603,7 @@ var tableWrap = function (c, o, showDelta) {
                     tr(td(b(folder.name), { colspan: 4 }))
                 ], folder.files.map(function (f) {
                     var _a;
-                    return line("&nbsp; &nbsp;".concat(link(folder.name, f.name)), f.metrics, lang, (_a = o === null || o === void 0 ? void 0 : o.get(k, f.name)) === null || _a === void 0 ? void 0 : _a.metrics, showDelta);
+                    return line("&nbsp; &nbsp;".concat(link(folder.name, f.name)), f.metrics, lang, (_a = o === null || o === void 0 ? void 0 : o.get(k, f.name)) === null || _a === void 0 ? void 0 : _a.metrics, showDelta, showBranchesColumn);
                 }), true);
             })
                 .reduce(function (accum, item) { return __spreadArray(__spreadArray([], accum, true), item, true); }, []), false)))));
@@ -89611,8 +89616,9 @@ var file = coreExports.getInput("file") || process.env.FILE;
 var baseFile = coreExports.getInput("base-file") || process.env.BASE_FILE;
 var onlyWithCover = coreExports.getBooleanInput("only-with-cover");
 var onlyWithCoverableLines = coreExports.getBooleanInput("only-with-coverable-lines");
-var withChart = coreExports.getInput("with-chart") == "true";
-var withTable = coreExports.getInput("with-table") == "true";
+var withChart = coreExports.getBooleanInput("with-chart");
+var withTable = coreExports.getBooleanInput("with-table");
+var showBranchesColumn = coreExports.getBooleanInput("with-branches");
 var tableWithOnlyBellow = Number(coreExports.getInput("table-below-coverage") || 100);
 var tableWithOnlyAbove = Number(coreExports.getInput("table-above-coverage") || 0);
 var tableWithChangeAbove = Number(coreExports.getInput("table-coverage-change") || 0);
@@ -89635,7 +89641,7 @@ var comment = function (cStats, oldStats, coverageType) { return __awaiter$1(voi
             }));
         });
         return [2 /*return*/, ((withChart ? chart(cStats, oldStats) : "") +
-                html(withTable, filter(cStats, {
+                html(filter(cStats, {
                     cover: onlyWithCover,
                     coverableLines: onlyWithCoverableLines
                 }, {
@@ -89643,7 +89649,11 @@ var comment = function (cStats, oldStats, coverageType) { return __awaiter$1(voi
                     min: tableWithOnlyAbove,
                     max: tableWithOnlyBellow,
                     delta: tableWithChangeAbove
-                }, oldStats), oldStats, showPercentageChangePerFile))];
+                }, oldStats), oldStats, {
+                    withTable: withTable,
+                    deltaPerFile: showPercentageChangePerFile,
+                    showBranchesColumn: showBranchesColumn
+                }))];
     });
 }); };
 var filter = function (s, onlyWith, onlyBetween, o) {
@@ -89729,7 +89739,7 @@ var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
     return __generator(this, function (_k) {
         switch (_k.label) {
             case 0:
-                if (!["lines", "methods", "branchs"].includes(tableWithTypeLimit)) {
+                if (!["lines", "methods", "branches"].includes(tableWithTypeLimit)) {
                     coreExports.error("there is no coverage type ".concat(tableWithTypeLimit));
                     return [2 /*return*/];
                 }
