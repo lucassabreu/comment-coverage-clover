@@ -89576,7 +89576,6 @@ var link = function (folder, file) {
 };
 var html = function (c, o, configs) {
     if (o === void 0) { o = null; }
-    if (configs === void 0) { configs = { withTable: false, deltaPerFile: false, showBranchesColumn: true }; }
     return (configs.withTable
         ? tableWrap(c, o, configs.deltaPerFile, configs.showBranchesColumn)
         : span)("Summary - ".concat([

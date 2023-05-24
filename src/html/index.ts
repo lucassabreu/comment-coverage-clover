@@ -135,9 +135,9 @@ export const html = (
   o: Stats = null,
   configs: {
     withTable: boolean;
-    deltaPerFile?: boolean;
-    showBranchesColumn?: boolean;
-  } = { withTable: false, deltaPerFile: false, showBranchesColumn: true }
+    deltaPerFile: boolean;
+    showBranchesColumn: boolean;
+  }
 ): string =>
   (configs.withTable
     ? tableWrap(c, o, configs.deltaPerFile, configs.showBranchesColumn)
