@@ -68,7 +68,7 @@ export const fromString = (str: string): Stats => {
     {
       lines: new Coverage(m.statements, m.coveredstatements),
       methods: new Coverage(m.methods, m.coveredmethods),
-      branchs: new Coverage(m.conditionals, m.coveredconditionals),
+      branches: new Coverage(m.conditionals, m.coveredconditionals),
     },
     allFiles
       .map((f) => {
@@ -92,7 +92,7 @@ export const fromString = (str: string): Stats => {
               metrics: {
                 lines: new Coverage(m.statements, m.coveredstatements),
                 methods: new Coverage(m.methods, m.coveredmethods),
-                branchs: new Coverage(m.conditionals, m.coveredconditionals),
+                branches: new Coverage(m.conditionals, m.coveredconditionals),
               },
             })
           ),

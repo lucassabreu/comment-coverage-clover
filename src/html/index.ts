@@ -80,7 +80,7 @@ const line = (
 ) =>
   tr(
     td(name),
-    ...["lines", "methods", "branchs"].map((p) =>
+    ...["lines", "methods", "branches"].map((p) =>
       td(
         c2s(m[p], lang) +
           (!showDelta ? "" : compareFile(m[p], o && o[p], lang)),
@@ -139,7 +139,7 @@ export const html = (
       [
         total("Lines", c.total.lines, o?.total.lines),
         total("Methods", c.total.methods, o?.total.methods),
-        total("Branchs", c.total.branchs, o?.total.branchs),
+        total("Branches", c.total.branches, o?.total.branches),
       ]
         .filter((v) => v)
         .join(" | ")
@@ -153,7 +153,7 @@ const tableWrap =
       summary(summaryText),
       "<br />",
       table(
-        thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branchs"))),
+        thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branches"))),
         tbody(
           c.folders.size === 0
             ? tr(td("No files reported or matching filters", { colspan: 4 }))

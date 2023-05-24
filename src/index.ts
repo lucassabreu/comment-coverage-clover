@@ -177,7 +177,7 @@ const notFoundMessage =
   "was not found, please check if the path is valid, or if it exists.";
 
 const run = async () => {
-  if (!["lines", "methods", "branchs"].includes(tableWithTypeLimit)) {
+  if (!["lines", "methods", "branches"].includes(tableWithTypeLimit)) {
     error(`there is no coverage type ${tableWithTypeLimit}`);
     return;
   }

@@ -89435,7 +89435,7 @@ var fromString = function (str) {
     return new Stats({
         lines: new Coverage(m.statements, m.coveredstatements),
         methods: new Coverage(m.methods, m.coveredmethods),
-        branchs: new Coverage(m.conditionals, m.coveredconditionals)
+        branches: new Coverage(m.conditionals, m.coveredconditionals)
     }, allFiles
         .map(function (f) {
         f._attributes.name = f._attributes.path || f._attributes.name;
@@ -89450,7 +89450,7 @@ var fromString = function (str) {
             metrics: {
                 lines: new Coverage(m.statements, m.coveredstatements),
                 methods: new Coverage(m.methods, m.coveredmethods),
-                branchs: new Coverage(m.conditionals, m.coveredconditionals)
+                branches: new Coverage(m.conditionals, m.coveredconditionals)
             }
         }));
     }, new Map()));
@@ -89546,7 +89546,7 @@ var limitedFragment = function (limit, noSpaceLeft) {
 var line = function (name, m, lang, o, showDelta) {
     if (o === void 0) { o = null; }
     if (showDelta === void 0) { showDelta = false; }
-    return tr.apply(void 0, __spreadArray([td(name)], ["lines", "methods", "branchs"].map(function (p) {
+    return tr.apply(void 0, __spreadArray([td(name)], ["lines", "methods", "branches"].map(function (p) {
         return td(c2s(m[p], lang) +
             (!showDelta ? "" : compareFile(m[p], o && o[p], lang)), {
             align: "right"
@@ -89579,7 +89579,7 @@ var html = function (withTable, c, o, deltaPerFile) {
     return (withTable ? tableWrap(c, o, deltaPerFile) : span)("Summary - ".concat([
         total("Lines", c.total.lines, o === null || o === void 0 ? void 0 : o.total.lines),
         total("Methods", c.total.methods, o === null || o === void 0 ? void 0 : o.total.methods),
-        total("Branchs", c.total.branchs, o === null || o === void 0 ? void 0 : o.total.branchs),
+        total("Branches", c.total.branches, o === null || o === void 0 ? void 0 : o.total.branches),
     ]
         .filter(function (v) { return v; })
         .join(" | ")));
@@ -89588,7 +89588,7 @@ var tableWrap = function (c, o, showDelta) {
     if (o === void 0) { o = null; }
     if (showDelta === void 0) { showDelta = false; }
     return function (summaryText) {
-        return details(summary(summaryText), "<br />", table(thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branchs"))), tbody(c.folders.size === 0
+        return details(summary(summaryText), "<br />", table(thead(tr(th("Files"), th("Lines"), th("Methods"), th("Branches"))), tbody(c.folders.size === 0
             ? tr(td("No files reported or matching filters", { colspan: 4 }))
             : limitedFragment.apply(void 0, __spreadArray([65536 - 4000,
                 tr(td(b("Table truncated to fit comment"), { colspan: 4 }))], Array.from(c.folders.entries())
@@ -89729,7 +89729,7 @@ var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
     return __generator(this, function (_k) {
         switch (_k.label) {
             case 0:
-                if (!["lines", "methods", "branchs"].includes(tableWithTypeLimit)) {
+                if (!["lines", "methods", "branches"].includes(tableWithTypeLimit)) {
                     coreExports.error("there is no coverage type ".concat(tableWithTypeLimit));
                     return [2 /*return*/];
                 }
