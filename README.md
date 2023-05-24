@@ -42,6 +42,7 @@ Configuration
 | `min-line-coverage`               | Minimum percentage acceptable for line coverage <br/> Default: `0`                                                                                                        |
 | `min-method-coverage`             | Minimum percentage acceptable for method coverage <br/>Default `0`                                                                                                        |
 | `with-table`                      | Add a table with a list of files and its coverage <br/> Default: `true`                                                                                                   |
+| `with-branches`                   | Adds the column "Branches" with the branching coverage <br/> Default: `true`                                                                                              |
 | `show-percentage-change-on-table` | Show in percentage how much the file coverage changed per file                                                                                                            |
 | `table-type-coverage`             | Which of the coverage percentages to filter <br/> Default: `"lines"`                                                                                                      |
 | `table-below-coverage`            | Show only files below or equal to this coverage percentage <br/> Default: `100`                                                                                           |

@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+### Added
+
+- option `with-branches` to control if the column `Branches` show be rendered
+
 ### Fixed
 
 - plural of `branch` is `branches` ([#34](https://github.com/lucassabreu/comment-coverage-clover/issues/34))

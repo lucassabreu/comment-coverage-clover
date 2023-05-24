@@ -218,3 +218,14 @@ jobs:
           with-chart: true
           show-percentage-change-on-table: true
           signature: "clover file to comment - only one package"
+
+      - name: clover file to comment - hide branches column
+        uses: ./.
+        with:
+          dir-prefix: /var/www/html
+          file: clover.onepackage.xml
+          base-file: clover.onepackage.base.xml
+          with-chart: true
+          show-percentage-change-on-table: true
+          with-branches: false
+          signature: "clover file to comment - hide branches column"
