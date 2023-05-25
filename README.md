@@ -1,3 +1,7 @@
+> **Note**
+> 
+> GitHub Marketplace may not show all the avaliable releases, check the repository for the newest release.
+
 Comment Coverage (Clover)
 =========================
 
