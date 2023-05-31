@@ -229,3 +229,23 @@ jobs:
           show-percentage-change-on-table: true
           with-branches: false
           signature: "clover file to comment - hide branches column"
+
+      - name: comment using a pat
+        uses: ./.
+        with:
+          dir-prefix: /var/www/html
+          file: clover.onepackage.xml
+          with-chart: false
+          with-branches: false
+          signature: "comment using a pat"
+          github-token: ${{ secrets.PAT }}
+
+      - name: comment using a pat - again
+        uses: ./.
+        with:
+          dir-prefix: /var/www/html
+          file: clover.onepackage.xml
+          with-chart: false
+          with-branches: false
+          signature: "comment using a pat"
+          github-token: ${{ secrets.PAT }}

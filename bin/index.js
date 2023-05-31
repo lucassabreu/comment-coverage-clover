@@ -3,7 +3,7 @@
 var require$$0 = require('os');
 var require$$0$1 = require('fs');
 var require$$0$2 = require('path');
-var require$$2 = require('http');
+var require$$2$1 = require('http');
 var require$$3 = require('https');
 require('net');
 var require$$1$1 = require('tls');
@@ -11,9 +11,9 @@ var require$$4 = require('events');
 require('assert');
 var require$$6 = require('util');
 var require$$0$4 = require('stream');
-var require$$2$1 = require('url');
+var require$$2$2 = require('url');
 var require$$0$3 = require('punycode');
-var require$$5$1 = require('zlib');
+var require$$5 = require('zlib');
 var require$$1$2 = require('string_decoder');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
@@ -21,15 +21,15 @@ function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'defau
 var require$$0__default = /*#__PURE__*/_interopDefaultLegacy(require$$0);
 var require$$0__default$1 = /*#__PURE__*/_interopDefaultLegacy(require$$0$1);
 var require$$0__default$2 = /*#__PURE__*/_interopDefaultLegacy(require$$0$2);
-var require$$2__default = /*#__PURE__*/_interopDefaultLegacy(require$$2);
+var require$$2__default = /*#__PURE__*/_interopDefaultLegacy(require$$2$1);
 var require$$3__default = /*#__PURE__*/_interopDefaultLegacy(require$$3);
 var require$$1__default = /*#__PURE__*/_interopDefaultLegacy(require$$1$1);
 var require$$4__default = /*#__PURE__*/_interopDefaultLegacy(require$$4);
 var require$$6__default = /*#__PURE__*/_interopDefaultLegacy(require$$6);
 var require$$0__default$4 = /*#__PURE__*/_interopDefaultLegacy(require$$0$4);
-var require$$2__default$1 = /*#__PURE__*/_interopDefaultLegacy(require$$2$1);
+var require$$2__default$1 = /*#__PURE__*/_interopDefaultLegacy(require$$2$2);
 var require$$0__default$3 = /*#__PURE__*/_interopDefaultLegacy(require$$0$3);
-var require$$5__default = /*#__PURE__*/_interopDefaultLegacy(require$$5$1);
+var require$$5__default = /*#__PURE__*/_interopDefaultLegacy(require$$5);
 var require$$1__default$1 = /*#__PURE__*/_interopDefaultLegacy(require$$1$2);
 
 /******************************************************************************
@@ -174,28 +174,28 @@ function toCommandProperties(annotationProperties) {
 }
 utils$3.toCommandProperties = toCommandProperties;
 
-var __createBinding$4 = (commonjsGlobal && commonjsGlobal.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+var __createBinding$3 = (commonjsGlobal && commonjsGlobal.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
 }));
-var __setModuleDefault$4 = (commonjsGlobal && commonjsGlobal.__setModuleDefault) || (Object.create ? (function(o, v) {
+var __setModuleDefault$3 = (commonjsGlobal && commonjsGlobal.__setModuleDefault) || (Object.create ? (function(o, v) {
     Object.defineProperty(o, "default", { enumerable: true, value: v });
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar$4 = (commonjsGlobal && commonjsGlobal.__importStar) || function (mod) {
+var __importStar$3 = (commonjsGlobal && commonjsGlobal.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding$4(result, mod, k);
-    __setModuleDefault$4(result, mod);
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding$3(result, mod, k);
+    __setModuleDefault$3(result, mod);
     return result;
 };
 Object.defineProperty(command, "__esModule", { value: true });
 command.issue = command.issueCommand = void 0;
-const os$1 = __importStar$4(require$$0__default["default"]);
+const os$1 = __importStar$3(require$$0__default["default"]);
 const utils_1$2 = utils$3;
 /**
  * Commands
@@ -207,13 +207,13 @@ const utils_1$2 = utils$3;
  *   ::warning::This is the message
  *   ::set-env name=MY_VAR::some value
  */
-function issueCommand$1(command, properties, message) {
+function issueCommand(command, properties, message) {
     const cmd = new Command(command, properties, message);
     process.stdout.write(cmd.toString() + os$1.EOL);
 }
-command.issueCommand = issueCommand$1;
+command.issueCommand = issueCommand;
 function issue(name, message = '') {
-    issueCommand$1(name, {}, message);
+    issueCommand(name, {}, message);
 }
 command.issue = issue;
 const CMD_STRING = '::';
@@ -266,47 +266,6 @@ function escapeProperty(s) {
 }
 
 var fileCommand = {};
-
-// For internal use, subject to change.
-var __createBinding$3 = (commonjsGlobal && commonjsGlobal.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault$3 = (commonjsGlobal && commonjsGlobal.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar$3 = (commonjsGlobal && commonjsGlobal.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding$3(result, mod, k);
-    __setModuleDefault$3(result, mod);
-    return result;
-};
-Object.defineProperty(fileCommand, "__esModule", { value: true });
-fileCommand.issueCommand = void 0;
-// We use any as a valid input type
-/* eslint-disable @typescript-eslint/no-explicit-any */
-const fs = __importStar$3(require$$0__default$1["default"]);
-const os = __importStar$3(require$$0__default["default"]);
-const utils_1$1 = utils$3;
-function issueCommand(command, message) {
-    const filePath = process.env[`GITHUB_${command}`];
-    if (!filePath) {
-        throw new Error(`Unable to find environment variable for file command ${command}`);
-    }
-    if (!fs.existsSync(filePath)) {
-        throw new Error(`Missing file at path: ${filePath}`);
-    }
-    fs.appendFileSync(filePath, `${utils_1$1.toCommandValue(message)}${os.EOL}`, {
-        encoding: 'utf8'
-    });
-}
-fileCommand.issueCommand = issueCommand;
 
 // Unique ID creation requires a high quality random # generator. In the browser we therefore
 // require the crypto API and do not support built-in fallback to lower quality random number
@@ -906,7 +865,64 @@ var esmBrowser = /*#__PURE__*/Object.freeze({
     parse: parse$1
 });
 
-var require$$5 = /*@__PURE__*/getAugmentedNamespace(esmBrowser);
+var require$$2 = /*@__PURE__*/getAugmentedNamespace(esmBrowser);
+
+// For internal use, subject to change.
+var __createBinding$2 = (commonjsGlobal && commonjsGlobal.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault$2 = (commonjsGlobal && commonjsGlobal.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar$2 = (commonjsGlobal && commonjsGlobal.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding$2(result, mod, k);
+    __setModuleDefault$2(result, mod);
+    return result;
+};
+Object.defineProperty(fileCommand, "__esModule", { value: true });
+fileCommand.prepareKeyValueMessage = fileCommand.issueFileCommand = void 0;
+// We use any as a valid input type
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const fs = __importStar$2(require$$0__default$1["default"]);
+const os = __importStar$2(require$$0__default["default"]);
+const uuid_1 = require$$2;
+const utils_1$1 = utils$3;
+function issueFileCommand(command, message) {
+    const filePath = process.env[`GITHUB_${command}`];
+    if (!filePath) {
+        throw new Error(`Unable to find environment variable for file command ${command}`);
+    }
+    if (!fs.existsSync(filePath)) {
+        throw new Error(`Missing file at path: ${filePath}`);
+    }
+    fs.appendFileSync(filePath, `${utils_1$1.toCommandValue(message)}${os.EOL}`, {
+        encoding: 'utf8'
+    });
+}
+fileCommand.issueFileCommand = issueFileCommand;
+function prepareKeyValueMessage(key, value) {
+    const delimiter = `ghadelimiter_${uuid_1.v4()}`;
+    const convertedValue = utils_1$1.toCommandValue(value);
+    // These should realistically never happen, but just in case someone finds a
+    // way to exploit uuid generation let's not allow keys or values that contain
+    // the delimiter.
+    if (key.includes(delimiter)) {
+        throw new Error(`Unexpected input: name should not contain the delimiter "${delimiter}"`);
+    }
+    if (convertedValue.includes(delimiter)) {
+        throw new Error(`Unexpected input: value should not contain the delimiter "${delimiter}"`);
+    }
+    return `${key}<<${delimiter}${os.EOL}${convertedValue}${os.EOL}${delimiter}`;
+}
+fileCommand.prepareKeyValueMessage = prepareKeyValueMessage;
 
 var oidcUtils = {};
 
@@ -2418,7 +2434,6 @@ function requireCore () {
 		const utils_1 = utils$3;
 		const os = __importStar(require$$0__default["default"]);
 		const path = __importStar(require$$0__default$2["default"]);
-		const uuid_1 = require$$5;
 		const oidc_utils_1 = requireOidcUtils();
 		/**
 		 * The code to exit an action
@@ -2448,20 +2463,9 @@ function requireCore () {
 		    process.env[name] = convertedVal;
 		    const filePath = process.env['GITHUB_ENV'] || '';
 		    if (filePath) {
-		        const delimiter = `ghadelimiter_${uuid_1.v4()}`;
-		        // These should realistically never happen, but just in case someone finds a way to exploit uuid generation let's not allow keys or values that contain the delimiter.
-		        if (name.includes(delimiter)) {
-		            throw new Error(`Unexpected input: name should not contain the delimiter "${delimiter}"`);
-		        }
-		        if (convertedVal.includes(delimiter)) {
-		            throw new Error(`Unexpected input: value should not contain the delimiter "${delimiter}"`);
-		        }
-		        const commandValue = `${name}<<${delimiter}${os.EOL}${convertedVal}${os.EOL}${delimiter}`;
-		        file_command_1.issueCommand('ENV', commandValue);
+		        return file_command_1.issueFileCommand('ENV', file_command_1.prepareKeyValueMessage(name, val));
 		    }
-		    else {
-		        command_1.issueCommand('set-env', { name }, convertedVal);
-		    }
+		    command_1.issueCommand('set-env', { name }, convertedVal);
 		}
 		exports.exportVariable = exportVariable;
 		/**
@@ -2479,7 +2483,7 @@ function requireCore () {
 		function addPath(inputPath) {
 		    const filePath = process.env['GITHUB_PATH'] || '';
 		    if (filePath) {
-		        file_command_1.issueCommand('PATH', inputPath);
+		        file_command_1.issueFileCommand('PATH', inputPath);
 		    }
 		    else {
 		        command_1.issueCommand('add-path', {}, inputPath);
@@ -2519,7 +2523,10 @@ function requireCore () {
 		    const inputs = getInput(name, options)
 		        .split('\n')
 		        .filter(x => x !== '');
-		    return inputs;
+		    if (options && options.trimWhitespace === false) {
+		        return inputs;
+		    }
+		    return inputs.map(input => input.trim());
 		}
 		exports.getMultilineInput = getMultilineInput;
 		/**
@@ -2552,8 +2559,12 @@ function requireCore () {
 		 */
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		function setOutput(name, value) {
+		    const filePath = process.env['GITHUB_OUTPUT'] || '';
+		    if (filePath) {
+		        return file_command_1.issueFileCommand('OUTPUT', file_command_1.prepareKeyValueMessage(name, value));
+		    }
 		    process.stdout.write(os.EOL);
-		    command_1.issueCommand('set-output', { name }, value);
+		    command_1.issueCommand('set-output', { name }, utils_1.toCommandValue(value));
 		}
 		exports.setOutput = setOutput;
 		/**
@@ -2682,7 +2693,11 @@ function requireCore () {
 		 */
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		function saveState(name, value) {
-		    command_1.issueCommand('save-state', { name }, value);
+		    const filePath = process.env['GITHUB_STATE'] || '';
+		    if (filePath) {
+		        return file_command_1.issueFileCommand('STATE', file_command_1.prepareKeyValueMessage(name, value));
+		    }
+		    command_1.issueCommand('save-state', { name }, utils_1.toCommandValue(value));
 		}
 		exports.saveState = saveState;
 		/**
@@ -2727,13 +2742,13 @@ var coreExports = requireCore();
 
 var github$1 = {};
 
-var context$1 = {};
+var context = {};
 
-Object.defineProperty(context$1, "__esModule", { value: true });
-context$1.Context = void 0;
+Object.defineProperty(context, "__esModule", { value: true });
+context.Context = void 0;
 const fs_1 = require$$0__default$1["default"];
 const os_1 = require$$0__default["default"];
-class Context$2 {
+class Context$1 {
     /**
      * Hydrate the context from the environment
      */
@@ -2780,34 +2795,34 @@ class Context$2 {
         throw new Error("context.repo requires a GITHUB_REPOSITORY environment variable like 'owner/repo'");
     }
 }
-context$1.Context = Context$2;
+context.Context = Context$1;
 
 var utils$2 = {};
 
 var utils$1 = {};
 
-var __createBinding$2 = (commonjsGlobal && commonjsGlobal.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+var __createBinding$1 = (commonjsGlobal && commonjsGlobal.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
 }));
-var __setModuleDefault$2 = (commonjsGlobal && commonjsGlobal.__setModuleDefault) || (Object.create ? (function(o, v) {
+var __setModuleDefault$1 = (commonjsGlobal && commonjsGlobal.__setModuleDefault) || (Object.create ? (function(o, v) {
     Object.defineProperty(o, "default", { enumerable: true, value: v });
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar$2 = (commonjsGlobal && commonjsGlobal.__importStar) || function (mod) {
+var __importStar$1 = (commonjsGlobal && commonjsGlobal.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding$2(result, mod, k);
-    __setModuleDefault$2(result, mod);
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding$1(result, mod, k);
+    __setModuleDefault$1(result, mod);
     return result;
 };
 Object.defineProperty(utils$1, "__esModule", { value: true });
 utils$1.getApiBaseUrl = utils$1.getProxyAgent = utils$1.getAuthString = void 0;
-const httpClient = __importStar$2(lib$3);
+const httpClient = __importStar$1(lib$3);
 function getAuthString(token, options) {
     if (!token && !options.auth) {
         throw new Error('Parameter token or opts.auth is required');
@@ -86912,58 +86927,61 @@ distNode.isPaginatingEndpoint = isPaginatingEndpoint;
 distNode.paginateRest = paginateRest;
 distNode.paginatingEndpoints = paginatingEndpoints;
 
-var __createBinding$1 = (commonjsGlobal && commonjsGlobal.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault$1 = (commonjsGlobal && commonjsGlobal.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar$1 = (commonjsGlobal && commonjsGlobal.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding$1(result, mod, k);
-    __setModuleDefault$1(result, mod);
-    return result;
-};
-Object.defineProperty(utils$2, "__esModule", { value: true });
-utils$2.getOctokitOptions = utils$2.GitHub = context = utils$2.context = void 0;
-const Context$1 = __importStar$1(context$1);
-const Utils = __importStar$1(utils$1);
-// octokit + plugins
-const core_1 = distNode$9;
-const plugin_rest_endpoint_methods_1 = distNode$1;
-const plugin_paginate_rest_1 = distNode;
-var context = utils$2.context = new Context$1.Context();
-const baseUrl$1 = Utils.getApiBaseUrl();
-const defaults = {
-    baseUrl: baseUrl$1,
-    request: {
-        agent: Utils.getProxyAgent(baseUrl$1)
-    }
-};
-utils$2.GitHub = core_1.Octokit.plugin(plugin_rest_endpoint_methods_1.restEndpointMethods, plugin_paginate_rest_1.paginateRest).defaults(defaults);
-/**
- * Convience function to correctly format Octokit Options to pass into the constructor.
- *
- * @param     token    the repo PAT or GITHUB_TOKEN
- * @param     options  other options to set
- */
-function getOctokitOptions(token, options) {
-    const opts = Object.assign({}, options || {}); // Shallow clone - don't mutate the object provided by the caller
-    // Auth
-    const auth = Utils.getAuthString(token, opts);
-    if (auth) {
-        opts.auth = auth;
-    }
-    return opts;
-}
-utils$2.getOctokitOptions = getOctokitOptions;
+(function (exports) {
+	var __createBinding = (commonjsGlobal && commonjsGlobal.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+	    if (k2 === undefined) k2 = k;
+	    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+	}) : (function(o, m, k, k2) {
+	    if (k2 === undefined) k2 = k;
+	    o[k2] = m[k];
+	}));
+	var __setModuleDefault = (commonjsGlobal && commonjsGlobal.__setModuleDefault) || (Object.create ? (function(o, v) {
+	    Object.defineProperty(o, "default", { enumerable: true, value: v });
+	}) : function(o, v) {
+	    o["default"] = v;
+	});
+	var __importStar = (commonjsGlobal && commonjsGlobal.__importStar) || function (mod) {
+	    if (mod && mod.__esModule) return mod;
+	    var result = {};
+	    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+	    __setModuleDefault(result, mod);
+	    return result;
+	};
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.getOctokitOptions = exports.GitHub = exports.defaults = exports.context = void 0;
+	const Context = __importStar(context);
+	const Utils = __importStar(utils$1);
+	// octokit + plugins
+	const core_1 = distNode$9;
+	const plugin_rest_endpoint_methods_1 = distNode$1;
+	const plugin_paginate_rest_1 = distNode;
+	exports.context = new Context.Context();
+	const baseUrl = Utils.getApiBaseUrl();
+	exports.defaults = {
+	    baseUrl,
+	    request: {
+	        agent: Utils.getProxyAgent(baseUrl)
+	    }
+	};
+	exports.GitHub = core_1.Octokit.plugin(plugin_rest_endpoint_methods_1.restEndpointMethods, plugin_paginate_rest_1.paginateRest).defaults(exports.defaults);
+	/**
+	 * Convience function to correctly format Octokit Options to pass into the constructor.
+	 *
+	 * @param     token    the repo PAT or GITHUB_TOKEN
+	 * @param     options  other options to set
+	 */
+	function getOctokitOptions(token, options) {
+	    const opts = Object.assign({}, options || {}); // Shallow clone - don't mutate the object provided by the caller
+	    // Auth
+	    const auth = Utils.getAuthString(token, opts);
+	    if (auth) {
+	        opts.auth = auth;
+	    }
+	    return opts;
+	}
+	exports.getOctokitOptions = getOctokitOptions;
+	
+} (utils$2));
 
 var __createBinding = (commonjsGlobal && commonjsGlobal.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -86986,7 +87004,7 @@ var __importStar = (commonjsGlobal && commonjsGlobal.__importStar) || function (
 };
 Object.defineProperty(github$1, "__esModule", { value: true });
 var getOctokit_1 = github$1.getOctokit = github$1.context = void 0;
-const Context = __importStar(context$1);
+const Context = __importStar(context);
 const utils_1 = utils$2;
 github$1.context = new Context.Context();
 /**
@@ -86995,8 +87013,9 @@ github$1.context = new Context.Context();
  * @param     token    the repo PAT or GITHUB_TOKEN
  * @param     options  other options to set
  */
-function getOctokit(token, options) {
-    return new utils_1.GitHub(utils_1.getOctokitOptions(token, options));
+function getOctokit(token, options, ...additionalPlugins) {
+    const GitHubWithPlugins = utils_1.GitHub.plugin(...additionalPlugins);
+    return new GitHubWithPlugins(utils_1.getOctokitOptions(token, options));
 }
 getOctokit_1 = github$1.getOctokit = getOctokit;
 
@@ -87011,7 +87030,7 @@ var percs = function () { return ({
     70: 0,
     80: 0,
     90: 0,
-    100: 0
+    100: 0,
 }); };
 var reduce = function (s) {
     return Array.from(s.folders.values())
@@ -89435,7 +89454,7 @@ var fromString = function (str) {
     return new Stats({
         lines: new Coverage(m.statements, m.coveredstatements),
         methods: new Coverage(m.methods, m.coveredmethods),
-        branches: new Coverage(m.conditionals, m.coveredconditionals)
+        branches: new Coverage(m.conditionals, m.coveredconditionals),
     }, allFiles
         .map(function (f) {
         f._attributes.name = f._attributes.path || f._attributes.name;
@@ -89450,8 +89469,8 @@ var fromString = function (str) {
             metrics: {
                 lines: new Coverage(m.statements, m.coveredstatements),
                 methods: new Coverage(m.methods, m.coveredmethods),
-                branches: new Coverage(m.conditionals, m.coveredconditionals)
-            }
+                branches: new Coverage(m.conditionals, m.coveredconditionals),
+            },
         }));
     }, new Map()));
 };
@@ -89500,7 +89519,7 @@ var a = function (href, content) {
 };
 
 var lang = coreExports.getInput("lang") || "en-US";
-var baseUrl = "".concat(context.serverUrl, "/").concat(context.repo.owner, "/").concat(context.repo.repo, "/blob/").concat(context.sha);
+var baseUrl = "".concat(utils$2.context.serverUrl, "/").concat(utils$2.context.repo.owner, "/").concat(utils$2.context.repo.repo, "/blob/").concat(utils$2.context.sha);
 if (coreExports.getInput("dir-prefix-keep")) {
     baseUrl = "".concat(baseUrl, "/").concat(coreExports.getInput("dir-prefix-keep")).replace(/\/$/, "");
 }
@@ -89510,14 +89529,14 @@ var p2s = function (p, lang, zero) {
         ? zero
         : p.toLocaleString(lang, {
             style: "percent",
-            minimumFractionDigits: 2
+            minimumFractionDigits: 2,
         });
 };
 var c2s = function (c, lang) {
     return span(p2s(c.percentual, lang), {
         title: c.covered.toLocaleString(lang, { useGrouping: true }) +
             " out of " +
-            c.total.toLocaleString(lang, { useGrouping: true })
+            c.total.toLocaleString(lang, { useGrouping: true }),
     });
 };
 var compareFile = function (n, o, lang) {
@@ -89550,7 +89569,7 @@ var line = function (name, m, lang, o, showDelta, showBranchesColumn) {
     return tr.apply(void 0, __spreadArray([td(name)], __spreadArray(["lines", "methods"], (showBranchesColumn ? ["branches"] : []), true).map(function (p) {
         return td(c2s(m[p], lang) +
             (!showDelta ? "" : compareFile(m[p], o && o[p], lang)), {
-            align: "right"
+            align: "right",
         });
     }), false));
 };
@@ -89564,7 +89583,7 @@ var compare = function (n, o, lang, showDelta) {
         title: "Was ".concat(p2s(o.percentual || 0, lang, "0%"), " before") +
             (showDelta && (n.percentual || 0) !== (o.percentual || 0)
                 ? " (".concat(n.percentual > o.percentual ? "+" : "-").concat(p2s(Math.abs(n.percentual - o.percentual), lang), ")")
-                : "")
+                : ""),
     });
 };
 var total = function (name, c, oldC) {
@@ -89637,22 +89656,22 @@ var comment = function (cStats, oldStats, coverageType) { return __awaiter$1(voi
         w = workspace.endsWith("/") ? workspace : workspace.concat("/");
         cStats.folders.forEach(function (v, k) {
             return cStats.folders.set(k, Object.assign(v, {
-                name: v.name.startsWith(w) ? v.name.slice(w.length) : v.name
+                name: v.name.startsWith(w) ? v.name.slice(w.length) : v.name,
             }));
         });
         return [2 /*return*/, ((withChart ? chart(cStats, oldStats) : "") +
                 html(filter(cStats, {
                     cover: onlyWithCover,
-                    coverableLines: onlyWithCoverableLines
+                    coverableLines: onlyWithCoverableLines,
                 }, {
                     type: coverageType,
                     min: tableWithOnlyAbove,
                     max: tableWithOnlyBellow,
-                    delta: tableWithChangeAbove
+                    delta: tableWithChangeAbove,
                 }, oldStats), oldStats, {
                     withTable: withTable,
                     deltaPerFile: showPercentageChangePerFile,
-                    showBranchesColumn: showBranchesColumn
+                    showBranchesColumn: showBranchesColumn,
                 }))];
     });
 }); };
@@ -89686,7 +89705,7 @@ var filter = function (s, onlyWith, onlyBetween, o) {
             return filters.reduce(function (r, fn) { return r && fn(f, key); }, true);
         });
         if (folder.files.length === 0) {
-            s.folders["delete"](key);
+            s.folders.delete(key);
         }
     });
     return s;
@@ -89734,10 +89753,10 @@ function checkThreshold(c, o) {
 }
 var notFoundMessage = "was not found, please check if the path is valid, or if it exists.";
 var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
-    var commit, cStats, _a, oldStats, _b, _c, msgs, body, _d, _e, commentId, comments, i, c, e_1;
-    var _g, _h, _j;
-    return __generator(this, function (_k) {
-        switch (_k.label) {
+    var commit, cStats, _a, oldStats, _b, _c, msgs, body, _d, _e, filter, u_1, commentId, comments, i, c, e_2;
+    var _g, _h;
+    return __generator(this, function (_j) {
+        switch (_j.label) {
             case 0:
                 if (!["lines", "methods", "branches"].includes(tableWithTypeLimit)) {
                     coreExports.error("there is no coverage type ".concat(tableWithTypeLimit));
@@ -89745,16 +89764,16 @@ var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
                 }
                 if (!github)
                     return [2 /*return*/];
-                if (!context.payload.pull_request)
+                if (!utils$2.context.payload.pull_request)
                     return [2 /*return*/];
-                commit = (_g = context.payload.pull_request) === null || _g === void 0 ? void 0 : _g.head.sha.substring(0, 7);
+                commit = (_g = utils$2.context.payload.pull_request) === null || _g === void 0 ? void 0 : _g.head.sha.substring(0, 7);
                 if (!require$$0$1.existsSync(file)) {
                     throw "file \"".concat(file, "\" ").concat(notFoundMessage);
                 }
                 _a = fromString;
                 return [4 /*yield*/, require$$6.promisify(require$$0$1.readFile)(file)];
             case 1:
-                cStats = _a.apply(void 0, [(_k.sent()).toString()]);
+                cStats = _a.apply(void 0, [(_j.sent()).toString()]);
                 if (baseFile && !require$$0$1.existsSync(baseFile)) {
                     coreExports.error("base file \"".concat(baseFile, "\" ").concat(notFoundMessage));
                     baseFile = undefined;
@@ -89764,8 +89783,8 @@ var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
                 _c = fromString;
                 return [4 /*yield*/, require$$6.promisify(require$$0$1.readFile)(baseFile)];
             case 2:
-                _b = _c.apply(void 0, [(_k.sent()).toString()]);
-                _k.label = 3;
+                _b = _c.apply(void 0, [(_j.sent()).toString()]);
+                _j.label = 3;
             case 3:
                 oldStats = _b;
                 msgs = Array.from(checkThreshold(cStats, oldStats));
@@ -89773,45 +89792,57 @@ var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
                 _e = (_d = "\nCoverage report for commit: ".concat(commit, "\nFile: `").concat(file, "`\n\n").concat(msgs.map(function (m) { return "> :warning: ".concat(m); }).join("\n"), "\n\n")).concat;
                 return [4 /*yield*/, comment(cStats, oldStats, tableWithTypeLimit)];
             case 4:
-                body = _e.apply(_d, [_k.sent(), "\n\n"]).concat(signature);
-                commentId = null;
-                _k.label = 5;
+                body = _e.apply(_d, [_j.sent(), "\n\n"]).concat(signature);
+                filter = function (c) { var _a; return ((_a = c === null || c === void 0 ? void 0 : c.user) === null || _a === void 0 ? void 0 : _a.type) === "Bot"; };
+                _j.label = 5;
             case 5:
-                _k.trys.push([5, 7, , 8]);
-                return [4 /*yield*/, github.rest.issues.listComments(__assign(__assign({}, context.repo), { issue_number: context.issue.number }))];
+                _j.trys.push([5, 7, , 8]);
+                return [4 /*yield*/, github.rest.users.getAuthenticated()];
             case 6:
-                comments = (_k.sent()).data;
+                u_1 = _j.sent();
+                filter = function (c) { var _a; return ((_a = c === null || c === void 0 ? void 0 : c.user) === null || _a === void 0 ? void 0 : _a.login) === u_1.data.login; };
+                coreExports.debug("Using a PAT from " + u_1.data.login);
+                return [3 /*break*/, 8];
+            case 7:
+                _j.sent();
+                return [3 /*break*/, 8];
+            case 8:
+                commentId = null;
+                _j.label = 9;
+            case 9:
+                _j.trys.push([9, 11, , 12]);
+                return [4 /*yield*/, github.rest.issues.listComments(__assign(__assign({}, utils$2.context.repo), { issue_number: utils$2.context.issue.number }))];
+            case 10:
+                comments = (_j.sent()).data.filter(filter);
                 for (i = comments.length - 1; i >= 0; i--) {
                     c = comments[i];
-                    if (((_h = c.user) === null || _h === void 0 ? void 0 : _h.type) !== "Bot")
-                        continue;
-                    if (!((_j = c.body) === null || _j === void 0 ? void 0 : _j.includes(signature)))
+                    if (!((_h = c.body) === null || _h === void 0 ? void 0 : _h.includes(signature)))
                         continue;
                     commentId = c.id;
                 }
-                return [3 /*break*/, 8];
-            case 7:
-                e_1 = _k.sent();
-                coreExports.error(e_1);
-                return [3 /*break*/, 8];
-            case 8:
-                if (!commentId) return [3 /*break*/, 12];
-                _k.label = 9;
-            case 9:
-                _k.trys.push([9, 11, , 12]);
-                return [4 /*yield*/, github.rest.issues.updateComment(__assign(__assign({}, context.repo), { comment_id: commentId, body: body }))];
-            case 10:
-                _k.sent();
-                return [2 /*return*/];
-            case 11:
-                _k.sent();
                 return [3 /*break*/, 12];
-            case 12: return [4 /*yield*/, github.rest.issues.createComment(__assign(__assign({}, context.repo), { issue_number: context.issue.number, body: body }))];
+            case 11:
+                e_2 = _j.sent();
+                coreExports.error(e_2);
+                return [3 /*break*/, 12];
+            case 12:
+                if (!commentId) return [3 /*break*/, 16];
+                _j.label = 13;
             case 13:
-                _k.sent();
+                _j.trys.push([13, 15, , 16]);
+                return [4 /*yield*/, github.rest.issues.updateComment(__assign(__assign({}, utils$2.context.repo), { comment_id: commentId, body: body }))];
+            case 14:
+                _j.sent();
+                return [2 /*return*/];
+            case 15:
+                _j.sent();
+                return [3 /*break*/, 16];
+            case 16: return [4 /*yield*/, github.rest.issues.createComment(__assign(__assign({}, utils$2.context.repo), { issue_number: utils$2.context.issue.number, body: body }))];
+            case 17:
+                _j.sent();
                 return [2 /*return*/];
         }
     });
 }); };
-run()["catch"](function (err) { return coreExports.setFailed(err + " Stack: " + err.stack); });
+run().catch(function (err) { return coreExports.setFailed(err + " Stack: " + err.stack); });
 //# sourceMappingURL=index.js.map
