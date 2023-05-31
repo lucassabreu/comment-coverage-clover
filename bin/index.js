@@ -89734,10 +89734,10 @@ function checkThreshold(c, o) {
 }
 var notFoundMessage = "was not found, please check if the path is valid, or if it exists.";
 var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
-    var commit, cStats, _a, oldStats, _b, _c, msgs, body, _d, _e, commentId, comments, i, c, e_1;
-    var _g, _h, _j;
-    return __generator(this, function (_k) {
-        switch (_k.label) {
+    var commit, cStats, _a, oldStats, _b, _c, msgs, body, _d, _e, filter, u_1, commentId, comments, i, c, e_2;
+    var _g, _h;
+    return __generator(this, function (_j) {
+        switch (_j.label) {
             case 0:
                 if (!["lines", "methods", "branches"].includes(tableWithTypeLimit)) {
                     coreExports.error("there is no coverage type ".concat(tableWithTypeLimit));
@@ -89754,7 +89754,7 @@ var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
                 _a = fromString;
                 return [4 /*yield*/, require$$6.promisify(require$$0$1.readFile)(file)];
             case 1:
-                cStats = _a.apply(void 0, [(_k.sent()).toString()]);
+                cStats = _a.apply(void 0, [(_j.sent()).toString()]);
                 if (baseFile && !require$$0$1.existsSync(baseFile)) {
                     coreExports.error("base file \"".concat(baseFile, "\" ").concat(notFoundMessage));
                     baseFile = undefined;
@@ -89764,8 +89764,8 @@ var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
                 _c = fromString;
                 return [4 /*yield*/, require$$6.promisify(require$$0$1.readFile)(baseFile)];
             case 2:
-                _b = _c.apply(void 0, [(_k.sent()).toString()]);
-                _k.label = 3;
+                _b = _c.apply(void 0, [(_j.sent()).toString()]);
+                _j.label = 3;
             case 3:
                 oldStats = _b;
                 msgs = Array.from(checkThreshold(cStats, oldStats));
@@ -89773,42 +89773,56 @@ var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
                 _e = (_d = "\nCoverage report for commit: ".concat(commit, "\nFile: `").concat(file, "`\n\n").concat(msgs.map(function (m) { return "> :warning: ".concat(m); }).join("\n"), "\n\n")).concat;
                 return [4 /*yield*/, comment(cStats, oldStats, tableWithTypeLimit)];
             case 4:
-                body = _e.apply(_d, [_k.sent(), "\n\n"]).concat(signature);
-                commentId = null;
-                _k.label = 5;
+                body = _e.apply(_d, [_j.sent(), "\n\n"]).concat(signature);
+                filter = function (c) { var _a; return ((_a = c === null || c === void 0 ? void 0 : c.user) === null || _a === void 0 ? void 0 : _a.type) === "Bot"; };
+                _j.label = 5;
             case 5:
-                _k.trys.push([5, 7, , 8]);
-                return [4 /*yield*/, github.rest.issues.listComments(__assign(__assign({}, context.repo), { issue_number: context.issue.number }))];
+                _j.trys.push([5, 7, , 8]);
+                return [4 /*yield*/, github.rest.users.getAuthenticated()];
             case 6:
-                comments = (_k.sent()).data;
+                u_1 = _j.sent();
+                filter = function (c) { var _a; return ((_a = c === null || c === void 0 ? void 0 : c.user) === null || _a === void 0 ? void 0 : _a.login) === u_1.data.login; };
+                console.debug("Using a PAT from " + u_1.data.login);
+                return [3 /*break*/, 8];
+            case 7:
+                _j.sent();
+                return [3 /*break*/, 8];
+            case 8:
+                commentId = null;
+                _j.label = 9;
+            case 9:
+                _j.trys.push([9, 11, , 12]);
+                return [4 /*yield*/, github.rest.issues.listComments(__assign(__assign({}, context.repo), { issue_number: context.issue.number }))];
+            case 10:
+                comments = (_j.sent()).data;
                 for (i = comments.length - 1; i >= 0; i--) {
                     c = comments[i];
-                    if (((_h = c.user) === null || _h === void 0 ? void 0 : _h.type) !== "Bot")
+                    if (!filter(c))
                         continue;
-                    if (!((_j = c.body) === null || _j === void 0 ? void 0 : _j.includes(signature)))
+                    if (!((_h = c.body) === null || _h === void 0 ? void 0 : _h.includes(signature)))
                         continue;
                     commentId = c.id;
                 }
-                return [3 /*break*/, 8];
-            case 7:
-                e_1 = _k.sent();
-                coreExports.error(e_1);
-                return [3 /*break*/, 8];
-            case 8:
-                if (!commentId) return [3 /*break*/, 12];
-                _k.label = 9;
-            case 9:
-                _k.trys.push([9, 11, , 12]);
-                return [4 /*yield*/, github.rest.issues.updateComment(__assign(__assign({}, context.repo), { comment_id: commentId, body: body }))];
-            case 10:
-                _k.sent();
-                return [2 /*return*/];
-            case 11:
-                _k.sent();
                 return [3 /*break*/, 12];
-            case 12: return [4 /*yield*/, github.rest.issues.createComment(__assign(__assign({}, context.repo), { issue_number: context.issue.number, body: body }))];
+            case 11:
+                e_2 = _j.sent();
+                coreExports.error(e_2);
+                return [3 /*break*/, 12];
+            case 12:
+                if (!commentId) return [3 /*break*/, 16];
+                _j.label = 13;
             case 13:
-                _k.sent();
+                _j.trys.push([13, 15, , 16]);
+                return [4 /*yield*/, github.rest.issues.updateComment(__assign(__assign({}, context.repo), { comment_id: commentId, body: body }))];
+            case 14:
+                _j.sent();
+                return [2 /*return*/];
+            case 15:
+                _j.sent();
+                return [3 /*break*/, 16];
+            case 16: return [4 /*yield*/, github.rest.issues.createComment(__assign(__assign({}, context.repo), { issue_number: context.issue.number, body: body }))];
+            case 17:
+                _j.sent();
                 return [2 /*return*/];
         }
     });

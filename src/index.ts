@@ -1,4 +1,10 @@
-import { error, getBooleanInput, getInput, setFailed } from "@actions/core";
+import {
+  debug,
+  error,
+  getBooleanInput,
+  getInput,
+  setFailed,
+} from "@actions/core";
 import { getOctokit } from "@actions/github";
 import { context } from "@actions/github/lib/utils";
 import { existsSync, readFile } from "fs";
@@ -219,6 +225,15 @@ ${await comment(cStats, oldStats, tableWithTypeLimit as keyof Metrics)}
 
 ${signature}`;
 
+  let filter = (c: any) => c?.user?.type === "Bot";
+
+  try {
+    const u = await github.rest.users.getAuthenticated();
+    filter = (c: any) => c?.user?.login === u.data.login;
+
+    debug("Using a PAT from " + u.data.login);
+  } catch (e) {}
+
   let commentId = null;
   try {
     const comments = (
@@ -226,11 +241,10 @@ ${signature}`;
         ...context.repo,
         issue_number: context.issue.number,
       })
-    ).data;
+    ).data.filter(filter);
 
     for (let i = comments.length - 1; i >= 0; i--) {
       const c = comments[i];
-      if (c.user?.type !== "Bot") continue;
       if (!c.body?.includes(signature)) continue;
       commentId = c.id;
     }
