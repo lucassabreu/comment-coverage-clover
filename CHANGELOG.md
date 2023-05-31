@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- better support for personal access tokens
+
+### Changed
+
+- dependencies upgraded
+
 ## [0.9.4] - 2023-05-25
 
 ### Added
