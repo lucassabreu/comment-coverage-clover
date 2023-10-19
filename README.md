@@ -30,28 +30,30 @@ File: `clover.example.base.xml`
 Configuration
 -------------
 
-| Input                             | Description                                                                                                                                                               |
-|-----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `file`                            | The location of the clover file. <br/> **Required**                                                                                                                       |
-| `base-file`                       | The location of the clover file with a previous state of the coverage to compare                                                                                          |
-| `dir-prefix`                      | Section of the file on clover report to remove <br/> Default: `github.workspace` <br/> **Required**                                                                       |
-| `dir-prefix-keep`                 | Section of the `dir-prefix` to keep when creating link to file.<br/>Example: if your php application is at "$REPO/backend", then you should set this to "backend"         |
-| `only-with-cover`                 | Should only list files with at least one line covered.                                                                                                                    |
-| `only-with-coverable-lines`       | Should only list files with at least one "coverable" line of code<br/>Example: interfaces or abstract classes with no implementation                                      |
-| `lang`                            | In which [language](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Intl#argumento_locales) to format the numbers <br/> Default: `en-US` |
-| `chart-size`                      | How many characters to use on chart's bar<br/> Default: `23`                                                                                                              |
-| `with-chart`                      | Add a chart with the distribution of coverage on files<br/> Default: `true`                                                                                               |
-| `max-line-coverage-decrease`      | How much the line coverage percentage can decrease without failing                                                                                                        |
-| `max-method-coverage-decrease`    | How much the method coverage percentage can decrease without failing                                                                                                      |
-| `min-line-coverage`               | Minimum percentage acceptable for line coverage <br/> Default: `0`                                                                                                        |
-| `min-method-coverage`             | Minimum percentage acceptable for method coverage <br/>Default `0`                                                                                                        |
-| `with-table`                      | Add a table with a list of files and its coverage <br/> Default: `true`                                                                                                   |
-| `with-branches`                   | Adds the column "Branches" with the branching coverage <br/> Default: `true`                                                                                              |
-| `show-percentage-change-on-table` | Show in percentage how much the file coverage changed per file                                                                                                            |
-| `table-type-coverage`             | Which of the coverage percentages to filter <br/> Default: `"lines"`                                                                                                      |
-| `table-below-coverage`            | Show only files below or equal to this coverage percentage <br/> Default: `100`                                                                                           |
-| `table-above-coverage`            | Show only files above or equal to this coverage percentage <br/> Default: `0`                                                                                             |
-| `table-coverage-change`           | Show only files which their coverage changed equal or above this percentage <br/> Default: `0`                                                                            |
+| Input                             | Description                                                                                                                                                       |
+|-----------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `file`                            | The location of the clover file. <br/> **Required**                                                                                                               |
+| `base-file`                       | The location of the clover file with a previous state of the coverage to compare                                                                                  |
+| `dir-prefix`                      | Section of the file on clover report to remove <br/> Default: `github.workspace` <br/> **Required**                                                               |
+| `dir-prefix-keep`                 | Section of the `dir-prefix` to keep when creating link to file.<br/>Example: if your php application is at "$REPO/backend", then you should set this to "backend" |
+| `only-with-cover`                 | Should only list files with at least one line covered.                                                                                                            |
+| `only-with-coverable-lines`       | Should only list files with at least one "coverable" line of code<br/>Example: interfaces or abstract classes with no implementation                              |
+| `lang`                            | In which [language][lang] to format the numbers <br/> Default: `en-US`                                                                                            |
+| `chart-size`                      | How many characters to use on chart's bar<br/> Default: `23`                                                                                                      |
+| `with-chart`                      | Add a chart with the distribution of coverage on files<br/> Default: `true`                                                                                       |
+| `max-line-coverage-decrease`      | How much the line coverage percentage can decrease without failing                                                                                                |
+| `max-method-coverage-decrease`    | How much the method coverage percentage can decrease without failing                                                                                              |
+| `min-line-coverage`               | Minimum percentage acceptable for line coverage <br/> Default: `0`                                                                                                |
+| `min-method-coverage`             | Minimum percentage acceptable for method coverage <br/>Default `0`                                                                                                |
+| `with-table`                      | Add a table with a list of files and its coverage <br/> Default: `true`                                                                                           |
+| `with-branches`                   | Adds the column "Branches" with the branching coverage <br/> Default: `true`                                                                                      |
+| `show-percentage-change-on-table` | Show in percentage how much the file coverage changed per file                                                                                                    |
+| `table-type-coverage`             | Which of the coverage percentages to filter <br/> Default: `"lines"`                                                                                              |
+| `table-below-coverage`            | Show only files below or equal to this coverage percentage <br/> Default: `100`                                                                                   |
+| `table-above-coverage`            | Show only files above or equal to this coverage percentage <br/> Default: `0`                                                                                     |
+| `table-coverage-change`           | Show only files which their coverage changed equal or above this percentage <br/> Default: `0`                                                                    |
+| `signature`                       | Custom signature to be used at the bottom of the comment. <br/>If you need multiple comments per pull request each step needs to have a unique `signature`        |
+| `github-token`                    | Custom [PAT][pat] to be used instead of the [default action token][default-token], should have the `repo` scope                                                   |
 
 Example usage
 -------------
@@ -156,3 +158,6 @@ jobs:
 ---------
 
 [danhunsaker/clover-reporter-action]: https://github.com/danhunsaker/clover-reporter-action
+[pat]: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
+[lang]: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Intl#argumento_locales
+[default-token]: https://docs.github.com/en/actions/security-guides/automatic-token-authentication

@@ -6,7 +6,7 @@ branding:
   color: green
 inputs:
   github-token:
-    description: Github token
+    description: Github token (`repo` scope required)
     required: true
     default: ${{ github.token }}
   dir-prefix:
