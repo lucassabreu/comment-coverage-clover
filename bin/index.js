@@ -89762,10 +89762,13 @@ var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
                     coreExports.error("there is no coverage type ".concat(tableWithTypeLimit));
                     return [2 /*return*/];
                 }
-                if (!github)
-                    return [2 /*return*/];
                 if (!utils$2.context.payload.pull_request)
-                    return [2 /*return*/];
+                    throw ("this action requires a pull request context to be able to comment\n" +
+                        "https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request");
+                if (!github)
+                    throw token
+                        ? "no Github token was informed !"
+                        : "the Github token informed is not valid";
                 commit = (_g = utils$2.context.payload.pull_request) === null || _g === void 0 ? void 0 : _g.head.sha.substring(0, 7);
                 if (!require$$0$1.existsSync(file)) {
                     throw "file \"".concat(file, "\" ").concat(notFoundMessage);
