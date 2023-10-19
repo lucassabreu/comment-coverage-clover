@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- scopes required for the `github-token` input
+- `signature` input documented on README
+
 ### Fixed
 
 - when the token set for the action is not valid the action will now fail with an error.
