@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- when the token set for the action is not valid the action will now fail with an error.
+- if the workflow context does no have a pull request the action will fail with an error.
+
 ## [0.10.2] - 2023-07-14
 
 ### Fixed

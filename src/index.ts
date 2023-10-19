@@ -192,8 +192,15 @@ const run = async () => {
     return;
   }
 
-  if (!github) return;
-  if (!context.payload.pull_request) return;
+  if (!context.payload.pull_request)
+    throw (
+      "this action requires a pull request context to be able to comment\n" +
+      "https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request"
+    );
+  if (!github)
+    throw token
+      ? "no Github token was informed !"
+      : "the Github token informed is not valid";
 
   const commit = context.payload.pull_request?.head.sha.substring(0, 7);
 
