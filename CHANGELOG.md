@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- cover report with baseline example did not skip cover report action out of pull requests.
+
 ## [0.10.3] - 2023-10-19
 
 ### Added
