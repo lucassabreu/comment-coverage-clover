@@ -1998,7 +1998,7 @@ function requireOidcUtils () {
 	                .catch(error => {
 	                throw new Error(`Failed to get ID Token. \n 
         Error Code : ${error.statusCode}\n 
-        Error Message: ${error.result.message}`);
+        Error Message: ${error.message}`);
 	            });
 	            const id_token = (_a = res.result) === null || _a === void 0 ? void 0 : _a.value;
 	            if (!id_token) {
@@ -89753,7 +89753,7 @@ function checkThreshold(c, o) {
 }
 var notFoundMessage = "was not found, please check if the path is valid, or if it exists.";
 var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
-    var commit, cStats, _a, oldStats, _b, _c, msgs, body, _d, _e, filter, u_1, commentId, comments, i, c, e_2;
+    var commit, cStats, _a, oldStats, _b, _c, msgs, body, _d, _e, filter, u_1, commentId, comments, i, c, e_2, v;
     var _g, _h;
     return __generator(this, function (_j) {
         switch (_j.label) {
@@ -89840,8 +89840,14 @@ var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
             case 15:
                 _j.sent();
                 return [3 /*break*/, 16];
-            case 16: return [4 /*yield*/, github.rest.issues.createComment(__assign(__assign({}, utils$2.context.repo), { issue_number: utils$2.context.issue.number, body: body }))];
+            case 16:
+                v = coreExports.summary.addRaw(body);
+                coreExports.error(v.stringify());
+                return [4 /*yield*/, v.write()];
             case 17:
+                _j.sent();
+                return [4 /*yield*/, github.rest.issues.createComment(__assign(__assign({}, utils$2.context.repo), { issue_number: utils$2.context.issue.number, body: body }))];
+            case 18:
                 _j.sent();
                 return [2 /*return*/];
         }

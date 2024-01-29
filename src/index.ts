@@ -4,6 +4,7 @@ import {
   getBooleanInput,
   getInput,
   setFailed,
+  summary,
 } from "@actions/core";
 import { getOctokit } from "@actions/github";
 import { context } from "@actions/github/lib/utils";
@@ -269,6 +270,10 @@ ${signature}`;
       return;
     } catch {}
   }
+
+  const v = summary.addRaw(body);
+  error(v.stringify());
+  await v.write();
 
   await github.rest.issues.createComment({
     ...context.repo,
