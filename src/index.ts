@@ -277,7 +277,7 @@ ${signature}`;
     body,
   });
 
-  await summary.addRaw(body).addSeparator().write();
+  await summary.addQuote("sad").addSeparator().write();
 };
 
 run().catch((err: Error) => setFailed(err + " Stack: " + err.stack));
