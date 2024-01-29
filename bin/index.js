@@ -89843,7 +89843,9 @@ var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
             case 16: return [4 /*yield*/, github.rest.issues.createComment(__assign(__assign({}, utils$2.context.repo), { issue_number: utils$2.context.issue.number, body: body }))];
             case 17:
                 _j.sent();
-                coreExports.summary.addRaw(body, true).write();
+                return [4 /*yield*/, coreExports.summary.addRaw(body, true).write()];
+            case 18:
+                _j.sent();
                 return [2 /*return*/];
         }
     });
