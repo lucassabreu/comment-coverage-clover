@@ -271,13 +271,13 @@ ${signature}`;
     } catch {}
   }
 
+  await summary.addHeading("saddest?").addQuote("sad").addSeparator().write();
+
   await github.rest.issues.createComment({
     ...context.repo,
     issue_number: context.issue.number,
     body,
   });
-
-  await summary.addHeading("saddest?").addQuote("sad").addSeparator().write();
 };
 
 run().catch((err: Error) => setFailed(err + " Stack: " + err.stack));

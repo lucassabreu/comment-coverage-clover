@@ -89840,10 +89840,10 @@ var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
             case 15:
                 _j.sent();
                 return [3 /*break*/, 16];
-            case 16: return [4 /*yield*/, github.rest.issues.createComment(__assign(__assign({}, utils$2.context.repo), { issue_number: utils$2.context.issue.number, body: body }))];
+            case 16: return [4 /*yield*/, coreExports.summary.addHeading("saddest?").addQuote("sad").addSeparator().write()];
             case 17:
                 _j.sent();
-                return [4 /*yield*/, coreExports.summary.addHeading("saddest?").addQuote("sad").addSeparator().write()];
+                return [4 /*yield*/, github.rest.issues.createComment(__assign(__assign({}, utils$2.context.repo), { issue_number: utils$2.context.issue.number, body: body }))];
             case 18:
                 _j.sent();
                 return [2 /*return*/];
