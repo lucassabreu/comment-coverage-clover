@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.11.0] - 2024-01-29
+
 ### Changed
 
 - update action to node20
@@ -232,7 +234,10 @@ as bundling tool.
 - implemented base action reading clover.xml files and converting then.
 - release.yml workflow to auto-release tags
 
-[Unreleased]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.10.2...HEAD
+[Unreleased]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.11.0...HEAD
+[0.11.0]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.10.1...v0.10.2
+[0.10.4]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.10.1...v0.10.2
+[0.10.3]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.10.1...v0.10.2
 [0.10.2]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.10.1...v0.10.2
 [0.10.1]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.10.0...v0.10.1
 [0.10.0]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.9.4...v0.10.0
