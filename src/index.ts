@@ -4,6 +4,7 @@ import {
   getBooleanInput,
   getInput,
   setFailed,
+  summary,
 } from "@actions/core";
 import { getOctokit } from "@actions/github";
 import { context } from "@actions/github/lib/utils";
@@ -275,6 +276,8 @@ ${signature}`;
     issue_number: context.issue.number,
     body,
   });
+
+  summary.addRaw(body);
 };
 
 run().catch((err: Error) => setFailed(err + " Stack: " + err.stack));
