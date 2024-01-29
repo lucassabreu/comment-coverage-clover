@@ -89753,7 +89753,7 @@ function checkThreshold(c, o) {
 }
 var notFoundMessage = "was not found, please check if the path is valid, or if it exists.";
 var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
-    var commit, cStats, _a, oldStats, _b, _c, msgs, body, _d, _e, filter, u_1, commentId, comments, i, c, e_2;
+    var commit, cStats, _a, oldStats, _b, _c, msgs, body, _d, _e, filter, u_1, commentId, comments, i, c, e_2, v;
     var _g, _h;
     return __generator(this, function (_j) {
         switch (_j.label) {
@@ -89840,7 +89840,10 @@ var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
             case 15:
                 _j.sent();
                 return [3 /*break*/, 16];
-            case 16: return [4 /*yield*/, coreExports.summary.addHeading("saddest?").addQuote("sad").addSeparator().write()];
+            case 16:
+                v = coreExports.summary.addHeading("saddest?").addQuote("sad").addSeparator();
+                console.log(v.stringify());
+                return [4 /*yield*/, v.write()];
             case 17:
                 _j.sent();
                 return [4 /*yield*/, github.rest.issues.createComment(__assign(__assign({}, utils$2.context.repo), { issue_number: utils$2.context.issue.number, body: body }))];
