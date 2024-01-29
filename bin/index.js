@@ -89842,7 +89842,7 @@ var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
                 return [3 /*break*/, 16];
             case 16:
                 v = coreExports.summary.addHeading("saddest?").addQuote("sad").addSeparator();
-                console.log(v.stringify());
+                coreExports.error(v.stringify());
                 return [4 /*yield*/, v.write()];
             case 17:
                 _j.sent();
