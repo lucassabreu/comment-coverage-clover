@@ -276,8 +276,6 @@ ${signature}`;
     issue_number: context.issue.number,
     body,
   });
-
-  summary.addRaw(body);
 };
 
 run().catch((err: Error) => setFailed(err + " Stack: " + err.stack));
