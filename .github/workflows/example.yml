@@ -10,6 +10,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@master
 
+      - name: Adding markdown
+        run: echo '### Hello world! ' >> $GITHUB_STEP_SUMMARY
+
       - name: clover file not found
         uses: ./.
         continue-on-error: true
