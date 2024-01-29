@@ -277,7 +277,7 @@ ${signature}`;
     body,
   });
 
-  summary.addRaw(body);
+  summary.addRaw(body, true);
 };
 
 run().catch((err: Error) => setFailed(err + " Stack: " + err.stack));
