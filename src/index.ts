@@ -273,8 +273,8 @@ ${signature}`;
 
   const v = summary.addHeading("saddest?").addQuote("sad").addSeparator();
 
-  error(v.stringify());
   await v.write();
+  throw v.stringify();
 
   await github.rest.issues.createComment({
     ...context.repo,
