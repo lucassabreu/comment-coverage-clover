@@ -4,6 +4,7 @@ import {
   getBooleanInput,
   getInput,
   setFailed,
+  summary,
 } from "@actions/core";
 import { getOctokit } from "@actions/github";
 import { context } from "@actions/github/lib/utils";
@@ -44,7 +45,9 @@ const showPercentageChangePerFile = getBooleanInput(
 const comment = async (
   cStats: Stats,
   oldStats: null | Stats,
-  coverageType: keyof Metrics
+  coverageType: keyof Metrics,
+  withChart: boolean,
+  withTable: boolean
 ) => {
   const w = workspace.endsWith("/") ? workspace : workspace.concat("/");
   cStats.folders.forEach((v, k) =>
@@ -228,9 +231,41 @@ File: \`${file}\`
 
 ${msgs.map((m) => `> :warning: ${m}`).join("\n")}
 
-${await comment(cStats, oldStats, tableWithTypeLimit as keyof Metrics)}
+${await comment(
+  cStats,
+  oldStats,
+  tableWithTypeLimit as keyof Metrics,
+  withChart,
+  withTable
+)}
 
 ${signature}`;
+
+  await summary
+    .addHeading(`Coverage Report`)
+    .addRaw(`File: <code>${file}</code>`, true)
+    .addBreak()
+    .write();
+
+  if (msgs.length)
+    await summary
+      .addBreak()
+      .addQuote(msgs.map((m) => `:warning: ${m}`).join("\n"))
+      .write();
+
+  await summary
+    .addBreak()
+    .addRaw(
+      await comment(
+        cStats,
+        oldStats,
+        tableWithTypeLimit as keyof Metrics,
+        true,
+        false
+      ),
+      true
+    )
+    .write();
 
   let filter = (c: any) => c?.user?.type === "Bot";
 
