@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- explanation about forks and token permissions with them.
+
 ### Changed
 
 - improving error reporting for debugging purposes

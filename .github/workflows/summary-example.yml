@@ -1,0 +1,21 @@
+name: example of summary
+on:
+  pull_request:
+
+jobs:
+  build:
+    name: example of workflow
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+
+      - name: clover file to comment (clover.example.base.xml)
+        uses: ./.
+        with:
+          dir-prefix: /var/www/html
+          file: clover.example.base.xml
+          base-file: clover.example.xml
+          chart-size: 75
+          only-with-cover: true
+          signature: "summary example"

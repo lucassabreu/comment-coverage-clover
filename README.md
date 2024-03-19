@@ -155,6 +155,20 @@ jobs:
           base-file: tests/base/coverage.xml
 ```
 
+Restrictions on Forks
+---------------------
+
+Github Actions [imposes higher Restrictions on workflows triggered from forks in public repositories][fork],
+where the default token generated will have only read permissions.
+
+Because of that when this Action is run on pull requests from forks no comment will be created with the
+coverage report, instead the report will only be shown at the steps summary.
+
+![example of step summary with the report](./assets/summary-example.png)
+
+If comments on pull request from forks are required for your workflow a [PAT](pat) can be used, but be aware
+that doing that may open the owner of the PAT to the malicious intentions of the internet.
+
 [CHANGELOG](CHANGELOG.md)
 ---------
 
@@ -162,3 +176,4 @@ jobs:
 [pat]: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
 [lang]: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Intl#argumento_locales
 [default-token]: https://docs.github.com/en/actions/security-guides/automatic-token-authentication
+[fork]: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token
