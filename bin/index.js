@@ -89636,6 +89636,7 @@ var baseFile = coreExports.getInput("base-file") || process.env.BASE_FILE;
 var onlyWithCover = coreExports.getBooleanInput("only-with-cover");
 var onlyWithCoverableLines = coreExports.getBooleanInput("only-with-coverable-lines");
 var withChart = coreExports.getBooleanInput("with-chart");
+var skipCommentOnForks = coreExports.getBooleanInput("skip-comments-on-forks");
 var withTable = coreExports.getBooleanInput("with-table");
 var showBranchesColumn = coreExports.getBooleanInput("with-branches");
 var tableWithOnlyBellow = Number(coreExports.getInput("table-below-coverage") || 100);
@@ -89766,9 +89767,9 @@ var errorToString = function (e) {
 var notFoundMessage = "was not found, please check if the path is valid, or if it exists.";
 var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
     var commit, cStats, _a, oldStats, _b, _c, msgs, body, _d, _e, _f, _g, filter, u_1, e_1, commentId, comments, i, c, e_2;
-    var _j, _k, _l;
-    return __generator(this, function (_m) {
-        switch (_m.label) {
+    var _j, _k, _l, _m, _o, _p;
+    return __generator(this, function (_q) {
+        switch (_q.label) {
             case 0:
                 if (!["lines", "methods", "branches"].includes(tableWithTypeLimit)) {
                     coreExports.error("there is no coverage type ".concat(tableWithTypeLimit));
@@ -89788,7 +89789,7 @@ var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
                 _a = fromString;
                 return [4 /*yield*/, require$$6.promisify(require$$0$1.readFile)(file)];
             case 1:
-                cStats = _a.apply(void 0, [(_m.sent()).toString()]);
+                cStats = _a.apply(void 0, [(_q.sent()).toString()]);
                 if (baseFile && !require$$0$1.existsSync(baseFile)) {
                     coreExports.error("base file \"".concat(baseFile, "\" ").concat(notFoundMessage));
                     baseFile = undefined;
@@ -89798,8 +89799,8 @@ var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
                 _c = fromString;
                 return [4 /*yield*/, require$$6.promisify(require$$0$1.readFile)(baseFile)];
             case 2:
-                _b = _c.apply(void 0, [(_m.sent()).toString()]);
-                _m.label = 3;
+                _b = _c.apply(void 0, [(_q.sent()).toString()]);
+                _q.label = 3;
             case 3:
                 oldStats = _b;
                 msgs = Array.from(checkThreshold(cStats, oldStats));
@@ -89807,78 +89808,85 @@ var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
                 _e = (_d = "\nCoverage report for commit: ".concat(commit, "\nFile: `").concat(file, "`\n\n").concat(msgs.map(function (m) { return "> :warning: ".concat(m); }).join("\n"), "\n\n")).concat;
                 return [4 /*yield*/, comment(cStats, oldStats, tableWithTypeLimit, withChart, withTable)];
             case 4:
-                body = _e.apply(_d, [_m.sent(), "\n\n"]).concat(signature);
+                body = _e.apply(_d, [_q.sent(), "\n\n"]).concat(signature);
                 return [4 /*yield*/, coreExports.summary
                         .addHeading("Coverage Report")
                         .addRaw("File: <code>".concat(file, "</code>"), true)
                         .addBreak()
                         .write()];
             case 5:
-                _m.sent();
+                _q.sent();
                 if (!msgs.length) return [3 /*break*/, 7];
                 return [4 /*yield*/, coreExports.summary
                         .addBreak()
                         .addQuote(msgs.map(function (m) { return ":warning: ".concat(m); }).join("\n"))
                         .write()];
             case 6:
-                _m.sent();
-                _m.label = 7;
+                _q.sent();
+                _q.label = 7;
             case 7:
                 _g = (_f = coreExports.summary
                     .addBreak())
                     .addRaw;
                 return [4 /*yield*/, comment(cStats, oldStats, tableWithTypeLimit, true, false)];
-            case 8: return [4 /*yield*/, _g.apply(_f, [_m.sent(), true])
+            case 8: return [4 /*yield*/, _g.apply(_f, [_q.sent(), true])
                     .write()];
             case 9:
-                _m.sent();
+                _q.sent();
+                if (utils$2.context.eventName !== "pull_request")
+                    return [2 /*return*/];
+                if (skipCommentOnForks &&
+                    "".concat(utils$2.context.repo.owner, "/").concat(utils$2.context.repo.repo) !==
+                        ((_m = (_l = (_k = utils$2.context.payload.pull_request) === null || _k === void 0 ? void 0 : _k.head) === null || _l === void 0 ? void 0 : _l.repo) === null || _m === void 0 ? void 0 : _m.full_name)) {
+                    return [2 /*return*/];
+                }
                 filter = function (c) { var _a; return ((_a = c === null || c === void 0 ? void 0 : c.user) === null || _a === void 0 ? void 0 : _a.type) === "Bot"; };
-                _m.label = 10;
+                _q.label = 10;
             case 10:
-                _m.trys.push([10, 12, , 13]);
+                _q.trys.push([10, 12, , 13]);
                 return [4 /*yield*/, github.rest.users.getAuthenticated()];
             case 11:
-                u_1 = _m.sent();
+                u_1 = _q.sent();
                 filter = function (c) { var _a; return ((_a = c === null || c === void 0 ? void 0 : c.user) === null || _a === void 0 ? void 0 : _a.login) === u_1.data.login; };
                 coreExports.info("Using a PAT from " +
                     u_1.data.login +
                     " with scopes: " +
-                    scopesToString((_k = u_1.headers) === null || _k === void 0 ? void 0 : _k["x-oauth-scopes"]));
+                    scopesToString((_o = u_1.headers) === null || _o === void 0 ? void 0 : _o["x-oauth-scopes"]));
                 return [3 /*break*/, 13];
             case 12:
-                e_1 = _m.sent();
+                e_1 = _q.sent();
                 coreExports.debug(errorToString(e_1));
                 return [3 /*break*/, 13];
             case 13:
                 commentId = null;
-                _m.label = 14;
+                _q.label = 14;
             case 14:
-                _m.trys.push([14, 16, , 17]);
+                _q.trys.push([14, 16, , 17]);
                 return [4 /*yield*/, github.rest.issues.listComments(__assign(__assign({}, utils$2.context.repo), { issue_number: utils$2.context.issue.number }))];
             case 15:
-                comments = (_m.sent()).data.filter(filter);
+                comments = (_q.sent()).data.filter(filter);
                 for (i = comments.length - 1; i >= 0; i--) {
                     c = comments[i];
-                    if (!((_l = c.body) === null || _l === void 0 ? void 0 : _l.includes(signature)))
+                    if (!((_p = c.body) === null || _p === void 0 ? void 0 : _p.includes(signature)))
                         continue;
                     commentId = c.id;
                 }
                 return [3 /*break*/, 17];
             case 16:
-                e_2 = _m.sent();
+                e_2 = _q.sent();
                 coreExports.error(errorToString(e_2));
                 return [3 /*break*/, 17];
             case 17:
                 if (!commentId) return [3 /*break*/, 21];
-                _m.label = 18;
+                _q.label = 18;
             case 18:
-                _m.trys.push([18, 20, , 21]);
+                _q.trys.push([18, 20, , 21]);
                 return [4 /*yield*/, github.rest.issues.updateComment(__assign(__assign({}, utils$2.context.repo), { comment_id: commentId, body: body }))];
             case 19:
-                _m.sent();
+                _q.sent();
                 return [2 /*return*/];
             case 20:
-                _m.sent();
+                _q.sent();
                 return [3 /*break*/, 21];
             case 21: return [4 /*yield*/, github.rest.issues
                     .createComment(__assign(__assign({}, utils$2.context.repo), { issue_number: utils$2.context.issue.number, body: body }))
@@ -89888,7 +89896,7 @@ var run = function () { return __awaiter$1(void 0, void 0, void 0, function () {
                         (e.stack ? ". Stack: " + e.stack : ""));
                 })];
             case 22:
-                _m.sent();
+                _q.sent();
                 return [2 /*return*/];
         }
     });

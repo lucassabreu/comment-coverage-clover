@@ -25,6 +25,7 @@ let baseFile = getInput("base-file") || process.env.BASE_FILE;
 const onlyWithCover = getBooleanInput("only-with-cover");
 const onlyWithCoverableLines = getBooleanInput("only-with-coverable-lines");
 const withChart = getBooleanInput("with-chart");
+const skipCommentOnForks = getBooleanInput("skip-comments-on-forks");
 const withTable = getBooleanInput("with-table");
 const showBranchesColumn = getBooleanInput("with-branches");
 const tableWithOnlyBellow = Number(getInput("table-below-coverage") || 100);
@@ -283,6 +284,16 @@ ${signature}`;
       true
     )
     .write();
+
+  if (context.eventName !== "pull_request") return;
+
+  if (
+    skipCommentOnForks &&
+    `${context.repo.owner}/${context.repo.repo}` !==
+      context.payload.pull_request?.head?.repo?.full_name
+  ) {
+    return;
+  }
 
   let filter = (c: any) => c?.user?.type === "Bot";
 

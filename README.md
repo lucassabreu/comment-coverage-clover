@@ -54,6 +54,7 @@ Configuration
 | `table-coverage-change`           | Show only files which their coverage changed equal or above this percentage <br/> Default: `0`                                                                    |
 | `signature`                       | Custom signature to be used at the bottom of the comment. <br/>If you need multiple comments per pull request each step needs to have a unique `signature`        |
 | `github-token`                    | Custom [PAT][pat] to be used instead of the [default action token][default-token], should have the `repo` scope                                                   |
+| `skip-comments-on-forks`          | Should skip trying to comment on [pull requests created from forks](#restrictions-on-forks) <br/> Default: `false`                                                                          |
 
 Example usage
 -------------
