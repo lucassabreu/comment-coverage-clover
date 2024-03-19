@@ -285,13 +285,15 @@ ${signature}`;
     )
     .write();
 
-  if (context.eventName !== "pull_request") return;
+  if (context.eventName !== "pull_request") {
+    return;
+  }
 
-  if (
-    skipCommentOnForks &&
+  const isFork =
     `${context.repo.owner}/${context.repo.repo}` !==
-      context.payload.pull_request?.head?.repo?.full_name
-  ) {
+    context.payload.pull_request?.head?.repo?.full_name;
+
+  if (skipCommentOnForks && isFork) {
     return;
   }
 
@@ -337,7 +339,9 @@ ${signature}`;
         body,
       });
       return;
-    } catch {}
+    } catch (e) {
+      debug(errorToString(e));
+    }
   }
 
   await github.rest.issues
@@ -347,6 +351,11 @@ ${signature}`;
       body,
     })
     .catch((e: Error) => {
+      if (isFork) {
+        debug(errorToString(e));
+        return;
+      }
+
       throw new Error(
         "Failed to create a new comment with: " +
           e.message +
