@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- explanation about forks and token permissions with them.
+- new option `skip-comments-on-forks` to prevent blocking pull requests from forks because of lack of
+  permissions.
+
+### Changed
+
+- improving error reporting for debugging purposes
+
 ## [0.12.0] - 2024-02-02
 
 ### Added

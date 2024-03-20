@@ -3,6 +3,7 @@ import {
   error,
   getBooleanInput,
   getInput,
+  info,
   setFailed,
   summary,
 } from "@actions/core";
@@ -10,6 +11,7 @@ import { getOctokit } from "@actions/github";
 import { context } from "@actions/github/lib/utils";
 import { existsSync, readFile } from "fs";
 import { promisify } from "util";
+import { RequestError } from "@octokit/request-error";
 
 import { chart } from "./chart";
 import { fromString } from "./clover";
@@ -23,6 +25,7 @@ let baseFile = getInput("base-file") || process.env.BASE_FILE;
 const onlyWithCover = getBooleanInput("only-with-cover");
 const onlyWithCoverableLines = getBooleanInput("only-with-coverable-lines");
 const withChart = getBooleanInput("with-chart");
+const skipCommentOnForks = getBooleanInput("skip-comments-on-forks");
 const withTable = getBooleanInput("with-table");
 const showBranchesColumn = getBooleanInput("with-branches");
 const tableWithOnlyBellow = Number(getInput("table-below-coverage") || 100);
@@ -186,6 +189,21 @@ function* checkThreshold(c: Stats, o?: Stats) {
   }
 }
 
+const scopesToString = (scopes: null | string) =>
+  scopes?.split(/,\s+/)?.join(", ") || "(empty)";
+
+const errorToString = (e: any) =>
+  e +
+  (e instanceof Error
+    ? (e instanceof RequestError
+        ? `\nRequest: ${e.request.method} ${e.request.url}` +
+          `\nResponse Scopes: ${scopesToString(
+            e.response?.headers?.["x-oauth-scopes"]
+          )}` +
+          `\nResponse Headers: ${JSON.stringify(e.response?.headers || [])}`
+        : "") + `\nStack: ${e.stack}`
+    : "");
+
 const notFoundMessage =
   "was not found, please check if the path is valid, or if it exists.";
 
@@ -267,14 +285,33 @@ ${signature}`;
     )
     .write();
 
+  if (context.eventName !== "pull_request") {
+    return;
+  }
+
+  const isFork =
+    `${context.repo.owner}/${context.repo.repo}` !==
+    context.payload.pull_request?.head?.repo?.full_name;
+
+  if (skipCommentOnForks && isFork) {
+    return;
+  }
+
   let filter = (c: any) => c?.user?.type === "Bot";
 
   try {
     const u = await github.rest.users.getAuthenticated();
     filter = (c: any) => c?.user?.login === u.data.login;
 
-    debug("Using a PAT from " + u.data.login);
-  } catch (e) {}
+    info(
+      "Using a PAT from " +
+        u.data.login +
+        " with scopes: " +
+        scopesToString(u.headers?.["x-oauth-scopes"])
+    );
+  } catch (e) {
+    debug(errorToString(e));
+  }
 
   let commentId = null;
   try {
@@ -291,7 +328,7 @@ ${signature}`;
       commentId = c.id;
     }
   } catch (e) {
-    error(e);
+    error(errorToString(e));
   }
 
   if (commentId) {
@@ -302,14 +339,29 @@ ${signature}`;
         body,
       });
       return;
-    } catch {}
+    } catch (e) {
+      debug(errorToString(e));
+    }
   }
 
-  await github.rest.issues.createComment({
-    ...context.repo,
-    issue_number: context.issue.number,
-    body,
-  });
+  await github.rest.issues
+    .createComment({
+      ...context.repo,
+      issue_number: context.issue.number,
+      body,
+    })
+    .catch((e: Error) => {
+      if (isFork) {
+        debug(errorToString(e));
+        return;
+      }
+
+      throw new Error(
+        "Failed to create a new comment with: " +
+          e.message +
+          (e.stack ? ". Stack: " + e.stack : "")
+      );
+    });
 };
 
-run().catch((err: Error) => setFailed(err + " Stack: " + err.stack));
+run().catch((err: Error) => setFailed(errorToString(err)));
