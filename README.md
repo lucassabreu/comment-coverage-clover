@@ -167,7 +167,7 @@ coverage report, instead the report will only be shown at the steps summary.
 
 ![example of step summary with the report](./assets/summary-example.png)
 
-If comments on pull request from forks are required for your workflow a [PAT](pat) can be used, but be aware
+If comments on pull request from forks are required for your workflow a [PAT][pat] can be used, but be aware
 that doing that may open the owner of the PAT to the malicious intentions of the internet.
 
 [CHANGELOG](CHANGELOG.md)
