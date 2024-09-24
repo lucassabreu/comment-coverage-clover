@@ -73,6 +73,10 @@ inputs:
   signature:
     description: Custom signature to be used at the bottom of the comment
     required: false
+  skip-comments-on-forks:
+    description: Should skip trying to comment on pull requests created from forks
+    default: false
+
 runs:
   using: node20
   main: bin/index.js
