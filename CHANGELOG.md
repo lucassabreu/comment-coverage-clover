@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.14.0] - 2024-09-24
+
+### Fixed
+- fix link on README about PAT
+
+### Changed
+- update dependencies for security reasons
+
+### Thanks
+
+Thank you to [@tom-reinders](https://github.com/tom-reinders) for improving the project on PR [#55](https://github.com/lucassabreu/comment-coverage-clover/pull/55)
+
 ## [0.13.0] - 2024-03-20
 
 ### Added

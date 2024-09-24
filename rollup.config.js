@@ -3,8 +3,9 @@ import resolve from "@rollup/plugin-node-resolve";
 import json from "@rollup/plugin-json";
 import externals from "rollup-plugin-node-externals";
 import typescript from "rollup-plugin-typescript2";
+import fs from "fs";
 
-const pkg = require("./package.json");
+const pkg = JSON.parse(fs.readFileSync("package.json"));
 
 export default {
   input: pkg.source,
