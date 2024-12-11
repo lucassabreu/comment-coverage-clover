@@ -89562,10 +89562,10 @@ var line = function (name, m, lang, o, showDelta, showBranchesColumn) {
 var compare = function (n, o, lang, showDelta) {
     if (showDelta === void 0) { showDelta = false; }
     return span(n.percentual == o.percentual
-        ? ":stop_button:"
+        ? ":eject_button:"
         : n.percentual < o.percentual
-            ? ":arrow_down_small:"
-            : ":arrow_up_small:", {
+            ? ":arrow_lower_left:"
+            : ":arrow_upper_right:", {
         title: "Was ".concat(p2s(o.percentual || 0, lang, "0%"), " before") +
             (showDelta && (n.percentual || 0) !== (o.percentual || 0)
                 ? " (".concat(n.percentual > o.percentual ? "+" : "-").concat(p2s(Math.abs(n.percentual - o.percentual), lang), ")")

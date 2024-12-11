@@ -101,10 +101,10 @@ const compare = (
 ): string =>
   span(
     n.percentual == o.percentual
-      ? ":stop_button:"
+      ? ":eject_button:"
       : n.percentual < o.percentual
-      ? ":arrow_down_small:"
-      : ":arrow_up_small:",
+      ? ":arrow_lower_left:"
+      : ":arrow_upper_right:",
     {
       title:
         `Was ${p2s(o.percentual || 0, lang, "0%")} before` +
