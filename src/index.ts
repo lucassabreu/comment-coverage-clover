@@ -45,6 +45,11 @@ const showPercentageChangePerFile = getBooleanInput(
   "show-percentage-change-on-table"
 );
 
+const iconEquals = getInput("icon-equals") || ":stop_button:";
+const iconIncreased = getInput("icon-increased") || ":arrow_up_small:";
+const iconDecreased = getInput("icon-decreased") || ":arrow_down_small:";
+const iconNew = getInput("icon-new") || ":new:";
+
 const comment = async (
   cStats: Stats,
   oldStats: null | Stats,
@@ -84,6 +89,12 @@ const comment = async (
         withTable,
         deltaPerFile: showPercentageChangePerFile,
         showBranchesColumn,
+        icons: {
+          equals: iconEquals,
+          increased: iconIncreased,
+          decreased: iconDecreased,
+          new: iconNew,
+        },
       }
     )
   );
