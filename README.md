@@ -56,8 +56,8 @@ Configuration
  | `github-token`                    | Custom [PAT][pat] to be used instead of the [default action token][default-token], should have the `repo` scope                                                   |
  | `skip-comments-on-forks`          | Should skip trying to comment on [pull requests created from forks](#restrictions-on-forks) <br/> Default: `false`                                                |
  | `icon-equals`                     | Emoji/text to be used when the coverage diff is zero <br/> Default: `:stop_button:`                                                                               |
- | `icon-increased`                  | Emoji/text to be used when the coverage diff is increased <br/> Default: `:stop_up_small:`                                                                        |
- | `icon-decreased`                  | Emoji/text to be used when the coverage diff is decreased <br/> Default: `:stop_down_small:`                                                                      |
+ | `icon-increased`                  | Emoji/text to be used when the coverage diff is increased <br/> Default: `:arrow_up_small:`                                                                        |
+ | `icon-decreased`                  | Emoji/text to be used when the coverage diff is decreased <br/> Default: `:arrow_down_small:`                                                                      |
  | `icon-new`                        | Emoji/text to be used when the file file is new, and does not have previous coverage metrics to compare <br/> Default: `:new:`                                    |
 
 Example usage

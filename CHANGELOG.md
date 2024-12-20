@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.15.1] - 2024-12-20
+
+### Fixed
+- increase and decrease default icons were wrong and don't exist
+
 ## [0.15.0] - 2024-12-20
 
 ### Added

@@ -81,10 +81,10 @@ inputs:
     default: ":stop_button:"
   icon-increased:
     description: Emoji/text to be used when the coverage diff is increased
-    default: ":stop_up_small:"
+    default: ":arrow_up_small:"
   icon-decreased:
     description: Emoji/text to be used when the coverage diff is decreased
-    default: ":stop_down_small:"
+    default: ":arrow_down_small:"
   icon-new:
     description: Emoji/text to be used when the file file is new, and does not have previous coverage metrics to compare
     default: ":new:"
