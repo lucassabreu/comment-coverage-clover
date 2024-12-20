@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.15.0] - 2024-12-20
+
+### Added
+
+- support to choosing which icons to use to better fit users situations
+
 ## [0.14.0] - 2024-09-24
 
 ### Fixed
