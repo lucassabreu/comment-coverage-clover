@@ -48,6 +48,7 @@ const showPercentageChangePerFile = getBooleanInput(
 const iconEquals = getInput("icon-equals") || ":stop_button:";
 const iconIncreased = getInput("icon-increased") || ":arrow_up_small:";
 const iconDecreased = getInput("icon-decreased") || ":arrow_down_small:";
+const iconNew = getInput("icon-new") || ":new:";
 
 const comment = async (
   cStats: Stats,
@@ -92,6 +93,7 @@ const comment = async (
           equals: iconEquals,
           increased: iconIncreased,
           decreased: iconDecreased,
+          new: iconNew,
         },
       }
     )

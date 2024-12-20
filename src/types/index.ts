@@ -49,4 +49,5 @@ export class Icons {
   equals: string;
   increased: string;
   decreased: string;
+  new: string;
 }

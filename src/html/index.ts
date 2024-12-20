@@ -52,7 +52,7 @@ const compareFile = (
 ) =>
   " " +
   (o === null
-    ? span(":new:", { title: "new file" })
+    ? span(icons.new, { title: "new file" })
     : compare(n, o, lang, true, icons));
 
 interface Stringable {

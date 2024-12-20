@@ -89528,7 +89528,7 @@ var c2s = function (c, lang) {
 var compareFile = function (n, o, lang, icons) {
     return " " +
         (o === null
-            ? span(":new:", { title: "new file" })
+            ? span(icons.new, { title: "new file" })
             : compare(n, o, lang, true, icons));
 };
 var limitedFragment = function (limit, noSpaceLeft) {
@@ -89639,6 +89639,7 @@ var showPercentageChangePerFile = coreExports.getBooleanInput("show-percentage-c
 var iconEquals = coreExports.getInput("icon-equals") || ":stop_button:";
 var iconIncreased = coreExports.getInput("icon-increased") || ":arrow_up_small:";
 var iconDecreased = coreExports.getInput("icon-decreased") || ":arrow_down_small:";
+var iconNew = coreExports.getInput("icon-new") || ":new:";
 var comment = function (cStats, oldStats, coverageType, withChart, withTable) { return __awaiter$1(void 0, void 0, void 0, function () {
     var w;
     return __generator(this, function (_a) {
@@ -89665,6 +89666,7 @@ var comment = function (cStats, oldStats, coverageType, withChart, withTable) { 
                         equals: iconEquals,
                         increased: iconIncreased,
                         decreased: iconDecreased,
+                        new: iconNew,
                     },
                 }))];
     });

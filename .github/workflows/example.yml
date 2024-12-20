@@ -262,6 +262,7 @@ jobs:
           icon-equals: ":eject_button:"
           icon-increased: ":arrow_upper_right:"
           icon-decreased: ":arrow_lower_right:"
+          icon-new: ":checkered_flag:"
 
       - name: comment using text instead of icons
         uses: ./.
@@ -274,4 +275,5 @@ jobs:
           icon-equals: "(same)"
           icon-increased: "(increased)"
           icon-decreased: "(decreased)"
+          icon-new: "(new)"
           signature: "comment using text instead of icons"
