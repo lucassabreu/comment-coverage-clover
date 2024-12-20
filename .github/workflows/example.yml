@@ -249,3 +249,29 @@ jobs:
           with-branches: false
           signature: "comment using a pat"
           github-token: ${{ secrets.PAT }}
+
+      - name: comment using custom icons
+        uses: ./.
+        with:
+          dir-prefix: /var/www/html
+          file: clover.onepackage.xml
+          base-file: clover.onepackage.base.xml
+          with-chart: true
+          show-percentage-change-on-table: true
+          signature: "comment using custom icons"
+          icon-equals: ":eject_button:"
+          icon-increased: ":arrow_upper_right:"
+          icon-decreased: ":arrow_lower_right:"
+
+      - name: comment using text instead of icons
+        uses: ./.
+        with:
+          dir-prefix: /var/www/html
+          file: clover.onepackage.xml
+          base-file: clover.onepackage.base.xml
+          with-chart: true
+          show-percentage-change-on-table: true
+          icon-equals: "(same)"
+          icon-increased: "(increased)"
+          icon-decreased: "(decreased)"
+          signature: "comment using text instead of icons"
