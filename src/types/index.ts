@@ -44,3 +44,9 @@ export class Stats {
     return this.folders.get(folder)?.get(file);
   }
 }
+
+export class Icons {
+  equals: string;
+  increased: string;
+  decreased: string;
+}

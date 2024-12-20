@@ -89525,11 +89525,11 @@ var c2s = function (c, lang) {
             c.total.toLocaleString(lang, { useGrouping: true }),
     });
 };
-var compareFile = function (n, o, lang) {
+var compareFile = function (n, o, lang, icons) {
     return " " +
         (o === null
             ? span(":new:", { title: "new file" })
-            : compare(n, o, lang, true));
+            : compare(n, o, lang, true, icons));
 };
 var limitedFragment = function (limit, noSpaceLeft) {
     var children = [];
@@ -89548,52 +89548,51 @@ var limitedFragment = function (limit, noSpaceLeft) {
     }
     return html;
 };
-var line = function (name, m, lang, o, showDelta, showBranchesColumn) {
+var line = function (name, m, lang, icons, o, showDelta, showBranchesColumn) {
     if (o === void 0) { o = null; }
     if (showDelta === void 0) { showDelta = false; }
     if (showBranchesColumn === void 0) { showBranchesColumn = true; }
     return tr.apply(void 0, __spreadArray([td(name)], __spreadArray(["lines", "methods"], (showBranchesColumn ? ["branches"] : []), true).map(function (p) {
         return td(c2s(m[p], lang) +
-            (!showDelta ? "" : compareFile(m[p], o && o[p], lang)), {
+            (!showDelta ? "" : compareFile(m[p], o && o[p], lang, icons)), {
             align: "right",
         });
     }), false));
 };
-var compare = function (n, o, lang, showDelta) {
+var compare = function (n, o, lang, showDelta, icons) {
     if (showDelta === void 0) { showDelta = false; }
     return span(n.percentual == o.percentual
-        ? ":eject_button:"
+        ? icons.equals
         : n.percentual < o.percentual
-            ? ":arrow_lower_left:"
-            : ":arrow_upper_right:", {
+            ? icons.decreased
+            : icons.increased, {
         title: "Was ".concat(p2s(o.percentual || 0, lang, "0%"), " before") +
             (showDelta && (n.percentual || 0) !== (o.percentual || 0)
                 ? " (".concat(n.percentual > o.percentual ? "+" : "-").concat(p2s(Math.abs(n.percentual - o.percentual), lang), ")")
                 : ""),
     });
 };
-var total = function (name, c, oldC) {
+var total = function (name, icons, c, oldC) {
     return c.total > 0 &&
-        fragment(b(name + ":"), " ", c2s(c, lang), " ", !oldC ? "" : compare(c, oldC, lang));
+        fragment(b(name + ":"), " ", c2s(c, lang), " ", !oldC ? "" : compare(c, oldC, lang, false, icons));
 };
 var link = function (folder, file) {
     return a("".concat(baseUrl, "/").concat(folder, "/").concat(file), file);
 };
 var html = function (c, o, configs) {
     if (o === void 0) { o = null; }
-    if (configs === void 0) { configs = { withTable: false, deltaPerFile: false, showBranchesColumn: true }; }
     return (configs.withTable
-        ? tableWrap(c, o, configs.deltaPerFile, configs.showBranchesColumn)
+        ? tableWrap(c, configs.icons, o, configs.deltaPerFile, configs.showBranchesColumn)
         : span)("Summary - ".concat([
-        total("Lines", c.total.lines, o === null || o === void 0 ? void 0 : o.total.lines),
-        total("Methods", c.total.methods, o === null || o === void 0 ? void 0 : o.total.methods),
+        total("Lines", configs.icons, c.total.lines, o === null || o === void 0 ? void 0 : o.total.lines),
+        total("Methods", configs.icons, c.total.methods, o === null || o === void 0 ? void 0 : o.total.methods),
         configs.showBranchesColumn &&
-            total("Branches", c.total.branches, o === null || o === void 0 ? void 0 : o.total.branches),
+            total("Branches", configs.icons, c.total.branches, o === null || o === void 0 ? void 0 : o.total.branches),
     ]
         .filter(function (v) { return v; })
         .join(" | ")));
 };
-var tableWrap = function (c, o, showDelta, showBranchesColumn) {
+var tableWrap = function (c, icons, o, showDelta, showBranchesColumn) {
     if (o === void 0) { o = null; }
     if (showDelta === void 0) { showDelta = false; }
     if (showBranchesColumn === void 0) { showBranchesColumn = true; }
@@ -89608,7 +89607,7 @@ var tableWrap = function (c, o, showDelta, showBranchesColumn) {
                     tr(td(b(folder.name), { colspan: 4 }))
                 ], folder.files.map(function (f) {
                     var _a;
-                    return line("&nbsp; &nbsp;".concat(link(folder.name, f.name)), f.metrics, lang, (_a = o === null || o === void 0 ? void 0 : o.get(k, f.name)) === null || _a === void 0 ? void 0 : _a.metrics, showDelta, showBranchesColumn);
+                    return line("&nbsp; &nbsp;".concat(link(folder.name, f.name)), f.metrics, lang, icons, (_a = o === null || o === void 0 ? void 0 : o.get(k, f.name)) === null || _a === void 0 ? void 0 : _a.metrics, showDelta, showBranchesColumn);
                 }), true);
             })
                 .reduce(function (accum, item) { return __spreadArray(__spreadArray([], accum, true), item, true); }, []), false)))));
@@ -89637,6 +89636,9 @@ var maxMethodCoverageDecrease = coreExports.getInput("max-method-coverage-decrea
 var minLineCoverage = Number(coreExports.getInput("min-line-coverage"));
 var minMethodCoverage = Number(coreExports.getInput("min-method-coverage"));
 var showPercentageChangePerFile = coreExports.getBooleanInput("show-percentage-change-on-table");
+var iconEquals = coreExports.getInput("icon-equals") || ":stop_button:";
+var iconIncreased = coreExports.getInput("icon-increased") || ":arrow_up_small:";
+var iconDecreased = coreExports.getInput("icon-decreased") || ":arrow_down_small:";
 var comment = function (cStats, oldStats, coverageType, withChart, withTable) { return __awaiter$1(void 0, void 0, void 0, function () {
     var w;
     return __generator(this, function (_a) {
@@ -89659,6 +89661,11 @@ var comment = function (cStats, oldStats, coverageType, withChart, withTable) { 
                     withTable: withTable,
                     deltaPerFile: showPercentageChangePerFile,
                     showBranchesColumn: showBranchesColumn,
+                    icons: {
+                        equals: iconEquals,
+                        increased: iconIncreased,
+                        decreased: iconDecreased,
+                    },
                 }))];
     });
 }); };

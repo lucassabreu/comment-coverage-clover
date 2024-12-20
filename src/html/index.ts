@@ -1,7 +1,7 @@
 import { getInput } from "@actions/core";
 import { context } from "@actions/github/lib/utils";
 
-import { Coverage, File, Metrics, Stats } from "../types";
+import { Coverage, File, Icons, Metrics, Stats } from "../types";
 
 import {
   a,
@@ -44,11 +44,16 @@ const c2s = (c: Coverage, lang: string): string =>
 const json = (o: any, ident = true) =>
   `<pre>${JSON.stringify(o, null, ident ? 2 : null)}</pre>`;
 
-const compareFile = (n: Coverage, o: null | Coverage, lang: string) =>
+const compareFile = (
+  n: Coverage,
+  o: null | Coverage,
+  lang: string,
+  icons: Icons
+) =>
   " " +
   (o === null
     ? span(":new:", { title: "new file" })
-    : compare(n, o, lang, true));
+    : compare(n, o, lang, true, icons));
 
 interface Stringable {
   toString: () => string;
@@ -75,6 +80,7 @@ const line = (
   name: string,
   m: Metrics,
   lang: string,
+  icons: Icons,
   o: Metrics = null,
   showDelta = false,
   showBranchesColumn = true
@@ -85,7 +91,7 @@ const line = (
       (p) =>
         td(
           c2s(m[p], lang) +
-            (!showDelta ? "" : compareFile(m[p], o && o[p], lang)),
+            (!showDelta ? "" : compareFile(m[p], o && o[p], lang, icons)),
           {
             align: "right",
           }
@@ -97,14 +103,15 @@ const compare = (
   n: Coverage,
   o: Coverage,
   lang: string,
-  showDelta = false
+  showDelta = false,
+  icons: Icons
 ): string =>
   span(
     n.percentual == o.percentual
-      ? ":eject_button:"
+      ? icons.equals
       : n.percentual < o.percentual
-      ? ":arrow_lower_left:"
-      : ":arrow_upper_right:",
+      ? icons.decreased
+      : icons.increased,
     {
       title:
         `Was ${p2s(o.percentual || 0, lang, "0%")} before` +
@@ -117,14 +124,14 @@ const compare = (
     }
   );
 
-const total = (name: string, c: Coverage, oldC?: Coverage) =>
+const total = (name: string, icons: Icons, c: Coverage, oldC?: Coverage) =>
   c.total > 0 &&
   fragment(
     b(name + ":"),
     " ",
     c2s(c, lang),
     " ",
-    !oldC ? "" : compare(c, oldC, lang)
+    !oldC ? "" : compare(c, oldC, lang, false, icons)
   );
 
 const link = (folder: string, file: string) =>
@@ -135,19 +142,27 @@ export const html = (
   o: Stats = null,
   configs: {
     withTable: boolean;
-    deltaPerFile?: boolean;
-    showBranchesColumn?: boolean;
-  } = { withTable: false, deltaPerFile: false, showBranchesColumn: true }
+    deltaPerFile: boolean;
+    showBranchesColumn: boolean;
+    icons: Icons;
+  }
 ): string =>
   (configs.withTable
-    ? tableWrap(c, o, configs.deltaPerFile, configs.showBranchesColumn)
+    ? tableWrap(
+        c,
+        configs.icons,
+        o,
+        configs.deltaPerFile,
+        configs.showBranchesColumn
+      )
     : span)(
     "Summary - ".concat(
       [
-        total("Lines", c.total.lines, o?.total.lines),
-        total("Methods", c.total.methods, o?.total.methods),
+        total("Lines", configs.icons, c.total.lines, o?.total.lines),
+
+        total("Methods", configs.icons, c.total.methods, o?.total.methods),
         configs.showBranchesColumn &&
-          total("Branches", c.total.branches, o?.total.branches),
+          total("Branches", configs.icons, c.total.branches, o?.total.branches),
       ]
         .filter((v) => v)
         .join(" | ")
@@ -155,7 +170,13 @@ export const html = (
   );
 
 const tableWrap =
-  (c: Stats, o: Stats = null, showDelta = false, showBranchesColumn = true) =>
+  (
+    c: Stats,
+    icons: Icons,
+    o: Stats = null,
+    showDelta = false,
+    showBranchesColumn = true
+  ) =>
   (summaryText: string): string =>
     details(
       summary(summaryText),
@@ -183,6 +204,7 @@ const tableWrap =
                         `&nbsp; &nbsp;${link(folder.name, f.name)}`,
                         f.metrics,
                         lang,
+                        icons,
                         o?.get(k, f.name)?.metrics,
                         showDelta,
                         showBranchesColumn
