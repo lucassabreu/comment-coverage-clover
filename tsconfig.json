@@ -1,6 +1,8 @@
 {
   "declaration": false,
   "compilerOptions": {
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "moduleResolution": "node"
   }
 }
