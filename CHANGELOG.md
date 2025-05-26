@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.15.5] - 2025-05-26
+
+### Changed
+- suggest `dawidd6/action-download-artifact@v7` because of security risks
+
 ## [0.15.4] - 2025-05-15
 
 ### Changed
