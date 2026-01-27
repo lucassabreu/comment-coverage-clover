@@ -7,9 +7,9 @@
   "author": "Lucas dos Santos Abreu <lucas.s.abreu@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.11.1",
-    "@actions/github": "^6.0.0",
-    "@octokit/core": "^6.1.4",
+    "@actions/core": "^2.0.2",
+    "@actions/github": "^8.0.0",
+    "@octokit/core": "^7.0.6",
     "source-map-support": "^0.5.21",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2",
