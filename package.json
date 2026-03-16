@@ -1,6 +1,6 @@
 {
   "name": "@lucassabreu/comment-coverage-clover",
-  "version": "0.15.11",
+  "version": "0.15.12",
   "type": "module",
   "description": "Creates a comment on a commit or pull request with test coverage %",
   "main": "bin/index.mjs",
@@ -16,6 +16,9 @@
     "xml-js": "^1.6.11"
   },
   "scripts": {
+    "release": "tsx scripts/release.ts major",
+    "release:minor": "tsx scripts/release.ts minor",
+    "release:patch": "tsx scripts/release.ts patch",
     "format:check": "prettier . --list-different",
     "format": "prettier --write .",
     "build": "rollup -c",
