@@ -1,7 +1,6 @@
 {
   "name": "@lucassabreu/comment-coverage-clover",
-  "version": "0.15.3",
-  "type": "module",
+  "version": "0.15.11",
   "description": "Creates a comment on a commit or pull request with test coverage %",
   "main": "bin/index.js",
   "source": "src/index.ts",
