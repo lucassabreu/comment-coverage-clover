@@ -1,30 +1,9 @@
-'use strict';
-
-var node_module = require('node:module');
-var os = require('node:os');
-var fs = require('node:fs');
-var node_util = require('node:util');
-
-var _documentCurrentScript = typeof document !== 'undefined' ? document.currentScript : null;
-function _interopNamespaceDefault(e) {
-    var n = Object.create(null);
-    if (e) {
-        Object.keys(e).forEach(function (k) {
-            if (k !== 'default') {
-                var d = Object.getOwnPropertyDescriptor(e, k);
-                Object.defineProperty(n, k, d.get ? d : {
-                    enumerable: true,
-                    get: function () { return e[k]; }
-                });
-            }
-        });
-    }
-    n.default = e;
-    return Object.freeze(n);
-}
-
-var os__namespace = /*#__PURE__*/_interopNamespaceDefault(os);
-var fs__namespace = /*#__PURE__*/_interopNamespaceDefault(fs);
+import { createRequire } from 'node:module';
+import * as os from 'node:os';
+import os__default, { EOL } from 'node:os';
+import * as fs from 'node:fs';
+import { promises, constants as constants$5, existsSync, readFileSync, readFile } from 'node:fs';
+import { promisify } from 'node:util';
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -3347,7 +3326,7 @@ function requireSourceMap () {
 	return sourceMap;
 }
 
-const require$l = node_module.createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('index.js', document.baseURI).href)));
+const require$l = createRequire(import.meta.url);
 function __require$k() { return require$l("node:path"); }
 
 /* eslint-disable node/no-deprecated-api */
@@ -4139,7 +4118,7 @@ function toCommandProperties(annotationProperties) {
  */
 function issueCommand(command, properties, message) {
     const cmd = new Command(command, properties, message);
-    process.stdout.write(cmd.toString() + os__namespace.EOL);
+    process.stdout.write(cmd.toString() + os.EOL);
 }
 const CMD_STRING = '::';
 class Command {
@@ -4192,25 +4171,25 @@ function escapeProperty(s) {
 
 var tunnel$1 = {};
 
-const require$k = node_module.createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('index.js', document.baseURI).href)));
+const require$k = createRequire(import.meta.url);
 function __require$j() { return require$k("node:net"); }
 
-const require$j = node_module.createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('index.js', document.baseURI).href)));
+const require$j = createRequire(import.meta.url);
 function __require$i() { return require$j("node:tls"); }
 
-const require$i = node_module.createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('index.js', document.baseURI).href)));
+const require$i = createRequire(import.meta.url);
 function __require$h() { return require$i("node:http"); }
 
-const require$h = node_module.createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('index.js', document.baseURI).href)));
+const require$h = createRequire(import.meta.url);
 function __require$g() { return require$h("node:https"); }
 
-const require$g = node_module.createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('index.js', document.baseURI).href)));
+const require$g = createRequire(import.meta.url);
 function __require$f() { return require$g("node:events"); }
 
-const require$f = node_module.createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('index.js', document.baseURI).href)));
+const require$f = createRequire(import.meta.url);
 function __require$e() { return require$f("node:assert"); }
 
-const require$e = node_module.createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('index.js', document.baseURI).href)));
+const require$e = createRequire(import.meta.url);
 function __require$d() { return require$e("node:util"); }
 
 var hasRequiredTunnel$1;
@@ -4574,13 +4553,13 @@ function requireSymbols$4 () {
 	return symbols$4;
 }
 
-const require$d = node_module.createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('index.js', document.baseURI).href)));
+const require$d = createRequire(import.meta.url);
 function __require$c() { return require$d("node:stream"); }
 
-const require$c = node_module.createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('index.js', document.baseURI).href)));
+const require$c = createRequire(import.meta.url);
 function __require$b() { return require$c("node:buffer"); }
 
-const require$b = node_module.createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('index.js', document.baseURI).href)));
+const require$b = createRequire(import.meta.url);
 function __require$a() { return require$b("node:querystring"); }
 
 var errors;
@@ -4969,6 +4948,24 @@ function requireErrors () {
 	  [kSecureProxyConnectionError] = true
 	}
 
+	const kMessageSizeExceededError = Symbol.for('undici.error.UND_ERR_WS_MESSAGE_SIZE_EXCEEDED');
+	class MessageSizeExceededError extends UndiciError {
+	  constructor (message) {
+	    super(message);
+	    this.name = 'MessageSizeExceededError';
+	    this.message = message || 'Max decompressed message size exceeded';
+	    this.code = 'UND_ERR_WS_MESSAGE_SIZE_EXCEEDED';
+	  }
+
+	  static [Symbol.hasInstance] (instance) {
+	    return instance && instance[kMessageSizeExceededError] === true
+	  }
+
+	  get [kMessageSizeExceededError] () {
+	    return true
+	  }
+	}
+
 	errors = {
 	  AbortError,
 	  HTTPParserError,
@@ -4992,7 +4989,8 @@ function requireErrors () {
 	  ResponseExceededMaxSizeError,
 	  RequestRetryError,
 	  ResponseError,
-	  SecureProxyConnectionError
+	  SecureProxyConnectionError,
+	  MessageSizeExceededError
 	};
 	return errors;
 }
@@ -6010,7 +6008,7 @@ function requireUtil$7 () {
 	return util$7;
 }
 
-const require$a = node_module.createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('index.js', document.baseURI).href)));
+const require$a = createRequire(import.meta.url);
 function __require$9() { return require$a("node:diagnostics_channel"); }
 
 var diagnostics;
@@ -6294,6 +6292,10 @@ function requireRequest$1 () {
 
 	    if (upgrade && typeof upgrade !== 'string') {
 	      throw new InvalidArgumentError('upgrade must be a string')
+	    }
+
+	    if (upgrade && !isValidHeaderValue(upgrade)) {
+	      throw new InvalidArgumentError('invalid upgrade header')
 	    }
 
 	    if (headersTimeout != null && (!Number.isFinite(headersTimeout) || headersTimeout < 0)) {
@@ -6590,13 +6592,19 @@ function requireRequest$1 () {
 	    val = `${val}`;
 	  }
 
-	  if (request.host === null && headerName === 'host') {
+	  if (headerName === 'host') {
+	    if (request.host !== null) {
+	      throw new InvalidArgumentError('duplicate host header')
+	    }
 	    if (typeof val !== 'string') {
 	      throw new InvalidArgumentError('invalid host header')
 	    }
 	    // Consumed by Client
 	    request.host = val;
-	  } else if (request.contentLength === null && headerName === 'content-length') {
+	  } else if (headerName === 'content-length') {
+	    if (request.contentLength !== null) {
+	      throw new InvalidArgumentError('duplicate content-length header')
+	    }
 	    request.contentLength = parseInt(val, 10);
 	    if (!Number.isFinite(request.contentLength)) {
 	      throw new InvalidArgumentError('invalid content-length header')
@@ -7909,7 +7917,7 @@ function requireLlhttp_simdWasm () {
 	return llhttp_simdWasm;
 }
 
-const require$9 = node_module.createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('index.js', document.baseURI).href)));
+const require$9 = createRequire(import.meta.url);
 function __require$8() { return require$9("node:zlib"); }
 
 var constants$2;
@@ -8844,13 +8852,13 @@ function requireDataUrl () {
 	return dataUrl;
 }
 
-const require$8 = node_module.createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('index.js', document.baseURI).href)));
+const require$8 = createRequire(import.meta.url);
 function __require$7() { return require$8("node:perf_hooks"); }
 
-const require$7 = node_module.createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('index.js', document.baseURI).href)));
+const require$7 = createRequire(import.meta.url);
 function __require$6() { return require$7("node:util/types"); }
 
-const require$6 = node_module.createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('index.js', document.baseURI).href)));
+const require$6 = createRequire(import.meta.url);
 function __require$5() { return require$6("node:worker_threads"); }
 
 var webidl_1;
@@ -16469,7 +16477,7 @@ function requireAgent () {
 	return agent;
 }
 
-const require$5 = node_module.createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('index.js', document.baseURI).href)));
+const require$5 = createRequire(import.meta.url);
 function __require$4() { return require$5("node:url"); }
 
 var proxyAgent;
@@ -17844,7 +17852,7 @@ function requireUtil$5 () {
 	return util$5;
 }
 
-const require$4 = node_module.createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('index.js', document.baseURI).href)));
+const require$4 = createRequire(import.meta.url);
 function __require$3() { return require$4("node:async_hooks"); }
 
 var hasRequiredApiRequest;
@@ -19696,7 +19704,7 @@ function requirePluralizer () {
 	return pluralizer;
 }
 
-const require$3 = node_module.createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('index.js', document.baseURI).href)));
+const require$3 = createRequire(import.meta.url);
 function __require$2() { return require$3("node:console"); }
 
 var pendingInterceptorsFormatter;
@@ -20200,7 +20208,7 @@ function requireDump () {
 	return dump;
 }
 
-const require$2 = node_module.createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('index.js', document.baseURI).href)));
+const require$2 = createRequire(import.meta.url);
 function __require$1() { return require$2("node:dns"); }
 
 var dns;
@@ -25602,7 +25610,7 @@ function requireEncoding () {
 	return encoding;
 }
 
-const require$1 = node_module.createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('index.js', document.baseURI).href)));
+const require$1 = createRequire(import.meta.url);
 function __require() { return require$1("node:string_decoder"); }
 
 var util$4;
@@ -28980,6 +28988,12 @@ function requireUtil$1 () {
 	 * @param {string} value
 	 */
 	function isValidClientWindowBits (value) {
+	  // Must have at least one character
+	  if (value.length === 0) {
+	    return false
+	  }
+
+	  // Check all characters are ASCII digits
 	  for (let i = 0; i < value.length; i++) {
 	    const byte = value.charCodeAt(i);
 
@@ -28988,7 +29002,9 @@ function requireUtil$1 () {
 	    }
 	  }
 
-	  return true
+	  // Check numeric range: zlib requires windowBits in range 8-15
+	  const num = Number.parseInt(value, 10);
+	  return num >= 8 && num <= 15
 	}
 
 	// https://nodejs.org/api/intl.html#detecting-internationalization-support
@@ -29518,10 +29534,14 @@ function requirePermessageDeflate () {
 
 	const { createInflateRaw, Z_DEFAULT_WINDOWBITS } = __require$8();
 	const { isValidClientWindowBits } = requireUtil$1();
+	const { MessageSizeExceededError } = requireErrors();
 
 	const tail = Buffer.from([0x00, 0x00, 0xff, 0xff]);
 	const kBuffer = Symbol('kBuffer');
 	const kLength = Symbol('kLength');
+
+	// Default maximum decompressed message size: 4 MB
+	const kDefaultMaxDecompressedSize = 4 * 1024 * 1024;
 
 	class PerMessageDeflate {
 	  /** @type {import('node:zlib').InflateRaw} */
@@ -29529,6 +29549,15 @@ function requirePermessageDeflate () {
 
 	  #options = {}
 
+	  /** @type {boolean} */
+	  #aborted = false
+
+	  /** @type {Function|null} */
+	  #currentCallback = null
+
+	  /**
+	   * @param {Map<string, string>} extensions
+	   */
 	  constructor (extensions) {
 	    this.#options.serverNoContextTakeover = extensions.has('server_no_context_takeover');
 	    this.#options.serverMaxWindowBits = extensions.get('server_max_window_bits');
@@ -29539,6 +29568,11 @@ function requirePermessageDeflate () {
 	    // 1.  Append 4 octets of 0x00 0x00 0xff 0xff to the tail end of the
 	    //     payload of the message.
 	    // 2.  Decompress the resulting data using DEFLATE.
+
+	    if (this.#aborted) {
+	      callback(new MessageSizeExceededError());
+	      return
+	    }
 
 	    if (!this.#inflate) {
 	      let windowBits = Z_DEFAULT_WINDOWBITS;
@@ -29552,13 +29586,37 @@ function requirePermessageDeflate () {
 	        windowBits = Number.parseInt(this.#options.serverMaxWindowBits);
 	      }
 
-	      this.#inflate = createInflateRaw({ windowBits });
+	      try {
+	        this.#inflate = createInflateRaw({ windowBits });
+	      } catch (err) {
+	        callback(err);
+	        return
+	      }
 	      this.#inflate[kBuffer] = [];
 	      this.#inflate[kLength] = 0;
 
 	      this.#inflate.on('data', (data) => {
-	        this.#inflate[kBuffer].push(data);
+	        if (this.#aborted) {
+	          return
+	        }
+
 	        this.#inflate[kLength] += data.length;
+
+	        if (this.#inflate[kLength] > kDefaultMaxDecompressedSize) {
+	          this.#aborted = true;
+	          this.#inflate.removeAllListeners();
+	          this.#inflate.destroy();
+	          this.#inflate = null;
+
+	          if (this.#currentCallback) {
+	            const cb = this.#currentCallback;
+	            this.#currentCallback = null;
+	            cb(new MessageSizeExceededError());
+	          }
+	          return
+	        }
+
+	        this.#inflate[kBuffer].push(data);
 	      });
 
 	      this.#inflate.on('error', (err) => {
@@ -29567,16 +29625,22 @@ function requirePermessageDeflate () {
 	      });
 	    }
 
+	    this.#currentCallback = callback;
 	    this.#inflate.write(chunk);
 	    if (fin) {
 	      this.#inflate.write(tail);
 	    }
 
 	    this.#inflate.flush(() => {
+	      if (this.#aborted || !this.#inflate) {
+	        return
+	      }
+
 	      const full = Buffer.concat(this.#inflate[kBuffer], this.#inflate[kLength]);
 
 	      this.#inflate[kBuffer].length = 0;
 	      this.#inflate[kLength] = 0;
+	      this.#currentCallback = null;
 
 	      callback(null, full);
 	    });
@@ -29631,6 +29695,10 @@ function requireReceiver () {
 	  /** @type {Map<string, PerMessageDeflate>} */
 	  #extensions
 
+	  /**
+	   * @param {import('./websocket').WebSocket} ws
+	   * @param {Map<string, string>|null} extensions
+	   */
 	  constructor (ws, extensions) {
 	    super();
 
@@ -29773,6 +29841,7 @@ function requireReceiver () {
 
 	        const buffer = this.consume(8);
 	        const upper = buffer.readUInt32BE(0);
+	        const lower = buffer.readUInt32BE(4);
 
 	        // 2^31 is the maximum bytes an arraybuffer can contain
 	        // on 32-bit systems. Although, on 64-bit systems, this is
@@ -29780,14 +29849,12 @@ function requireReceiver () {
 	        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Invalid_array_length
 	        // https://source.chromium.org/chromium/chromium/src/+/main:v8/src/common/globals.h;drc=1946212ac0100668f14eb9e2843bdd846e510a1e;bpv=1;bpt=1;l=1275
 	        // https://source.chromium.org/chromium/chromium/src/+/main:v8/src/objects/js-array-buffer.h;l=34;drc=1946212ac0100668f14eb9e2843bdd846e510a1e
-	        if (upper > 2 ** 31 - 1) {
+	        if (upper !== 0 || lower > 2 ** 31 - 1) {
 	          failWebsocketConnection(this.ws, 'Received payload length > 2^31 bytes.');
 	          return
 	        }
 
-	        const lower = buffer.readUInt32BE(4);
-
-	        this.#info.payloadLength = (upper << 8) + lower;
+	        this.#info.payloadLength = lower;
 	        this.#state = parserStates.READ_DATA;
 	      } else if (this.#state === parserStates.READ_DATA) {
 	        if (this.#byteOffset < this.#info.payloadLength) {
@@ -29817,7 +29884,7 @@ function requireReceiver () {
 	          } else {
 	            this.#extensions.get('permessage-deflate').decompress(body, this.#info.fin, (error, data) => {
 	              if (error) {
-	                closeWebSocketConnection(this.ws, 1007, error.message, error.message.length);
+	                failWebsocketConnection(this.ws, error.message);
 	                return
 	              }
 
@@ -30569,7 +30636,7 @@ function requireWebsocket () {
 	   * @see https://websockets.spec.whatwg.org/#feedback-from-the-protocol
 	   */
 	  #onConnectionEstablished (response, parsedExtensions) {
-	    // processResponse is called when the "response’s header list has been received and initialized."
+	    // processResponse is called when the "response's header list has been received and initialized."
 	    // once this happens, the connection is open
 	    this[kResponse] = response;
 
@@ -31935,7 +32002,7 @@ var __awaiter$1 = (undefined && undefined.__awaiter) || function (thisArg, _argu
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const { access, appendFile, writeFile } = fs.promises;
+const { access, appendFile, writeFile } = promises;
 const SUMMARY_ENV_VAR = 'GITHUB_STEP_SUMMARY';
 class Summary {
     constructor() {
@@ -31957,7 +32024,7 @@ class Summary {
                 throw new Error(`Unable to find environment variable for $${SUMMARY_ENV_VAR}. Check if your runtime environment supports job summaries.`);
             }
             try {
-                yield access(pathFromEnv, fs.constants.R_OK | fs.constants.W_OK);
+                yield access(pathFromEnv, constants$5.R_OK | constants$5.W_OK);
             }
             catch (_a) {
                 throw new Error(`Unable to access summary file: '${pathFromEnv}'. Check if the file has correct read/write permissions.`);
@@ -32053,7 +32120,7 @@ class Summary {
      * @returns {Summary} summary instance
      */
     addEOL() {
-        return this.addRaw(os.EOL);
+        return this.addRaw(EOL);
     }
     /**
      * Adds an HTML codeblock to the summary buffer
@@ -32208,10 +32275,10 @@ const summary$1 = _summary;
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const { chmod, copyFile, lstat, mkdir, open, readdir, rename, rm, rmdir, stat, symlink, unlink } = fs__namespace.promises;
+const { chmod, copyFile, lstat, mkdir, open, readdir, rename, rm, rmdir, stat, symlink, unlink } = fs.promises;
 // export const {open} = 'fs'
 process.platform === 'win32';
-fs__namespace.constants.O_RDONLY;
+fs.constants.O_RDONLY;
 
 (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -32254,8 +32321,8 @@ process.platform === 'win32';
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-os.platform();
-os.arch();
+os__default.platform();
+os__default.arch();
 
 (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -32346,7 +32413,7 @@ function error(message, properties = {}) {
  * @param message info message
  */
 function info(message) {
-    process.stdout.write(message + os__namespace.EOL);
+    process.stdout.write(message + os.EOL);
 }
 
 class Context {
@@ -32357,12 +32424,12 @@ class Context {
         var _a, _b, _c;
         this.payload = {};
         if (process.env.GITHUB_EVENT_PATH) {
-            if (fs.existsSync(process.env.GITHUB_EVENT_PATH)) {
-                this.payload = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH, { encoding: 'utf8' }));
+            if (existsSync(process.env.GITHUB_EVENT_PATH)) {
+                this.payload = JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH, { encoding: 'utf8' }));
             }
             else {
                 const path = process.env.GITHUB_EVENT_PATH;
-                process.stdout.write(`GITHUB_EVENT_PATH ${path} does not exist${os.EOL}`);
+                process.stdout.write(`GITHUB_EVENT_PATH ${path} does not exist${EOL}`);
             }
         }
         this.eventName = process.env.GITHUB_EVENT_NAME;
@@ -40204,21 +40271,21 @@ var run = function () { return __awaiter$2(void 0, void 0, void 0, function () {
                         ? "no Github token was informed !"
                         : "the Github token informed is not valid";
                 commit = (_h = context.payload.pull_request) === null || _h === void 0 ? void 0 : _h.head.sha.substring(0, 7);
-                if (!fs.existsSync(file)) {
+                if (!existsSync(file)) {
                     throw "file \"".concat(file, "\" ").concat(notFoundMessage);
                 }
                 _a = fromString;
-                return [4 /*yield*/, node_util.promisify(fs.readFile)(file)];
+                return [4 /*yield*/, promisify(readFile)(file)];
             case 1:
                 cStats = _a.apply(void 0, [(_p.sent()).toString()]);
-                if (baseFile && !fs.existsSync(baseFile)) {
+                if (baseFile && !existsSync(baseFile)) {
                     error("base file \"".concat(baseFile, "\" ").concat(notFoundMessage));
                     baseFile = undefined;
                 }
                 _b = baseFile;
                 if (!_b) return [3 /*break*/, 3];
                 _c = fromString;
-                return [4 /*yield*/, node_util.promisify(fs.readFile)(baseFile)];
+                return [4 /*yield*/, promisify(readFile)(baseFile)];
             case 2:
                 _b = _c.apply(void 0, [(_p.sent()).toString()]);
                 _p.label = 3;
@@ -40329,4 +40396,4 @@ var run = function () { return __awaiter$2(void 0, void 0, void 0, function () {
     });
 }); };
 run().catch(function (err) { return setFailed(errorToString(err)); });
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=index.mjs.map

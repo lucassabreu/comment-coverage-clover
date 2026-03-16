@@ -1,8 +1,9 @@
 {
   "name": "@lucassabreu/comment-coverage-clover",
   "version": "0.15.11",
+  "type": "module",
   "description": "Creates a comment on a commit or pull request with test coverage %",
-  "main": "bin/index.js",
+  "main": "bin/index.mjs",
   "source": "src/index.ts",
   "author": "Lucas dos Santos Abreu <lucas.s.abreu@gmail.com>",
   "license": "MIT",
@@ -24,6 +25,7 @@
     "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.0",
+    "@types/node": "^25.5.0",
     "prettier": "^3.5.3",
     "rollup": "^4.59.0",
     "rollup-plugin-node-externals": "^8.0.0",

@@ -91,4 +91,4 @@ inputs:
 
 runs:
   using: node20
-  main: bin/index.js
+  main: bin/index.mjs
