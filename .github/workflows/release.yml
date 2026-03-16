@@ -11,18 +11,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@master
+        uses: actions/checkout@v4
+
       - name: Extract Release Notes
         run: |
           sed "/^## \[${GITHUB_REF#refs/tags/v}/, /^## \[/!d" CHANGELOG.md | tail -n +2 | head -n -2 > release-notes.md
+
       - name: Create Release
         id: create_release
-        uses: actions/create-release@latest
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          name: Release ${{ github.ref }}
           body_path: release-notes.md
           draft: false
           prerelease: false
