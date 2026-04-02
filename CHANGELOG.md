@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.17.0] - 2026-04-02
+
 ### Changed
 
 - steps from the github workflows updated
@@ -382,7 +384,8 @@ into comments in the pull request.
 - implemented base action reading clover.xml files and converting then.
 - release.yml workflow to auto-release tags
 
-[Unreleased]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.16.0...HEAD
+[Unreleased]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.17.0...HEAD
+[0.17.0]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.16.0...v0.17.0
 [0.16.0]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.15.12...v0.16.0
 [0.15.12]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.15.11...v0.15.12
 [0.15.11]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.15.10...v0.15.11
