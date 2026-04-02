@@ -90,5 +90,5 @@ inputs:
     default: ":new:"
 
 runs:
-  using: node20
+  using: node24
   main: bin/index.mjs

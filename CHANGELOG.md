@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - steps from the github workflows updated
+- update node version to 24
 
 ## [0.16.0] - 2026-03-16
 
