@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- update dependencies for security reasons
+  - https://github.com/lucassabreu/comment-coverage-clover/pull/72
+
 ## [0.17.0] - 2026-04-02
 
 ### Changed

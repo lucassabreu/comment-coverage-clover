@@ -47,8 +47,8 @@ const tostr = (e: Record<string, number>, o?: Record<string, number>) => {
       .map(
         (k) =>
           `${k.padStart(4)}% │ ${bar(e[k], (o && o[k]) || 0, max)} │ ${p2s(
-            e[k] / sum
-          )}`
+            e[k] / sum,
+          )}`,
       )
       .join("\n") +
     `\n      └─${"─".repeat(size)}─┘` +

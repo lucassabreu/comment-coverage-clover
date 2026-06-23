@@ -45,7 +45,7 @@ const maxMethodCoverageDecrease = getInput("max-method-coverage-decrease");
 const minLineCoverage = Number(getInput("min-line-coverage"));
 const minMethodCoverage = Number(getInput("min-method-coverage"));
 const showPercentageChangePerFile = getBooleanInput(
-  "show-percentage-change-on-table"
+  "show-percentage-change-on-table",
 );
 
 const iconEquals = getInput("icon-equals") || ":stop_button:";
@@ -58,7 +58,7 @@ const comment = async (
   oldStats: null | Stats,
   coverageType: keyof Metrics,
   withChart: boolean,
-  withTable: boolean
+  withTable: boolean,
 ) => {
   const w = workspace.endsWith("/") ? workspace : workspace.concat("/");
   cStats.folders.forEach((v, k) =>
@@ -66,8 +66,8 @@ const comment = async (
       k,
       Object.assign(v, {
         name: v.name.startsWith(w) ? v.name.slice(w.length) : v.name,
-      })
-    )
+      }),
+    ),
   );
 
   return (
@@ -85,7 +85,7 @@ const comment = async (
           max: tableWithOnlyBellow,
           delta: tableWithChangeAbove,
         },
-        oldStats
+        oldStats,
       ),
       oldStats,
       {
@@ -98,7 +98,7 @@ const comment = async (
           decreased: iconDecreased,
           new: iconNew,
         },
-      }
+      },
     )
   );
 };
@@ -115,7 +115,7 @@ const filter = (
     max: number;
     delta: number;
   },
-  o: Stats = null
+  o: Stats = null,
 ): Stats => {
   const filters: ((f: File, folder: string) => boolean)[] = [];
 
@@ -129,8 +129,8 @@ const filter = (
         between(
           f.metrics[onlyBetween.type].percentual * 100,
           onlyBetween.min,
-          onlyBetween.max
-        )
+          onlyBetween.max,
+        ),
       );
 
     if (onlyBetween.delta > 0 && o !== null)
@@ -141,7 +141,7 @@ const filter = (
           !of ||
           Math.abs(
             f.metrics[onlyBetween.type].percentual -
-              of.metrics[onlyBetween.type].percentual
+              of.metrics[onlyBetween.type].percentual,
           ) *
             100 >
             onlyBetween.delta
@@ -155,7 +155,7 @@ const filter = (
 
   s.folders.forEach((folder, key) => {
     folder.files = folder.files.filter((f) =>
-      filters.reduce((r, fn) => r && fn(f, key), true)
+      filters.reduce((r, fn) => r && fn(f, key), true),
     );
     if (folder.files.length === 0) {
       s.folders.delete(key);
@@ -172,13 +172,13 @@ function* checkThreshold(c: Stats, o?: Stats) {
   const f = (n: number) => n.toFixed(2) + "%";
   if (minLineCoverage > c.total.lines.percentual * 100) {
     yield `Minimum line coverage is ${f(minLineCoverage)}, currently it is ${f(
-      c.total.lines.percentual * 100
+      c.total.lines.percentual * 100,
     )}`;
   }
 
   if (minMethodCoverage > c.total.methods.percentual * 100) {
     yield `Minimum method coverage is ${f(
-      minMethodCoverage
+      minMethodCoverage,
     )}, currently it is ${f(c.total.methods.percentual * 100)}`;
   }
 
@@ -187,7 +187,7 @@ function* checkThreshold(c: Stats, o?: Stats) {
   const lcdiff = (o.total.lines.percentual - c.total.lines.percentual) * 100;
   if (maxLineCoverageDecrease && lcdiff >= Number(maxLineCoverageDecrease)) {
     yield `Line coverage was down by ${f(lcdiff)} (max is ${f(
-      Number(maxLineCoverageDecrease)
+      Number(maxLineCoverageDecrease),
     )})`;
   }
 
@@ -198,7 +198,7 @@ function* checkThreshold(c: Stats, o?: Stats) {
     mcdiff >= Number(maxMethodCoverageDecrease)
   ) {
     yield `Methods coverage was down by ${f(mcdiff)} (max is ${f(
-      Number(maxMethodCoverageDecrease)
+      Number(maxMethodCoverageDecrease),
     )})`;
   }
 }
@@ -212,7 +212,7 @@ const errorToString = (e: any) =>
     ? (e instanceof RequestError
         ? `\nRequest: ${e.request.method} ${e.request.url}` +
           `\nResponse Scopes: ${scopesToString(
-            e.response?.headers?.["x-oauth-scopes"]
+            e.response?.headers?.["x-oauth-scopes"],
           )}` +
           `\nResponse Headers: ${JSON.stringify(e.response?.headers || [])}`
         : "") + `\nStack: ${e.stack}`
@@ -268,7 +268,7 @@ ${await comment(
   oldStats,
   tableWithTypeLimit as keyof Metrics,
   withChart,
-  withTable
+  withTable,
 )}
 
 ${signature}`;
@@ -293,9 +293,9 @@ ${signature}`;
         oldStats,
         tableWithTypeLimit as keyof Metrics,
         true,
-        false
+        false,
       ),
-      true
+      true,
     )
     .write();
 
@@ -321,7 +321,7 @@ ${signature}`;
       "Using a PAT from " +
         u.data.login +
         " with scopes: " +
-        scopesToString(u.headers?.["x-oauth-scopes"])
+        scopesToString(u.headers?.["x-oauth-scopes"]),
     );
   } catch (e) {
     debug(errorToString(e));
@@ -373,7 +373,7 @@ ${signature}`;
       throw new Error(
         "Failed to create a new comment with: " +
           e.message +
-          (e.stack ? ". Stack: " + e.stack : "")
+          (e.stack ? ". Stack: " + e.stack : ""),
       );
     });
 };
