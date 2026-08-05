@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - added tsx to package.json for running scripts
 
+### Fixed
+
+- update dependencies for security reasons
+  - https://github.com/lucassabreu/comment-coverage-clover/pull/73
+
 ## [0.17.1] - 2026-06-23
 
 ### Changed
