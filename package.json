@@ -17,8 +17,8 @@
   },
   "scripts": {
     "release": "npx tsx scripts/release.ts major",
-    "release:minor": "tsx scripts/release.ts minor",
-    "release:patch": "tsx scripts/release.ts patch",
+    "release:minor": "npx tsx scripts/release.ts minor",
+    "release:patch": "npx tsx scripts/release.ts patch",
     "format:check": "prettier . --list-different",
     "format": "prettier --write .",
     "build": "rollup -c",

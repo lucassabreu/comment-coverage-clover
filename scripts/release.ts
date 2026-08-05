@@ -1,10 +1,8 @@
 #!/usr/bin/env npx tsx
 import { readFileSync, writeFileSync } from "fs";
 import { execSync } from "child_process";
-import { resolve, dirname } from "path";
-import { fileURLToPath } from "url";
+import { resolve } from "path";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
 const rootDir = resolve(__dirname, "..");
 
 const type = process.argv[2];
