@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.17.3] - 2026-09-22
+
 ### Security
 
 - removed dependency to `rollup-plugin-sourcemaps` that had deps with security issues
@@ -407,7 +409,8 @@ into comments in the pull request.
 - implemented base action reading clover.xml files and converting then.
 - release.yml workflow to auto-release tags
 
-[Unreleased]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.17.2...HEAD
+[Unreleased]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.17.3...HEAD
+[0.17.3]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.17.2...v0.17.3
 [0.17.2]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.17.1...v0.17.2
 [0.17.1]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.17.0...v0.17.1
 [0.17.0]: https://github.com/lucassabreu/comment-coverage-clover/compare/v0.16.0...v0.17.0
