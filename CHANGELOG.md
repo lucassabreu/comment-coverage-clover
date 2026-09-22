@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- removed dependency to `rollup-plugin-sourcemaps` that had deps with security issues
+
 ## [0.17.2] - 2026-08-05
 
 ### Added
