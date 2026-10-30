@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- bump undici from 6.29.0 to 6.29.1
+
 ## [0.17.4] - 2026-09-29
 
 ### Security
